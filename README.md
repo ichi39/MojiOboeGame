@@ -1,0 +1,2 @@
+# MojiOboeGame
+Antigravityのテスト用リポジトリ。ひらがなを覚えるゲームを作る
