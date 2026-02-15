@@ -3,12 +3,13 @@ const PET_CONFIG = {
     chick: {
         id: 'chick',
         name: 'ひよこ',
+        // Support for image assets: add 'image' property with path. e.g. image: 'assets/egg.png'
         stages: [
-            { minScore: 0, icon: '🥚', scale: 1.0 }, // Stage 0
-            { minScore: 1, icon: '🐣', scale: 1.0 }, // Stage 1
-            { minScore: 3, icon: '🐤', scale: 1.2 }, // Stage 2
-            { minScore: 6, icon: '🐤', scale: 1.5 }, // Stage 3
-            { minScore: 10, icon: '🐓', scale: 1.5 } // Stage 4
+            { minScore: 0, text: '🥚', scale: 1.0 }, // Stage 0
+            { minScore: 1, text: '🐣', scale: 1.0 }, // Stage 1
+            { minScore: 3, text: '🐤', scale: 1.2 }, // Stage 2
+            { minScore: 6, text: '🐤', scale: 1.5 }, // Stage 3
+            { minScore: 10, text: '🐓', scale: 1.5 } // Stage 4
         ]
     }
 };
@@ -70,8 +71,8 @@ const HIRAGANA_DATA = [
 // Clean up duplicate 'ra' and ensure char key is correct
 const CLEAN_HIRAGANA_DATA = HIRAGANA_DATA.filter((v, i, a) => a.findIndex(t => (t.char === v.char)) === i);
 
-
 class AudioController {
+    // ... (AudioController methods remain unchanged)
     constructor() {
         this.ctx = new (window.AudioContext || window.webkitAudioContext)();
         this.synth = window.speechSynthesis;
@@ -164,14 +165,7 @@ class Game {
         };
 
         this.difficultyBtns = document.querySelectorAll('[data-difficulty]');
-
-        // Learning elements
         this.learningContainer = document.querySelector('#learning-scene .learning-card');
-        // We will replace content dynamically for Matching Game
-
-        // Match next button not needed for matching game flow usually, 
-        // but maybe for skipping instructions? 
-        // We will reuse the container.
 
         // Game elements
         this.scoreDisplay = document.getElementById('score');
@@ -253,7 +247,8 @@ class Game {
             <div class="feedback-msg" style="height: 2rem; font-weight:bold; color: var(--primary-color);"></div>
         `;
 
-        this.audio.speak(targetQ.char + "。" + targetQ.word);
+        // Update: Only speak the word
+        this.audio.speak(targetQ.word);
 
         // Options: Target + 2 distractors
         const distractors = CLEAN_HIRAGANA_DATA
@@ -314,14 +309,18 @@ class Game {
         this.scoreDisplay.textContent = this.score;
         this.questionsLeftDisplay.textContent = this.questions.length - this.currentQuestionIndex;
 
+        // Question: Display Emoji + Audio Button
         this.questionText.innerHTML = `
-            <div style="font-size: 1.5rem; margin-bottom: 10px;">おとをきいてね</div>
-            <button id="replay-sound" class="btn btn-secondary" style="border-radius: 50%; width: 60px; height: 60px; padding: 0; font-size: 2rem;">🔊</button>
+            <div style="font-size: 1.5rem; margin-bottom: 10px;">これ な〜んだ？</div>
+            <div class="question-emoji" style="font-size: 6rem; line-height: 1.2;">${currentQ.emoji}</div>
+            <button id="replay-sound" class="btn btn-secondary" style="border-radius: 50%; width: 60px; height: 60px; padding: 0; font-size: 2rem; margin-top: 10px;">🔊</button>
         `;
 
-        document.getElementById('replay-sound').onclick = () => this.audio.speak(currentQ.char);
+        const speakText = currentQ.word;
 
-        setTimeout(() => this.audio.speak(currentQ.char), 500);
+        document.getElementById('replay-sound').onclick = () => this.audio.speak(speakText);
+
+        setTimeout(() => this.audio.speak(speakText), 500);
 
         const options = [currentQ];
         // Distractors
@@ -336,9 +335,9 @@ class Game {
 
         options.forEach(opt => {
             const btn = document.createElement('button');
-            btn.className = 'option-btn';
+            btn.className = 'option-btn quiz-btn-text-only'; // Special class for text-only
+            // Text only: Display highlighted Word.
             btn.innerHTML = `
-                <span class="food-icon">${opt.emoji}</span>
                 <span class="hiragana-text">${this.highlightChar(opt.char, opt.word)}</span>
             `;
             btn.onclick = (e) => this.handleAnswer(opt === currentQ, btn);
@@ -348,9 +347,6 @@ class Game {
 
     // Helper to highlight char in word
     highlightChar(char, word) {
-        // Find index of char in word. 
-        // Note: assumes char exists. If not, just return word.
-        // For distinct coloring.
         return word.split(char).join(`<span class="highlight">${char}</span>`);
     }
 
@@ -382,11 +378,12 @@ class Game {
             btn.classList.add('wrong');
             btn.disabled = true;
             this.audio.playWrong();
-            this.audio.speak("ちがうよ");
+            // Update: Removed spoken "chigauyo" feedback
         }
     }
 
     animateFoodToPet(btnElement, callback) {
+        // ... (existing animation logic)
         const rect = btnElement.getBoundingClientRect();
         const petRect = this.gamePet.getBoundingClientRect();
 
@@ -448,7 +445,19 @@ class Game {
         const config = PET_CONFIG[this.petType];
         const stageData = config.stages[this.petStage] || config.stages[0];
 
-        element.textContent = stageData.icon;
+        element.innerHTML = ''; // Clear previous content
+        if (stageData.image) {
+            const img = document.createElement('img');
+            img.src = stageData.image;
+            img.alt = config.name;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'contain';
+            element.appendChild(img);
+        } else {
+            // Fallback to text/emoji
+            element.textContent = stageData.text || stageData.icon || '❓';
+        }
         element.style.transform = `scale(${stageData.scale})`;
     }
 
@@ -462,7 +471,11 @@ class Game {
         if (isPerfect) {
             this.petStage = config.stages.length - 1;
             this.evolutionMessage.classList.remove('hidden');
-            this.audio.speak("おめでとう！ぜんもんせいかい！");
+
+            // Random praise
+            const praises = ["おめでとう！すごいね！", "やったね！かんぺき！", "すばらしい！", "てんさいだね！"];
+            const randomPraise = praises[Math.floor(Math.random() * praises.length)];
+            this.audio.speak(randomPraise);
         } else {
             this.evolutionMessage.classList.add('hidden');
             this.audio.speak("おつかれさま！");
