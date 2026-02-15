@@ -1,31 +1,144 @@
-// Pet Configuration Configuration
+// Pet Configuration
 const PET_CONFIG = {
     chick: {
         id: 'chick',
         name: 'ひよこ',
         stages: [
-            { minScore: 0, icon: '🥚', scale: 1.0 }, // Stage 0 (Egg)
-            { minScore: 1, icon: '🐣', scale: 1.0 }, // Stage 1 (Hatching)
-            { minScore: 3, icon: '🐤', scale: 1.2 }, // Stage 2 (Chick)
-            { minScore: 6, icon: '🐤', scale: 1.5 }, // Stage 3 (Big Chick)
-            { minScore: 10, icon: '🐓', scale: 1.5 } // Stage 4 (Rooster - Evolution)
+            { minScore: 0, icon: '🥚', scale: 1.0 }, // Stage 0
+            { minScore: 1, icon: '🐣', scale: 1.0 }, // Stage 1
+            { minScore: 3, icon: '🐤', scale: 1.2 }, // Stage 2
+            { minScore: 6, icon: '🐤', scale: 1.5 }, // Stage 3
+            { minScore: 10, icon: '🐓', scale: 1.5 } // Stage 4
         ]
     }
 };
 
-// Hiragana Data
+// Hiragana Data with Mnemonics
+// Word contains the target character. We need to know WHICH character is the target to highlight it.
+// Simple approach: wrap target in <span> or just store index? 
+// Let's store `word` and `emoji`. We will find `char` in `word` and wrap it.
 const HIRAGANA_DATA = [
-    { char: 'あ', romaji: 'a' }, { char: 'い', romaji: 'i' }, { char: 'う', romaji: 'u' }, { char: 'え', romaji: 'e' }, { char: 'お', romaji: 'o' },
-    { char: 'か', romaji: 'ka' }, { char: 'き', romaji: 'ki' }, { char: 'く', romaji: 'ku' }, { char: 'け', romaji: 'ke' }, { char: 'こ', romaji: 'ko' },
-    { char: 'さ', romaji: 'sa' }, { char: 'し', romaji: 'shi' }, { char: 'す', romaji: 'su' }, { char: 'せ', romaji: 'se' }, { char: 'そ', romaji: 'so' },
-    { char: 'た', romaji: 'ta' }, { char: 'ち', romaji: 'chi' }, { char: 'つ', romaji: 'tsu' }, { char: 'て', romaji: 'te' }, { char: 'と', romaji: 'to' },
-    { char: 'な', romaji: 'na' }, { char: 'に', romaji: 'ni' }, { char: 'ぬ', romaji: 'nu' }, { char: 'ね', romaji: 'ne' }, { char: 'の', romaji: 'no' },
-    { char: 'は', romaji: 'ha' }, { char: 'ひ', romaji: 'hi' }, { char: 'ふ', romaji: 'fu' }, { char: 'へ', romaji: 'he' }, { char: 'ほ', romaji: 'ho' },
-    { char: 'ま', romaji: 'ma' }, { char: 'み', romaji: 'mi' }, { char: 'む', romaji: 'mu' }, { char: 'め', romaji: 'me' }, { char: 'も', romaji: 'mo' },
-    { char: 'や', romaji: 'ya' }, { char: 'ゆ', romaji: 'yu' }, { char: 'よ', romaji: 'yo' },
-    { char: 'ら', romaji: 'ra' }, { char: 'り', romaji: 'ri' }, { char: 'る', romaji: 'ru' }, { char: 'れ', romaji: 're' }, { char: 'ろ', romaji: 'ro' },
-    { char: 'わ', romaji: 'wa' }, { char: 'を', romaji: 'wo' }, { char: 'ん', romaji: 'n' }
+    { char: 'あ', romaji: 'a', word: 'あめ', emoji: '🍬' },
+    { char: 'い', romaji: 'i', word: 'いちご', emoji: '🍓' },
+    { char: 'う', romaji: 'u', word: 'うさぎ', emoji: '🐰' },
+    { char: 'え', romaji: 'e', word: 'えんぴつ', emoji: '✏️' },
+    { char: 'お', romaji: 'o', word: 'おにぎり', emoji: '🍙' },
+    { char: 'か', romaji: 'ka', word: 'かさ', emoji: '🌂' },
+    { char: 'き', romaji: 'ki', word: 'き', emoji: '🌳' },
+    { char: 'く', romaji: 'ku', word: 'くつ', emoji: '👟' },
+    { char: 'け', romaji: 'ke', word: 'けーき', emoji: '🍰' },
+    { char: 'こ', romaji: 'ko', word: 'こま', emoji: '🎲' }, // using dice as top substitute or generic toy
+    { char: 'さ', romaji: 'sa', word: 'さかな', emoji: '🐟' },
+    { char: 'し', romaji: 'shi', word: 'しんかんせん', emoji: '🚅' },
+    { char: 'す', romaji: 'su', word: 'すいか', emoji: '🍉' },
+    { char: 'せ', romaji: 'se', word: 'せみ', emoji: '🐛' }, // bug generic
+    { char: 'そ', romaji: 'so', word: 'そふとくりーむ', emoji: '🍦' },
+    { char: 'た', romaji: 'ta', word: 'たいよう', emoji: '☀️' },
+    { char: 'ち', romaji: 'chi', word: 'ちきゅう', emoji: '🌍' },
+    { char: 'つ', romaji: 'tsu', word: 'つき', emoji: '🌙' },
+    { char: 'て', romaji: 'te', word: 'て', emoji: '✋' },
+    { char: 'と', romaji: 'to', word: 'とまと', emoji: '🍅' },
+    { char: 'な', romaji: 'na', word: 'なす', emoji: '🍆' },
+    { char: 'に', romaji: 'ni', word: 'にく', emoji: '🍖' },
+    { char: 'ぬ', romaji: 'nu', word: 'いぬ', emoji: '🐶' }, // Special case: ends with nu? No, starts with? 'nu' is hard. 'inu' contains it.
+    { char: 'ね', romaji: 'ne', word: 'ねこ', emoji: '🐱' },
+    { char: 'の', romaji: 'no', word: 'のーと', emoji: '📓' },
+    { char: 'は', romaji: 'ha', word: 'はさみ', emoji: '✂️' },
+    { char: 'ひ', romaji: 'hi', word: 'ひこうき', emoji: '✈️' },
+    { char: 'ふ', romaji: 'fu', word: 'ふうせん', emoji: '🎈' },
+    { char: 'へ', romaji: 'he', word: 'へび', emoji: '🐍' },
+    { char: 'ほ', romaji: 'ho', word: 'ほん', emoji: '📚' },
+    { char: 'ま', romaji: 'ma', word: 'まいく', emoji: '🎤' },
+    { char: 'み', romaji: 'mi', word: 'みかん', emoji: '🍊' },
+    { char: 'む', romaji: 'mu', word: 'むし', emoji: '🐞' },
+    { char: 'め', romaji: 'me', word: 'めがね', emoji: '👓' },
+    { char: 'も', romaji: 'mo', word: 'もも', emoji: '🍑' },
+    { char: 'や', romaji: 'ya', word: 'やま', emoji: '⛰️' },
+    { char: 'ゆ', romaji: 'yu', word: 'ゆき', emoji: '❄️' },
+    { char: 'よ', romaji: 'yo', word: 'よっと', emoji: '⛵' },
+    { char: 'ra', romaji: 'ra', word: 'らっぱ', emoji: '🎺' }, // Typo fix in next step if caught, 'ら'
+    { char: 'ら', romaji: 'ra', word: 'らっぱ', emoji: '🎺' },
+    { char: 'り', romaji: 'ri', word: 'りんご', emoji: '🍎' },
+    { char: 'る', romaji: 'ru', word: 'かえる', emoji: '🐸' }, // contained
+    { char: 'れ', romaji: 're', word: 'れもん', emoji: '🍋' },
+    { char: 'ろ', romaji: 'ro', word: 'ろうそく', emoji: '🕯️' },
+    { char: 'わ', romaji: 'wa', word: 'わに', emoji: '🐊' },
+    { char: 'を', romaji: 'wo', word: 'ほんをよむ', emoji: '📖' }, // particle
+    { char: 'ん', romaji: 'n', word: 'おでん', emoji: '🍢' }
 ];
+
+// Clean up duplicate 'ra' and ensure char key is correct
+const CLEAN_HIRAGANA_DATA = HIRAGANA_DATA.filter((v, i, a) => a.findIndex(t => (t.char === v.char)) === i);
+
+
+class AudioController {
+    constructor() {
+        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        this.synth = window.speechSynthesis;
+        this.voice = null;
+
+        // Try to load voices
+        if (this.synth.onvoiceschanged !== undefined) {
+            this.synth.onvoiceschanged = () => this.setVoice();
+        }
+        this.setVoice(); // Try immediately too
+    }
+
+    setVoice() {
+        const voices = this.synth.getVoices();
+        // Priority: Google 日本語 -> Kyoko -> Any JA -> First available
+        this.voice = voices.find(v => v.name === 'Google 日本語') ||
+            voices.find(v => v.name === 'Kyoko') ||
+            voices.find(v => v.lang.startsWith('ja')) ||
+            null;
+        console.log("Selected Voice:", this.voice ? this.voice.name : "Default");
+    }
+
+    playTone(freq, type, duration) {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+        gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + duration);
+    }
+
+    playCorrect() {
+        this.playTone(600, 'sine', 0.1);
+        setTimeout(() => this.playTone(800, 'sine', 0.2), 100);
+    }
+
+    playWrong() {
+        this.playTone(200, 'sawtooth', 0.3);
+    }
+
+    playEat() {
+        const count = 3;
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => {
+                this.playTone(100 + Math.random() * 50, 'square', 0.05);
+            }, i * 150);
+        }
+    }
+
+    speak(text) {
+        if (this.synth) {
+            this.synth.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            if (this.voice) {
+                utterance.voice = this.voice;
+            }
+            utterance.lang = 'ja-JP';
+            utterance.rate = 0.8; // Slightly slower
+            utterance.pitch = 1.1; // Slightly higher
+            this.synth.speak(utterance);
+        }
+    }
+}
 
 class Game {
     constructor() {
@@ -36,6 +149,7 @@ class Game {
         this.score = 0;
         this.petType = 'chick';
         this.petStage = 0;
+        this.audio = new AudioController();
 
         this.initElements();
         this.attachEventListeners();
@@ -49,15 +163,15 @@ class Game {
             result: document.getElementById('result-scene')
         };
 
-        // Title elements
         this.difficultyBtns = document.querySelectorAll('[data-difficulty]');
 
         // Learning elements
-        this.learningDisplay = {
-            hiragana: document.querySelector('.hiragana-display'),
-            romaji: document.querySelector('.romaji-display')
-        };
-        this.nextLearningBtn = document.getElementById('next-learning-btn');
+        this.learningContainer = document.querySelector('#learning-scene .learning-card');
+        // We will replace content dynamically for Matching Game
+
+        // Match next button not needed for matching game flow usually, 
+        // but maybe for skipping instructions? 
+        // We will reuse the container.
 
         // Game elements
         this.scoreDisplay = document.getElementById('score');
@@ -77,81 +191,111 @@ class Game {
         this.difficultyBtns.forEach(btn => {
             btn.addEventListener('click', (e) => this.startGame(e.target.dataset.difficulty));
         });
-
-        this.nextLearningBtn.addEventListener('click', () => this.nextLearningStep()); // Corrected binding
-
         this.retryBtn.addEventListener('click', () => this.switchScene('title'));
     }
 
     switchScene(sceneName) {
         Object.values(this.scenes).forEach(el => {
             el.classList.remove('active');
-            el.style.display = 'none'; // Ensure hidden
+            el.style.display = 'none';
         });
         const target = this.scenes[sceneName];
-        target.style.display = 'flex'; // Reset display
-        // Force reflow for animation
+        target.style.display = 'flex';
         void target.offsetWidth;
         target.classList.add('active');
         this.currentScene = sceneName;
     }
 
-    speak(text) {
-        if ('speechSynthesis' in window) {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'ja-JP';
-            utterance.rate = 0.8; // Slower for kids
-            window.speechSynthesis.speak(utterance);
-        }
-    }
-
     startGame(difficulty) {
+        this.audio.ctx.resume();
         this.difficulty = difficulty;
         this.score = 0;
-        this.petStage = 0; // Start fresh
+        this.petStage = 0;
         this.currentQuestionIndex = 0;
-        this.correctCount = 0; // Track perfect answers
 
-        // Determine number of questions
         let questionCount = 5;
         if (difficulty === 'easy') questionCount = 3;
         if (difficulty === 'hard') questionCount = 10;
 
-        // Shuffle and pick questions
-        const shuffled = [...HIRAGANA_DATA].sort(() => 0.5 - Math.random());
+        const shuffled = [...CLEAN_HIRAGANA_DATA].sort(() => 0.5 - Math.random());
         this.questions = shuffled.slice(0, questionCount);
 
-        this.updatePetDisplay(this.gamePet); // Initial state
-        this.startLearningPhase();
+        this.updatePetDisplay(this.gamePet);
+        this.startLearningMatchingPhase();
     }
 
-    startLearningPhase() {
+    // --- Matching Game for Learning Phase ---
+    startLearningMatchingPhase() {
         this.switchScene('learning');
         this.currentLearningIndex = 0;
-        this.showLearningCard(0);
+        this.showMatchingProblem();
     }
 
-    showLearningCard(index) {
-        if (index >= this.questions.length) {
+    showMatchingProblem() {
+        if (this.currentLearningIndex >= this.questions.length) {
             this.startQuizPhase();
             return;
         }
 
-        const q = this.questions[index];
-        this.learningDisplay.hiragana.textContent = q.char;
-        this.learningDisplay.romaji.textContent = q.romaji;
+        const targetQ = this.questions[this.currentLearningIndex];
 
-        this.speak(q.char); // Speak the character
+        // UI Setup
+        const container = document.getElementById('learning-scene');
+        container.innerHTML = `
+            <h2>おなじのど〜れだ？</h2>
+            <div class="sample-display">
+                <div class="sample-emoji">${targetQ.emoji}</div>
+                <div class="sample-char">${this.highlightChar(targetQ.char, targetQ.word)}</div>
+            </div>
+            <div class="matching-options" style="display: flex; gap: 10px; justify-content: center; margin-top: 2rem;">
+                <!-- Options generated below -->
+            </div>
+            <div class="feedback-msg" style="height: 2rem; font-weight:bold; color: var(--primary-color);"></div>
+        `;
 
-        this.nextLearningBtn.onclick = () => {
-            this.showLearningCard(index + 1);
-        };
+        this.audio.speak(targetQ.char + "。" + targetQ.word);
+
+        // Options: Target + 2 distractors
+        const distractors = CLEAN_HIRAGANA_DATA
+            .filter(d => d.char !== targetQ.char)
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 2);
+
+        const options = [targetQ, ...distractors].sort(() => 0.5 - Math.random());
+
+        const optionsContainer = container.querySelector('.matching-options');
+
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn matching-btn';
+            btn.innerHTML = `
+                <span class="food-icon">${opt.emoji}</span>
+                <span class="hiragana-text">${this.highlightChar(opt.char, opt.word)}</span>
+            `;
+            btn.onclick = () => this.handleMatchingAnswer(opt === targetQ, btn, container);
+            optionsContainer.appendChild(btn);
+        });
     }
 
-    nextLearningStep() {
-        // Fallback or explicit method if needed
+    handleMatchingAnswer(isCorrect, btn, container) {
+        if (isCorrect) {
+            btn.classList.add('correct');
+            this.audio.playCorrect();
+            container.querySelector('.feedback-msg').textContent = "せいかい！";
+            this.audio.speak("せいかい！");
+
+            setTimeout(() => {
+                this.currentLearningIndex++;
+                this.showMatchingProblem();
+            }, 1500);
+        } else {
+            btn.classList.add('wrong');
+            this.audio.playWrong();
+            // Don't advance, let them try again
+        }
     }
 
+    // --- Main Quiz Phase ---
     startQuizPhase() {
         this.switchScene('game');
         this.updatePetDisplay(this.gamePet);
@@ -167,84 +311,110 @@ class Game {
 
         const currentQ = this.questions[this.currentQuestionIndex];
 
-        // Update UI
         this.scoreDisplay.textContent = this.score;
         this.questionsLeftDisplay.textContent = this.questions.length - this.currentQuestionIndex;
-        // this.questionText.textContent = `「${currentQ.char}」のよみかたは？`;
-        this.questionText.innerHTML = `<span style="font-size: 3rem; color: var(--accent-color);">${currentQ.char}</span> のよみかたは？`;
 
-        this.speak(currentQ.char);
+        this.questionText.innerHTML = `
+            <div style="font-size: 1.5rem; margin-bottom: 10px;">おとをきいてね</div>
+            <button id="replay-sound" class="btn btn-secondary" style="border-radius: 50%; width: 60px; height: 60px; padding: 0; font-size: 2rem;">🔊</button>
+        `;
 
-        // Generate Options
+        document.getElementById('replay-sound').onclick = () => this.audio.speak(currentQ.char);
+
+        setTimeout(() => this.audio.speak(currentQ.char), 500);
+
         const options = [currentQ];
+        // Distractors
         while (options.length < 4) {
-            const random = HIRAGANA_DATA[Math.floor(Math.random() * HIRAGANA_DATA.length)];
+            const random = CLEAN_HIRAGANA_DATA[Math.floor(Math.random() * CLEAN_HIRAGANA_DATA.length)];
             if (!options.includes(random)) options.push(random);
         }
-
-        // Shuffle options
         options.sort(() => 0.5 - Math.random());
 
         this.optionsContainer.innerHTML = '';
-        this.hasAnswered = false; // Reset answer flag for this question
+        this.hasAnswered = false;
 
         options.forEach(opt => {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
-            btn.textContent = opt.romaji; // Showing Romaji for now
-            btn.dataset.char = opt.char;
-            btn.addEventListener('click', (e) => this.handleAnswer(opt === currentQ, e.target));
+            btn.innerHTML = `
+                <span class="food-icon">${opt.emoji}</span>
+                <span class="hiragana-text">${this.highlightChar(opt.char, opt.word)}</span>
+            `;
+            btn.onclick = (e) => this.handleAnswer(opt === currentQ, btn);
             this.optionsContainer.appendChild(btn);
         });
     }
 
+    // Helper to highlight char in word
+    highlightChar(char, word) {
+        // Find index of char in word. 
+        // Note: assumes char exists. If not, just return word.
+        // For distinct coloring.
+        return word.split(char).join(`<span class="highlight">${char}</span>`);
+    }
+
     handleAnswer(isCorrect, btnElement) {
-        if (this.hasAnswered) return; // Prevent multiple clicks processing if already correct
+        if (this.hasAnswered) return;
+
+        const btn = btnElement.closest('button');
 
         if (isCorrect) {
             this.hasAnswered = true;
-            btnElement.classList.add('correct');
-            this.speak("せいかい！");
+            btn.classList.add('correct');
+            this.audio.playCorrect();
             this.score++;
-            this.correctCount++;
-            this.growPet();
 
-            // Disable all buttons
             const allBtns = this.optionsContainer.querySelectorAll('button');
             allBtns.forEach(b => b.disabled = true);
 
-            setTimeout(() => {
-                this.currentQuestionIndex++;
-                this.showQuestion();
-            }, 1500);
+            this.animateFoodToPet(btn, () => {
+                this.audio.playEat();
+                this.growPet();
+
+                setTimeout(() => {
+                    this.currentQuestionIndex++;
+                    this.showQuestion();
+                }, 1500);
+            });
+
         } else {
-            btnElement.classList.add('wrong');
-            btnElement.disabled = true; // Disable wrong option
-            this.speak("ブブー");
-            // Don't advance, let them try again. But maybe score penalty?
-            // For now, no penalty, but they won't get 'perfect' if they miss? 
-            // Actually, `correctCount` tracks perfect answers. If they miss once, do they lose the 'perfect' status for that question?
-            // Let's say yes, if they miss, they don't get the point for that question, or they get 0.5?
-            // Implementation Plan says: "正解するとペットが大きくなる。不正解ならそのままのサイズ。"
-            // So if they miss, no growth. 
-            // To prevent farming growth, we should only allow growth on the FIRST attempt?
-            // Let's track `firstAttempt`
+            btn.classList.add('wrong');
+            btn.disabled = true;
+            this.audio.playWrong();
+            this.audio.speak("ちがうよ");
         }
     }
 
+    animateFoodToPet(btnElement, callback) {
+        const rect = btnElement.getBoundingClientRect();
+        const petRect = this.gamePet.getBoundingClientRect();
+
+        const clone = btnElement.cloneNode(true);
+        clone.classList.add('flying-food');
+        clone.style.left = rect.left + 'px';
+        clone.style.top = rect.top + 'px';
+        clone.style.width = rect.width + 'px';
+        clone.style.height = rect.height + 'px';
+        clone.style.margin = '0';
+
+        document.body.appendChild(clone);
+        void clone.offsetWidth;
+
+        const destX = petRect.left + petRect.width / 2 - rect.width / 2;
+        const destY = petRect.top + petRect.height / 2 - rect.height / 2;
+
+        clone.style.transform = `translate(${destX - rect.left}px, ${destY - rect.top}px) scale(0.5)`;
+        clone.style.opacity = '0';
+
+        setTimeout(() => {
+            clone.remove();
+            if (callback) callback();
+        }, 800);
+    }
+
     growPet() {
-        // Simple logic: Each correct answer (on first try?) increases score.
-        // And we map score to stage? 
-        // Or simply: score increments stage?
-        // Let's make it more granular. Visual size increase every point.
-        // Stage increase at thresholds.
-
-        // Let's use `score` as the driver.
         const config = PET_CONFIG[this.petType];
-
-        // Determine stage based on score/total_questions ratio?
-        // Let's stick to the config thresholds for stage changes (icon changes).
-        // But for size, we can interpolate?
 
         let newStageIndex = 0;
         config.stages.forEach((stage, index) => {
@@ -253,15 +423,22 @@ class Game {
             }
         });
 
+        this.gamePet.classList.add('eating');
+        setTimeout(() => this.gamePet.classList.remove('eating'), 1000);
+
         if (newStageIndex > this.petStage) {
-            this.petStage = newStageIndex;
-            this.speak("大きくなったよ！");
-            this.gamePet.classList.add('bounce');
-            setTimeout(() => this.gamePet.classList.remove('bounce'), 1000);
+            setTimeout(() => {
+                this.petStage = newStageIndex;
+                this.audio.speak("やったー！");
+                this.updatePetDisplay(this.gamePet);
+                this.gamePet.classList.add('bounce');
+                setTimeout(() => this.gamePet.classList.remove('bounce'), 1000);
+            }, 500);
         } else {
-            // Just a small bounce for correct answer even if not evolving
-            this.gamePet.classList.add('bounce');
-            setTimeout(() => this.gamePet.classList.remove('bounce'), 500);
+            setTimeout(() => {
+                this.gamePet.classList.add('bounce');
+                setTimeout(() => this.gamePet.classList.remove('bounce'), 500);
+            }, 500);
         }
 
         this.updatePetDisplay(this.gamePet);
@@ -272,8 +449,6 @@ class Game {
         const stageData = config.stages[this.petStage] || config.stages[0];
 
         element.textContent = stageData.icon;
-        // Base scale from stage + small increment based on progress within stage?
-        // keeping it simple for now
         element.style.transform = `scale(${stageData.scale})`;
     }
 
@@ -281,25 +456,22 @@ class Game {
         this.switchScene('result');
         this.finalScoreDisplay.textContent = this.score;
 
-        // Evolve Logic: If All Correct?
         let isPerfect = (this.score === this.questions.length);
-
         const config = PET_CONFIG[this.petType];
+
         if (isPerfect) {
-            // Force max stage (Evolution)
-            this.petStage = config.stages.length - 1; // Last stage
+            this.petStage = config.stages.length - 1;
             this.evolutionMessage.classList.remove('hidden');
-            this.speak("おめでとう！ぜんもんせいかい！");
+            this.audio.speak("おめでとう！ぜんもんせいかい！");
         } else {
             this.evolutionMessage.classList.add('hidden');
-            this.speak("おつかれさま！");
+            this.audio.speak("おつかれさま！");
         }
 
         this.updatePetDisplay(this.resultPet);
     }
 }
 
-// Start the game
 window.addEventListener('DOMContentLoaded', () => {
     new Game();
 });

@@ -156,39 +156,68 @@ main {
     margin-bottom: 2rem;
 }
 
+/* Food Buttons */
 .options-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
+    padding: 1rem;
 }
 
 .option-btn {
     background-color: #fff;
     border: 3px solid var(--secondary-color);
     color: var(--text-color);
-    font-size: 2rem;
-    padding: 1rem;
-    border-radius: 15px;
+    font-size: 2.5rem;
+    padding: 1.5rem;
+    border-radius: 50%;
+    /* Circle shape for food */
     cursor: pointer;
     transition: all 0.2s;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    position: relative;
+    /* For particle effects */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .option-btn:hover {
-    background-color: var(--secondary-color);
-    color: white;
+    transform: scale(1.05);
+    background-color: #fff;
+    /* Keep white bg for food visibility */
+    border-color: var(--primary-color);
 }
 
 .option-btn.correct {
-    background-color: var(--secondary-color);
-    color: white;
-    animation: bounce 0.5s;
+    background-color: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+    z-index: 10;
+    /* Bring to front during animation */
 }
 
 .option-btn.wrong {
-    background-color: var(--accent-color);
-    border-color: var(--accent-color);
-    color: white;
+    background-color: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
     animation: shake 0.5s;
+}
+
+.food-icon {
+    font-size: 3rem;
+    margin-bottom: 0.2rem;
+    display: block;
+}
+
+.hiragana-text {
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 1;
 }
 
 /* Animations */
@@ -225,6 +254,10 @@ main {
     animation: bouncePet 0.5s ease;
 }
 
+.pet.eating {
+    animation: chewing 1s ease infinite;
+}
+
 @keyframes bouncePet {
 
     0%,
@@ -235,6 +268,34 @@ main {
     50% {
         transform: scale(1.3) translateY(-10px);
     }
+}
+
+@keyframes chewing {
+
+    0%,
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+
+    25% {
+        transform: scale(1.1) rotate(-5deg);
+    }
+
+    50% {
+        transform: scale(0.9) rotate(5deg);
+    }
+
+    75% {
+        transform: scale(1.1) rotate(-5deg);
+    }
+}
+
+/* Flying Food Animation - Dynamic classes will be used, but base transition needed */
+.flying-food {
+    position: fixed;
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 1000;
+    pointer-events: none;
 }
 
 /* Result Scene */
