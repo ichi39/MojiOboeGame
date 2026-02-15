@@ -144,6 +144,20 @@ main {
     width: 100%;
     font-size: 1.2rem;
     font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.pet-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+    width: 100%;
+    background-color: #f9f9f9;
+    /* Mild background for pet area */
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .quiz-container {
@@ -154,13 +168,33 @@ main {
 .question-display {
     font-size: 2rem;
     margin-bottom: 2rem;
+    background-color: #fff4e6;
+    /* Light orange bg for question */
+    padding: 1.5rem;
+    border-radius: 20px;
+    border: 3px dashed var(--primary-color);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.question-display::after {
+    /* Triangle pointing down to options */
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 15px 15px 0;
+    border-style: solid;
+    border-color: var(--primary-color) transparent transparent;
 }
 
 /* Food Buttons */
 .options-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: 1.5rem;
+    /* Increased gap */
     padding: 1rem;
 }
 
@@ -169,27 +203,30 @@ main {
     border: 3px solid var(--secondary-color);
     color: var(--text-color);
     font-size: 2.5rem;
-    padding: 1.5rem;
-    border-radius: 50%;
-    /* Circle shape for food */
+    padding: 0.5rem;
+    /* Reduced padding to fit text better */
+    border-radius: 20px;
+    /* Rounded rectangle instead of circle options for more text space */
+    /* Circle shape for food was wrapping text. Changed to rounded box */
     cursor: pointer;
     transition: all 0.2s;
-    width: 120px;
-    height: 120px;
+    width: 100%;
+    /* Fill grid cell */
+    min-height: 100px;
+    /* Minimum height */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 0 auto;
     position: relative;
-    /* For particle effects */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .option-btn:hover {
-    transform: scale(1.05);
+    transform: translateY(-5px);
+    /* Lift effect */
     background-color: #fff;
-    /* Keep white bg for food visibility */
     border-color: var(--primary-color);
 }
 
@@ -198,7 +235,6 @@ main {
     border-color: #28a745;
     color: #155724;
     z-index: 10;
-    /* Bring to front during animation */
 }
 
 .option-btn.wrong {
@@ -209,15 +245,20 @@ main {
 }
 
 .food-icon {
-    font-size: 3rem;
+    font-size: 2.5rem;
     margin-bottom: 0.2rem;
     display: block;
 }
 
 .hiragana-text {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    /* Slightly smaller for flexibility */
     font-weight: bold;
-    line-height: 1;
+    line-height: 1.2;
+    white-space: nowrap;
+    /* Prevent wrapping */
+    overflow: visible;
+    /* Allow slight overflow if really needed, better than wrapping for single words */
 }
 
 /* Animations */
@@ -296,6 +337,13 @@ main {
     transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     z-index: 1000;
     pointer-events: none;
+    border-radius: 20px;
+    /* Match option buttons */
+    background: #fff;
+    border: 3px solid var(--secondary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Result Scene */
@@ -309,4 +357,62 @@ main {
 
 .hidden {
     display: none !important;
+}
+
+/* Responsive Design for iPad and Tablets */
+@media (min-width: 768px) {
+    #app {
+        max-width: 800px;
+        min-height: 90vh;
+        margin: 2rem auto;
+        border-radius: 30px;
+    }
+
+    .pet-container {
+        height: 300px;
+        /* Taller container for larger growth */
+        margin-bottom: 3rem;
+    }
+
+    .pet {
+        font-size: 8rem;
+        /* Larger base size */
+    }
+
+    .question-display {
+        font-size: 2.5rem;
+    }
+
+    .option-btn {
+        height: 140px;
+        font-size: 3rem;
+    }
+
+    .score-board,
+    .progress-info {
+        font-size: 1.5rem;
+    }
+}
+
+/* Adjust for Landscape mode to prevent cutoff */
+@media (max-height: 800px) and (orientation: landscape) {
+    #app {
+        margin: 0;
+        min-height: 100vh;
+        border-radius: 0;
+    }
+
+    .pet-container {
+        height: 200px;
+        margin-bottom: 1rem;
+    }
+
+    .question-display {
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .options-grid {
+        gap: 1rem;
+    }
 }

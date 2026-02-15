@@ -5,19 +5,16 @@ const PET_CONFIG = {
         name: 'ひよこ',
         // Support for image assets: add 'image' property with path. e.g. image: 'assets/egg.png'
         stages: [
-            { minScore: 0, text: '🥚', scale: 1.0 }, // Stage 0
-            { minScore: 1, text: '🐣', scale: 1.0 }, // Stage 1
-            { minScore: 3, text: '🐤', scale: 1.2 }, // Stage 2
-            { minScore: 6, text: '🐤', scale: 1.5 }, // Stage 3
-            { minScore: 10, text: '🐓', scale: 1.5 } // Stage 4
+            { minScore: 0, text: '🥚' }, // Stage 0
+            { minScore: 1, text: '🐣' }, // Stage 1
+            { minScore: 3, text: '🐤' }, // Stage 2
+            { minScore: 6, text: '🐤' }, // Stage 3
+            { minScore: 10, text: '🐓' } // Stage 4
         ]
     }
 };
 
 // Hiragana Data with Mnemonics
-// Word contains the target character. We need to know WHICH character is the target to highlight it.
-// Simple approach: wrap target in <span> or just store index? 
-// Let's store `word` and `emoji`. We will find `char` in `word` and wrap it.
 const HIRAGANA_DATA = [
     { char: 'あ', romaji: 'a', word: 'あめ', emoji: '🍬' },
     { char: 'い', romaji: 'i', word: 'いちご', emoji: '🍓' },
@@ -28,11 +25,11 @@ const HIRAGANA_DATA = [
     { char: 'き', romaji: 'ki', word: 'き', emoji: '🌳' },
     { char: 'く', romaji: 'ku', word: 'くつ', emoji: '👟' },
     { char: 'け', romaji: 'ke', word: 'けーき', emoji: '🍰' },
-    { char: 'こ', romaji: 'ko', word: 'こま', emoji: '🎲' }, // using dice as top substitute or generic toy
+    { char: 'こ', romaji: 'ko', word: 'こま', emoji: '🎲' },
     { char: 'さ', romaji: 'sa', word: 'さかな', emoji: '🐟' },
     { char: 'し', romaji: 'shi', word: 'しんかんせん', emoji: '🚅' },
     { char: 'す', romaji: 'su', word: 'すいか', emoji: '🍉' },
-    { char: 'せ', romaji: 'se', word: 'せみ', emoji: '🐛' }, // bug generic
+    { char: 'せ', romaji: 'se', word: 'せみ', emoji: '🐛' },
     { char: 'そ', romaji: 'so', word: 'そふとくりーむ', emoji: '🍦' },
     { char: 'た', romaji: 'ta', word: 'たいよう', emoji: '☀️' },
     { char: 'ち', romaji: 'chi', word: 'ちきゅう', emoji: '🌍' },
@@ -41,7 +38,7 @@ const HIRAGANA_DATA = [
     { char: 'と', romaji: 'to', word: 'とまと', emoji: '🍅' },
     { char: 'な', romaji: 'na', word: 'なす', emoji: '🍆' },
     { char: 'に', romaji: 'ni', word: 'にく', emoji: '🍖' },
-    { char: 'ぬ', romaji: 'nu', word: 'いぬ', emoji: '🐶' }, // Special case: ends with nu? No, starts with? 'nu' is hard. 'inu' contains it.
+    { char: 'ぬ', romaji: 'nu', word: 'いぬ', emoji: '🐶' },
     { char: 'ね', romaji: 'ne', word: 'ねこ', emoji: '🐱' },
     { char: 'の', romaji: 'no', word: 'のーと', emoji: '📓' },
     { char: 'は', romaji: 'ha', word: 'はさみ', emoji: '✂️' },
@@ -57,22 +54,22 @@ const HIRAGANA_DATA = [
     { char: 'や', romaji: 'ya', word: 'やま', emoji: '⛰️' },
     { char: 'ゆ', romaji: 'yu', word: 'ゆき', emoji: '❄️' },
     { char: 'よ', romaji: 'yo', word: 'よっと', emoji: '⛵' },
-    { char: 'ra', romaji: 'ra', word: 'らっぱ', emoji: '🎺' }, // Typo fix in next step if caught, 'ら'
+    { char: 'ra', romaji: 'ra', word: 'らっぱ', emoji: '🎺' },
     { char: 'ら', romaji: 'ra', word: 'らっぱ', emoji: '🎺' },
     { char: 'り', romaji: 'ri', word: 'りんご', emoji: '🍎' },
-    { char: 'る', romaji: 'ru', word: 'かえる', emoji: '🐸' }, // contained
+    { char: 'る', romaji: 'ru', word: 'かえる', emoji: '🐸' },
     { char: 'れ', romaji: 're', word: 'れもん', emoji: '🍋' },
     { char: 'ろ', romaji: 'ro', word: 'ろうそく', emoji: '🕯️' },
     { char: 'わ', romaji: 'wa', word: 'わに', emoji: '🐊' },
-    { char: 'を', romaji: 'wo', word: 'ほんをよむ', emoji: '📖' }, // particle
+    { char: 'を', romaji: 'wo', word: 'ほんをよむ', emoji: '📖' },
     { char: 'ん', romaji: 'n', word: 'おでん', emoji: '🍢' }
 ];
 
 // Clean up duplicate 'ra' and ensure char key is correct
 const CLEAN_HIRAGANA_DATA = HIRAGANA_DATA.filter((v, i, a) => a.findIndex(t => (t.char === v.char)) === i);
 
+
 class AudioController {
-    // ... (AudioController methods remain unchanged)
     constructor() {
         this.ctx = new (window.AudioContext || window.webkitAudioContext)();
         this.synth = window.speechSynthesis;
@@ -241,13 +238,12 @@ class Game {
                 <div class="sample-emoji">${targetQ.emoji}</div>
                 <div class="sample-char">${this.highlightChar(targetQ.char, targetQ.word)}</div>
             </div>
-            <div class="matching-options" style="display: flex; gap: 10px; justify-content: center; margin-top: 2rem;">
+            <div class="matching-options options-grid" style="margin-top: 2rem;">
                 <!-- Options generated below -->
             </div>
             <div class="feedback-msg" style="height: 2rem; font-weight:bold; color: var(--primary-color);"></div>
         `;
 
-        // Update: Only speak the word
         this.audio.speak(targetQ.word);
 
         // Options: Target + 2 distractors
@@ -361,6 +357,11 @@ class Game {
             this.audio.playCorrect();
             this.score++;
 
+            // Score Animation
+            this.scoreDisplay.classList.remove('bounce');
+            void this.scoreDisplay.offsetWidth; // Trigger reflow
+            this.scoreDisplay.classList.add('bounce');
+
             const allBtns = this.optionsContainer.querySelectorAll('button');
             allBtns.forEach(b => b.disabled = true);
 
@@ -378,12 +379,10 @@ class Game {
             btn.classList.add('wrong');
             btn.disabled = true;
             this.audio.playWrong();
-            // Update: Removed spoken "chigauyo" feedback
         }
     }
 
     animateFoodToPet(btnElement, callback) {
-        // ... (existing animation logic)
         const rect = btnElement.getBoundingClientRect();
         const petRect = this.gamePet.getBoundingClientRect();
 
@@ -424,8 +423,8 @@ class Game {
         setTimeout(() => this.gamePet.classList.remove('eating'), 1000);
 
         if (newStageIndex > this.petStage) {
+            this.petStage = newStageIndex;
             setTimeout(() => {
-                this.petStage = newStageIndex;
                 this.audio.speak("やったー！");
                 this.updatePetDisplay(this.gamePet);
                 this.gamePet.classList.add('bounce');
@@ -433,12 +432,11 @@ class Game {
             }, 500);
         } else {
             setTimeout(() => {
+                this.updatePetDisplay(this.gamePet);
                 this.gamePet.classList.add('bounce');
                 setTimeout(() => this.gamePet.classList.remove('bounce'), 500);
             }, 500);
         }
-
-        this.updatePetDisplay(this.gamePet);
     }
 
     updatePetDisplay(element) {
@@ -458,7 +456,11 @@ class Game {
             // Fallback to text/emoji
             element.textContent = stageData.text || stageData.icon || '❓';
         }
-        element.style.transform = `scale(${stageData.scale})`;
+
+        // Dynamic Scaling based on Score
+        // Base scale 1.0, increases by 0.15 per point. Max around 2.5 (10 points)
+        const scale = 1.0 + (this.score * 0.15);
+        element.style.transform = `scale(${scale})`;
     }
 
     finishGame() {
