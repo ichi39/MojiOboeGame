@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MojiOboeGame</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>もじおぼえゲーム</h1>
+        </header>
+        
+        <main>
+            <!-- Title Scene -->
+            <section id="title-scene" class="scene active">
+                <div class="pet-preview">
+                    <div class="pet" data-type="chick" data-stage="1">🐤</div>
+                </div>
+                <h2>なんいどをえらんでね</h2>
+                <div class="difficulty-buttons">
+                    <button class="btn btn-primary" data-difficulty="easy">やさしい (3もん)</button>
+                    <button class="btn btn-primary" data-difficulty="normal">ふつう (5もん)</button>
+                    <button class="btn btn-primary" data-difficulty="hard">むずかしい (10もん)</button>
+                </div>
+            </section>
+
+            <!-- Learning Scene -->
+            <section id="learning-scene" class="scene">
+                <h2>おぼえてね！</h2>
+                <div class="learning-card">
+                    <div class="hiragana-display">あ</div>
+                    <div class="romaji-display">a</div>
+                </div>
+                <button id="next-learning-btn" class="btn btn-secondary">つぎへ</button>
+            </section>
+
+            <!-- Game Scene -->
+            <section id="game-scene" class="scene">
+                <div class="game-header">
+                    <div class="score-board">スコア: <span id="score">0</span></div>
+                    <div class="progress-info">のこり: <span id="questions-left">0</span></div>
+                </div>
+                
+                <div class="pet-container">
+                    <div id="game-pet" class="pet">🐤</div>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="question-display" id="question-text">?</div>
+                    <div class="options-grid" id="options-container">
+                        <!-- Options will be generated here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Result Scene -->
+            <section id="result-scene" class="scene">
+                <h2>けっか</h2>
+                <div class="result-pet-container">
+                    <div id="result-pet" class="pet">🐤</div>
+                    <div id="evolution-message" class="hidden">しんかしたよ！✨</div>
+                </div>
+                <div class="final-score">スコア: <span id="final-score">0</span></div>
+                <button id="retry-btn" class="btn btn-primary">もういちどあそぶ</button>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 MojiOboeGame</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

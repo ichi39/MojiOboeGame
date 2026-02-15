@@ -1,0 +1,251 @@
+:root {
+    --primary-color: #FF9F1C;
+    --secondary-color: #2EC4B6;
+    --accent-color: #E71D36;
+    --bg-color: #FDFFFC;
+    --text-color: #011627;
+    --font-family: 'Kiwi Maru', serif;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+#app {
+    width: 100%;
+    max-width: 600px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 0 0 20px 20px;
+}
+
+main {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scene {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.scene.active {
+    display: flex;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Buttons */
+.btn {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.1s, background-color 0.2s;
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+/* Title Scene */
+.difficulty-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 300px;
+}
+
+/* Pet Display */
+.pet-preview,
+.pet-container,
+.result-pet-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+    width: 100%;
+}
+
+.pet {
+    font-size: 5rem;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Learning Scene */
+.learning-card {
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    padding: 3rem;
+    text-align: center;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.hiragana-display {
+    font-size: 8rem;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.romaji-display {
+    font-size: 2rem;
+    color: #666;
+}
+
+/* Game Scene */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.quiz-container {
+    width: 100%;
+    text-align: center;
+}
+
+.question-display {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.option-btn {
+    background-color: #fff;
+    border: 3px solid var(--secondary-color);
+    color: var(--text-color);
+    font-size: 2rem;
+    padding: 1rem;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.option-btn:hover {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.option-btn.correct {
+    background-color: var(--secondary-color);
+    color: white;
+    animation: bounce 0.5s;
+}
+
+.option-btn.wrong {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: white;
+    animation: shake 0.5s;
+}
+
+/* Animations */
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+/* Pet Animation */
+.pet.bounce {
+    animation: bouncePet 0.5s ease;
+}
+
+@keyframes bouncePet {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.3) translateY(-10px);
+    }
+}
+
+/* Result Scene */
+#evolution-message {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    animation: bounce 1s infinite;
+}
+
+.hidden {
+    display: none !important;
+}
