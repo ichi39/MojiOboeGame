@@ -5,49 +5,249 @@
     --bg-color: #FDFFFC;
     --text-color: #011627;
     --font-family: 'Kiwi Maru', serif;
+    --glow-color: rgba(255, 159, 28, 0.4);
 }
 
+/* ========== Background Themes ========== */
 body {
     margin: 0;
     font-family: var(--font-family);
-    background-color: var(--bg-color);
     color: var(--text-color);
     display: flex;
     justify-content: center;
     min-height: 100vh;
+    transition: background 1.5s ease;
+    overflow-x: hidden;
 }
 
+body.theme-morning {
+    background: linear-gradient(180deg, #fce4ec 0%, #fff8e1 50%, #e8f5e9 100%);
+}
+
+body.theme-afternoon {
+    background: linear-gradient(180deg, #bbdefb 0%, #e3f2fd 30%, #fff9c4 100%);
+}
+
+body.theme-evening {
+    background: linear-gradient(180deg, #1a237e 0%, #e65100 40%, #ff6f00 70%, #ffcc80 100%);
+}
+
+body.theme-night {
+    background: linear-gradient(180deg, #0d0d2b 0%, #1a1a4e 50%, #2e1065 100%);
+}
+
+body.theme-night .scene h2,
+body.theme-night .niwa-pet-name {
+    color: #e0e0ff;
+}
+
+body.theme-night header {
+    background-color: #3f1dc1;
+}
+
+body.theme-night #app {
+    background-color: rgba(20, 20, 60, 0.85);
+    color: #e0e0ff;
+}
+
+body.theme-night .option-btn {
+    background-color: rgba(30, 30, 80, 0.9);
+    color: #e0e0ff;
+    border-color: #7c4dff;
+}
+
+body.theme-night .question-display {
+    background-color: rgba(30, 30, 80, 0.7);
+    color: #e0e0ff;
+    border-color: #7c4dff;
+}
+
+body.theme-night .question-display::after {
+    border-color: #7c4dff transparent transparent;
+}
+
+body.theme-night footer {
+    color: #888;
+}
+
+/* ========== Background Stars (Night) ========== */
+#bg-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.bg-star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--dur, 3s) ease-in-out infinite;
+    opacity: 0;
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.2;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* ========== App Container ========== */
 #app {
     width: 100%;
     max-width: 600px;
-    background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
 }
 
 header {
-    background-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), #ff6b35);
     color: white;
     padding: 1rem;
     text-align: center;
-    border-radius: 0 0 20px 20px;
+    border-radius: 0 0 24px 24px;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+    position: relative;
 }
 
+#game-title {
+    margin: 0;
+    font-size: 1.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    animation: titlePulse 3s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+/* ========== EXP Bar ========== */
+.exp-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 0 1rem;
+}
+
+.exp-bar-label {
+    font-weight: bold;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.exp-bar {
+    flex: 1;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.exp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffd54f, #ffab40, #ff6e40);
+    border-radius: 6px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.exp-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), transparent);
+    border-radius: 6px 6px 0 0;
+}
+
+.exp-text {
+    font-size: 0.7rem;
+    white-space: nowrap;
+    opacity: 0.9;
+}
+
+/* ========== Main ========== */
 main {
     flex: 1;
-    padding: 2rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
 }
 
+/* ========== Combo Display ========== */
+#combo-display {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #ff6b35;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+    z-index: 100;
+    animation: comboPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#combo-display.combo-rainbow {
+    background: linear-gradient(135deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3, #54a0ff);
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes comboPopIn {
+    0% {
+        transform: scale(0) rotate(-10deg);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+/* ========== Scenes ========== */
 .scene {
     display: none;
     width: 100%;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
 }
 
 .scene.active {
@@ -67,41 +267,318 @@ main {
     }
 }
 
-/* Buttons */
+/* ========== Buttons ========== */
 .btn {
-    padding: 1rem 2rem;
-    font-size: 1.2rem;
+    padding: 0.9rem 1.8rem;
+    font-size: 1.1rem;
     border: none;
     border-radius: 50px;
     cursor: pointer;
     font-family: inherit;
-    transition: transform 0.1s, background-color 0.2s;
+    transition: transform 0.15s, box-shadow 0.15s, background-color 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), transparent);
+    border-radius: 50px 50px 0 0;
+    pointer-events: none;
 }
 
 .btn:active {
     transform: scale(0.95);
 }
 
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
 .btn-primary {
-    background-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), #ff6b35);
     color: white;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
 
 .btn-secondary {
-    background-color: var(--secondary-color);
+    background: linear-gradient(135deg, var(--secondary-color), #0ea895);
     color: white;
+    box-shadow: 0 4px 12px rgba(46, 196, 182, 0.3);
 }
 
-/* Title Scene */
+.btn-zukan {
+    background: linear-gradient(135deg, #7c4dff, #536dfe);
+    color: white;
+    box-shadow: 0 4px 12px rgba(124, 77, 255, 0.3);
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+}
+
+/* ========== にわ Scene ========== */
+.niwa-container {
+    width: 100%;
+    height: 220px;
+    background: linear-gradient(180deg, transparent 0%, rgba(139, 195, 74, 0.15) 70%, rgba(76, 175, 80, 0.2) 100%);
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 3px solid rgba(139, 195, 74, 0.3);
+}
+
+.niwa-bg-items {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.niwa-bg-item {
+    position: absolute;
+    font-size: 1.8rem;
+    opacity: 0.7;
+    animation: gentleSway 4s ease-in-out infinite;
+}
+
+@keyframes gentleSway {
+
+    0%,
+    100% {
+        transform: rotate(-3deg);
+    }
+
+    50% {
+        transform: rotate(3deg);
+    }
+}
+
+.niwa-pet-bounce {
+    animation: niwaBounce 2s ease-in-out infinite;
+    cursor: pointer;
+}
+
+@keyframes niwaBounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+.niwa-hearts {
+    position: absolute;
+    pointer-events: none;
+}
+
+.niwa-heart {
+    position: absolute;
+    font-size: 1.5rem;
+    animation: heartFloat 1.2s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes heartFloat {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(0.5);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(var(--dx, 20px), -80px) scale(1.2);
+    }
+}
+
+.niwa-info {
+    text-align: center;
+    width: 100%;
+}
+
+.niwa-pet-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.daily-bonus {
+    background: linear-gradient(135deg, #ffd54f, #ffab40);
+    color: #5d4037;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-weight: bold;
+    margin-top: 0.5rem;
+    animation: bonusPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes bonusPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(255, 171, 64, 0.3);
+    }
+
+    50% {
+        transform: scale(1.03);
+        box-shadow: 0 4px 15px rgba(255, 171, 64, 0.5);
+    }
+}
+
+.today-char {
+    margin-top: 0.4rem;
+    font-size: 1rem;
+    color: #5c6bc0;
+    font-weight: bold;
+}
+
+.niwa-nav-buttons {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    justify-content: center;
+}
+
 .difficulty-buttons {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.8rem;
     width: 100%;
     max-width: 300px;
 }
 
-/* Pet Display */
+/* ========== もじずかん ========== */
+.zukan-progress {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    color: var(--primary-color);
+}
+
+.zukan-badges {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 0.3rem;
+    font-size: 1.5rem;
+}
+
+.zukan-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    width: 100%;
+    max-width: 350px;
+}
+
+.zukan-cell {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.zukan-cell.unknown {
+    background: rgba(0, 0, 0, 0.06);
+    color: #ccc;
+}
+
+.zukan-cell.known {
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    color: #2e7d32;
+    box-shadow: 0 2px 8px rgba(46, 125, 50, 0.15);
+}
+
+.zukan-cell.known:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.25);
+}
+
+.zukan-cell .zukan-emoji {
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+
+/* ========== Learning Scene ========== */
+.learning-card {
+    background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+    border-radius: 24px;
+    padding: 2.5rem;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(255, 152, 0, 0.15);
+}
+
+.sample-display {
+    background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+    border-radius: 24px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(255, 152, 0, 0.15);
+}
+
+.sample-emoji {
+    font-size: 5rem;
+    margin-bottom: 0.5rem;
+}
+
+.sample-char {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.hiragana-display {
+    font-size: 7rem;
+    font-weight: bold;
+    color: var(--accent-color);
+    text-shadow: 0 4px 8px rgba(231, 29, 54, 0.15);
+}
+
+.romaji-display {
+    font-size: 1.8rem;
+    color: #888;
+    margin-top: 0.5rem;
+}
+
+.highlight {
+    color: var(--accent-color);
+    font-weight: bold;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.feedback-msg {
+    font-size: 1.2rem;
+}
+
+/* ========== Game Scene ========== */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
 .pet-preview,
 .pet-container,
 .result-pet-container {
@@ -112,52 +589,20 @@ main {
     width: 100%;
 }
 
+.pet-container {
+    height: 160px;
+    background: linear-gradient(180deg, rgba(249, 249, 249, 0.5), rgba(240, 240, 240, 0.5));
+    border-radius: 24px;
+    margin-bottom: 1.5rem;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: hidden;
+}
+
 .pet {
     font-size: 5rem;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* Learning Scene */
-.learning-card {
-    background-color: #f0f0f0;
-    border-radius: 20px;
-    padding: 3rem;
-    text-align: center;
-    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
-}
-
-.hiragana-display {
-    font-size: 8rem;
-    font-weight: bold;
-    color: var(--accent-color);
-}
-
-.romaji-display {
-    font-size: 2rem;
-    color: #666;
-}
-
-/* Game Scene */
-.game-header {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-}
-
-.pet-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 150px;
-    width: 100%;
-    background-color: #f9f9f9;
-    /* Mild background for pet area */
-    border-radius: 20px;
-    margin-bottom: 2rem;
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+    user-select: none;
 }
 
 .quiz-container {
@@ -166,19 +611,17 @@ main {
 }
 
 .question-display {
-    font-size: 2rem;
-    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
     background-color: #fff4e6;
-    /* Light orange bg for question */
     padding: 1.5rem;
     border-radius: 20px;
     border: 3px dashed var(--primary-color);
-    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(255, 159, 28, 0.1);
     position: relative;
 }
 
 .question-display::after {
-    /* Triangle pointing down to options */
     content: '';
     position: absolute;
     bottom: -15px;
@@ -189,79 +632,82 @@ main {
     border-color: var(--primary-color) transparent transparent;
 }
 
-/* Food Buttons */
 .options-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    /* Increased gap */
-    padding: 1rem;
+    gap: 1.2rem;
+    padding: 0.5rem;
 }
 
 .option-btn {
     background-color: #fff;
     border: 3px solid var(--secondary-color);
     color: var(--text-color);
-    font-size: 2.5rem;
-    padding: 0.5rem;
-    /* Reduced padding to fit text better */
+    font-size: 2.2rem;
+    padding: 0.7rem;
     border-radius: 20px;
-    /* Rounded rectangle instead of circle options for more text space */
-    /* Circle shape for food was wrapping text. Changed to rounded box */
     cursor: pointer;
     transition: all 0.2s;
     width: 100%;
-    /* Fill grid cell */
-    min-height: 100px;
-    /* Minimum height */
+    min-height: 90px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 0 auto;
     position: relative;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    font-family: inherit;
 }
 
 .option-btn:hover {
-    transform: translateY(-5px);
-    /* Lift effect */
-    background-color: #fff;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
     border-color: var(--primary-color);
 }
 
 .option-btn.correct {
-    background-color: #d4edda;
-    border-color: #28a745;
-    color: #155724;
+    background: linear-gradient(135deg, #c8e6c9, #a5d6a7);
+    border-color: #43a047;
+    color: #1b5e20;
     z-index: 10;
+    animation: correctPop 0.5s ease;
+}
+
+@keyframes correctPop {
+    0% {
+        transform: scale(1);
+    }
+
+    30% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .option-btn.wrong {
-    background-color: #f8d7da;
-    border-color: #dc3545;
-    color: #721c24;
+    background: linear-gradient(135deg, #ffcdd2, #ef9a9a);
+    border-color: #e53935;
+    color: #b71c1c;
     animation: shake 0.5s;
 }
 
 .food-icon {
-    font-size: 2.5rem;
-    margin-bottom: 0.2rem;
+    font-size: 2.2rem;
+    margin-bottom: 0.1rem;
     display: block;
 }
 
 .hiragana-text {
-    font-size: 1.8rem;
-    /* Slightly smaller for flexibility */
+    font-size: 1.6rem;
     font-weight: bold;
     line-height: 1.2;
     white-space: nowrap;
-    /* Prevent wrapping */
-    overflow: visible;
-    /* Allow slight overflow if really needed, better than wrapping for single words */
 }
 
-/* Animations */
+/* ========== Animations ========== */
 @keyframes bounce {
 
     0%,
@@ -282,15 +728,14 @@ main {
     }
 
     25% {
-        transform: translateX(-5px);
+        transform: translateX(-8px);
     }
 
     75% {
-        transform: translateX(5px);
+        transform: translateX(8px);
     }
 }
 
-/* Pet Animation */
 .pet.bounce {
     animation: bouncePet 0.5s ease;
 }
@@ -331,14 +776,13 @@ main {
     }
 }
 
-/* Flying Food Animation - Dynamic classes will be used, but base transition needed */
+/* Flying Food */
 .flying-food {
     position: fixed;
     transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     z-index: 1000;
     pointer-events: none;
     border-radius: 20px;
-    /* Match option buttons */
     background: #fff;
     border: 3px solid var(--secondary-color);
     display: flex;
@@ -346,12 +790,237 @@ main {
     align-items: center;
 }
 
-/* Result Scene */
+/* ========== パーティクルシステム ========== */
+#particle-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 50%;
+    animation-fill-mode: forwards;
+}
+
+.particle-star {
+    font-size: 1.5rem;
+    animation: particleStar var(--dur, 1s) ease-out forwards;
+}
+
+@keyframes particleStar {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(var(--dx, 50px), var(--dy, -100px)) scale(0.2) rotate(360deg);
+    }
+}
+
+.particle-firework {
+    width: 6px;
+    height: 6px;
+    animation: particleFirework var(--dur, 1.2s) ease-out forwards;
+}
+
+@keyframes particleFirework {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(var(--dx, 0), var(--dy, 0)) scale(0);
+    }
+}
+
+.particle-confetti {
+    width: 8px;
+    height: 12px;
+    border-radius: 2px;
+    animation: particleConfetti var(--dur, 2s) ease-out forwards;
+}
+
+@keyframes particleConfetti {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(var(--dx, 30px), var(--dy, 400px)) rotate(720deg) scale(0.5);
+    }
+}
+
+/* Evolution Flash */
+.evolution-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 10000;
+    animation: flashOut 1.5s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes flashOut {
+    0% {
+        opacity: 1;
+    }
+
+    30% {
+        opacity: 0.9;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Rainbow border for combo */
+.rainbow-glow {
+    animation: rainbowBorder 1s linear infinite;
+}
+
+@keyframes rainbowBorder {
+    0% {
+        box-shadow: 0 0 15px #ff6b6b;
+    }
+
+    16% {
+        box-shadow: 0 0 15px #feca57;
+    }
+
+    33% {
+        box-shadow: 0 0 15px #48dbfb;
+    }
+
+    50% {
+        box-shadow: 0 0 15px #ff9ff3;
+    }
+
+    66% {
+        box-shadow: 0 0 15px #54a0ff;
+    }
+
+    83% {
+        box-shadow: 0 0 15px #5f27cd;
+    }
+
+    100% {
+        box-shadow: 0 0 15px #ff6b6b;
+    }
+}
+
+/* ========== Result Scene ========== */
+.result-details {
+    width: 100%;
+    text-align: center;
+}
+
+.final-score {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.score-counter {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 0.5rem 0;
+}
+
+.new-chars {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    border-radius: 16px;
+}
+
+.new-chars h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    color: #2e7d32;
+}
+
+.new-chars-list {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.new-char-badge {
+    background: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--accent-color);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    animation: charBadgeIn 0.5s ease backwards;
+}
+
+.exp-earned {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff6b35;
+    animation: expPop 0.6s ease;
+}
+
+@keyframes expPop {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.levelup-message {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #ff6b35;
+    animation: levelupBounce 0.8s ease infinite;
+}
+
+@keyframes levelupBounce {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+}
+
 #evolution-message {
     color: var(--primary-color);
     font-weight: bold;
     font-size: 1.5rem;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     animation: bounce 1s infinite;
 }
 
@@ -359,7 +1028,14 @@ main {
     display: none !important;
 }
 
-/* Responsive Design for iPad and Tablets */
+footer {
+    text-align: center;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    color: #999;
+}
+
+/* ========== Responsive ========== */
 @media (min-width: 768px) {
     #app {
         max-width: 800px;
@@ -368,33 +1044,38 @@ main {
         border-radius: 30px;
     }
 
-    .pet-container {
+    .niwa-container {
         height: 300px;
-        /* Taller container for larger growth */
-        margin-bottom: 3rem;
+    }
+
+    .pet-container {
+        height: 260px;
+        margin-bottom: 2rem;
     }
 
     .pet {
-        font-size: 8rem;
-        /* Larger base size */
+        font-size: 7rem;
     }
 
     .question-display {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
     }
 
     .option-btn {
-        height: 140px;
-        font-size: 3rem;
+        min-height: 120px;
+        font-size: 2.8rem;
     }
 
-    .score-board,
-    .progress-info {
-        font-size: 1.5rem;
+    .zukan-grid {
+        max-width: 450px;
+        gap: 10px;
+    }
+
+    .zukan-cell {
+        font-size: 1.8rem;
     }
 }
 
-/* Adjust for Landscape mode to prevent cutoff */
 @media (max-height: 800px) and (orientation: landscape) {
     #app {
         margin: 0;
@@ -402,17 +1083,21 @@ main {
         border-radius: 0;
     }
 
+    .niwa-container {
+        height: 160px;
+    }
+
     .pet-container {
-        height: 200px;
-        margin-bottom: 1rem;
+        height: 140px;
+        margin-bottom: 0.5rem;
     }
 
     .question-display {
         padding: 0.5rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.8rem;
     }
 
     .options-grid {
-        gap: 1rem;
+        gap: 0.8rem;
     }
 }
