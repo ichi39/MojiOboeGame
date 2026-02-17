@@ -414,36 +414,7 @@ main {
     color: var(--text-color);
 }
 
-.daily-bonus {
-    background: linear-gradient(135deg, #ffd54f, #ffab40);
-    color: #5d4037;
-    padding: 0.5rem 1rem;
-    border-radius: 12px;
-    font-weight: bold;
-    margin-top: 0.5rem;
-    animation: bonusPulse 1.5s ease-in-out infinite;
-}
 
-@keyframes bonusPulse {
-
-    0%,
-    100% {
-        transform: scale(1);
-        box-shadow: 0 2px 8px rgba(255, 171, 64, 0.3);
-    }
-
-    50% {
-        transform: scale(1.03);
-        box-shadow: 0 4px 15px rgba(255, 171, 64, 0.5);
-    }
-}
-
-.today-char {
-    margin-top: 0.4rem;
-    font-size: 1rem;
-    color: #5c6bc0;
-    font-weight: bold;
-}
 
 .niwa-nav-buttons {
     display: flex;

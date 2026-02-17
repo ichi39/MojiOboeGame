@@ -125,10 +125,7 @@ class SaveManager {
             petLevel: 1,
             masteredChars: [],
             totalCorrect: 0,
-            comboMax: 0,
-            lastPlayDate: null,
-            dailyBonusUsed: false,
-            consecutiveLogins: 0
+            comboMax: 0
         };
     }
 
@@ -171,46 +168,7 @@ class SaveManager {
         return this.data.petLevel > oldLevel; // returns true if leveled up
     }
 
-    checkDailyBonus() {
-        const today = new Date().toISOString().split('T')[0];
-        if (this.data.lastPlayDate !== today) {
-            // New day!
-            if (this.data.lastPlayDate) {
-                // Check consecutive login
-                const last = new Date(this.data.lastPlayDate);
-                const now = new Date(today);
-                const diffDays = Math.floor((now - last) / (1000 * 60 * 60 * 24));
-                if (diffDays === 1) {
-                    this.data.consecutiveLogins++;
-                } else {
-                    this.data.consecutiveLogins = 1;
-                }
-            } else {
-                this.data.consecutiveLogins = 1;
-            }
-            this.data.lastPlayDate = today;
-            this.data.dailyBonusUsed = false;
-            this.save();
-            return true; // daily bonus available
-        }
-        return !this.data.dailyBonusUsed;
-    }
 
-    useDailyBonus() {
-        this.data.dailyBonusUsed = true;
-        this.save();
-    }
-
-    getTodayChar() {
-        // Deterministic "random" based on date
-        const today = new Date().toISOString().split('T')[0];
-        let hash = 0;
-        for (let i = 0; i < today.length; i++) {
-            hash = ((hash << 5) - hash) + today.charCodeAt(i);
-            hash |= 0;
-        }
-        return ALL_HIRAGANA[Math.abs(hash) % ALL_HIRAGANA.length];
-    }
 }
 
 // ==========================================
@@ -562,7 +520,6 @@ class Game {
         this.combo = 0;
         this.sessionNewChars = [];
         this.sessionEXP = 0;
-        this.dailyBonusActive = false;
         this.petType = 'chick';
 
         this.initElements();
@@ -593,9 +550,6 @@ class Game {
         // Niwa
         this.niwaPet = document.getElementById('niwa-pet');
         this.niwaPetName = document.getElementById('niwa-pet-name');
-        this.dailyBonusBanner = document.getElementById('daily-bonus-banner');
-        this.todayCharBanner = document.getElementById('today-char-banner');
-        this.todayCharDisplay = document.getElementById('today-char-display');
 
         // Zukan
         this.zukanGrid = document.getElementById('zukan-grid');
@@ -685,20 +639,6 @@ class Game {
     initNiwa() {
         this.updateNiwaPet();
         this.bgManager.update(this.save.data.petLevel);
-
-        // Daily bonus check
-        const bonusAvailable = this.save.checkDailyBonus();
-        if (bonusAvailable && !this.save.data.dailyBonusUsed) {
-            this.dailyBonusBanner.classList.remove('hidden');
-        } else {
-            this.dailyBonusBanner.classList.add('hidden');
-        }
-
-        // Today's character
-        const todayChar = this.save.getTodayChar();
-        this.todayCharDisplay.textContent = todayChar;
-        this.todayCharBanner.classList.remove('hidden');
-
         this.updateHeaderStats();
     }
 
@@ -780,27 +720,17 @@ class Game {
         this.sessionEXP = 0;
         this.currentQuestionIndex = 0;
 
-        // Daily bonus
-        this.dailyBonusActive = !this.save.data.dailyBonusUsed && this.save.checkDailyBonus();
-        if (this.dailyBonusActive) {
-            this.save.useDailyBonus();
-        }
-
         let questionCount = 5;
         if (difficulty === 'easy') questionCount = 3;
         if (difficulty === 'hard') questionCount = 10;
 
-        // Prioritize today's char and unmastered chars
-        const todayChar = this.save.getTodayChar();
+        // Prioritize unmastered chars
         const unmasteredChars = HIRAGANA_DATA.filter(h => !this.save.data.masteredChars.includes(h.char));
         const masteredChars = HIRAGANA_DATA.filter(h => this.save.data.masteredChars.includes(h.char));
 
         let pool = [];
-        // Include today's char first
-        const todayData = HIRAGANA_DATA.find(h => h.char === todayChar);
-        if (todayData) pool.push(todayData);
 
-        // Then unmastered
+        // Unmastered first
         const shuffledUnmastered = [...unmasteredChars].sort(() => 0.5 - Math.random());
         pool = [...pool, ...shuffledUnmastered];
 
@@ -971,7 +901,6 @@ class Game {
             // EXP calculation
             let expGain = 10;
             if (this.combo >= 3) expGain += 5; // combo bonus
-            if (this.dailyBonusActive) expGain *= 2; // daily bonus
             this.sessionEXP += expGain;
 
             // Particles on correct
