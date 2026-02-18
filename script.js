@@ -25,6 +25,27 @@ const PET_CONFIG = {
             const clamped = Math.min(level, 10);
             return clamped;
         }
+    },
+    mermaid: {
+        id: 'mermaid',
+        name: 'にんぎょ',
+        stages: [
+            { level: 0, text: '🥚', label: 'みずのたまご' },
+            { level: 1, text: '🥚', label: 'ゆれるたまご' },
+            { level: 2, text: '🥚', label: 'ひかるたまご' },
+            { level: 3, text: '🐟', label: 'こざかな' },
+            { level: 4, text: '🐠', label: 'かわいいさかな' },
+            { level: 5, text: '🐡', label: 'おおきなさかな' },
+            { level: 6, text: '🧜‍♀️', label: 'にんぎょ' },
+            { level: 7, text: '🧜‍♀️', label: 'きれいなにんぎょ' },
+            { level: 8, text: '🧜‍♀️', label: 'うつくしいにんぎょ' },
+            { level: 9, text: '👸', label: 'にんぎょひめ' },
+            { level: 10, text: '🧚', label: '✨でんせつのにんぎょ✨' }
+        ],
+        getStageIndex(level) {
+            const clamped = Math.min(level, 10);
+            return clamped;
+        }
     }
 };
 
@@ -121,12 +142,16 @@ class SaveManager {
 
     getDefault() {
         return {
-            petEXP: 0,
-            petLevel: 1,
             masteredChars: [],
             totalCorrect: 0,
             comboMax: 0,
-            unlockedDifficulties: ['easy']
+            unlockedDifficulties: ['easy'],
+            unlockedPets: ['chick'],
+            activePet: 'chick',
+            petData: {
+                chick: { exp: 0, level: 1 },
+                mermaid: { exp: 0, level: 1 }
+            }
         };
     }
 
@@ -135,8 +160,18 @@ class SaveManager {
             const raw = localStorage.getItem(this.SAVE_KEY);
             if (raw) {
                 const parsed = JSON.parse(raw);
+                const defaults = this.getDefault();
                 // Merge with defaults for new keys
-                return { ...this.getDefault(), ...parsed };
+                const merged = { ...defaults, ...parsed };
+                // Ensure petData has all pet entries
+                merged.petData = { ...defaults.petData, ...(parsed.petData || {}) };
+                // Migrate from old petEXP/petLevel format
+                if (parsed.petEXP !== undefined && !parsed.petData) {
+                    merged.petData.chick = { exp: parsed.petEXP, level: parsed.petLevel || 1 };
+                    delete merged.petEXP;
+                    delete merged.petLevel;
+                }
+                return merged;
             }
         } catch (e) {
             console.warn('Save data corrupted, resetting.', e);
@@ -152,6 +187,14 @@ class SaveManager {
         }
     }
 
+    // Helper accessors for active pet
+    get petEXP() {
+        return this.data.petData[this.data.activePet].exp;
+    }
+    get petLevel() {
+        return this.data.petData[this.data.activePet].level;
+    }
+
     addMasteredChar(char) {
         if (!this.data.masteredChars.includes(char)) {
             this.data.masteredChars.push(char);
@@ -162,11 +205,29 @@ class SaveManager {
     }
 
     addEXP(amount) {
-        const oldLevel = this.data.petLevel;
-        this.data.petEXP += amount;
-        this.data.petLevel = getLevelFromExp(this.data.petEXP);
+        const petId = this.data.activePet;
+        const pet = this.data.petData[petId];
+        const oldLevel = pet.level;
+        pet.exp += amount;
+        pet.level = getLevelFromExp(pet.exp);
         this.save();
-        return this.data.petLevel > oldLevel; // returns true if leveled up
+        return pet.level > oldLevel; // returns true if leveled up
+    }
+
+    switchPet(petId) {
+        if (this.data.unlockedPets.includes(petId)) {
+            this.data.activePet = petId;
+            this.save();
+        }
+    }
+
+    unlockPet(petId) {
+        if (!this.data.unlockedPets.includes(petId)) {
+            this.data.unlockedPets.push(petId);
+            this.save();
+            return true;
+        }
+        return false;
     }
 
 
@@ -511,7 +572,7 @@ class Game {
         this.save = new SaveManager();
         this.audio = new AudioController();
         this.particles = new ParticleSystem();
-        this.bgManager = new BackgroundManager(this.save.data.petLevel);
+        this.bgManager = new BackgroundManager(this.save.petLevel);
 
         this.currentScene = 'niwa';
         this.difficulty = 'normal';
@@ -521,12 +582,12 @@ class Game {
         this.combo = 0;
         this.sessionNewChars = [];
         this.sessionEXP = 0;
-        this.petType = 'chick';
+        this.petType = this.save.data.activePet;
 
         this.initElements();
         this.attachEventListeners();
         this.initNiwa();
-        this.bgManager.update(this.save.data.petLevel);
+        this.bgManager.update(this.save.petLevel);
 
         // Start title BGM
         // (wait for user interaction to start audio context)
@@ -623,6 +684,17 @@ class Game {
                 location.reload();
             }
         });
+
+        // Pet switching
+        document.querySelectorAll('.pet-switch-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const petId = btn.dataset.pet;
+                if (!this.save.data.unlockedPets.includes(petId)) return;
+                this.save.switchPet(petId);
+                this.petType = petId;
+                this.initNiwa();
+            });
+        });
     }
 
     // ========== Scene Management ==========
@@ -649,10 +721,37 @@ class Game {
 
     // ========== にわ (Home) ==========
     initNiwa() {
+        this.petType = this.save.data.activePet;
         this.updateNiwaPet();
-        this.bgManager.update(this.save.data.petLevel);
+        this.bgManager.update(this.save.petLevel);
         this.updateHeaderStats();
         this.updateDifficultyButtons();
+        this.updatePetSwitchBar();
+    }
+
+    updatePetSwitchBar() {
+        const unlocked = this.save.data.unlockedPets;
+        const active = this.save.data.activePet;
+        const petEmojis = { chick: '🐣', mermaid: '🧜‍♀️' };
+        const petNames = { chick: 'ひよこ', mermaid: 'にんぎょ' };
+
+        document.querySelectorAll('.pet-switch-btn').forEach(btn => {
+            const petId = btn.dataset.pet;
+            const isUnlocked = unlocked.includes(petId);
+            const isActive = (petId === active);
+
+            btn.classList.toggle('active', isActive);
+            btn.classList.toggle('locked', !isUnlocked);
+
+            if (isUnlocked) {
+                const pet = this.save.data.petData[petId];
+                const config = PET_CONFIG[petId];
+                const stageIdx = config.getStageIndex(pet.level);
+                btn.textContent = `${config.stages[stageIdx].text} ${petNames[petId]}`;
+            } else {
+                btn.textContent = `🔒 ${petNames[petId]}`;
+            }
+        });
     }
 
     updateDifficultyButtons() {
@@ -683,10 +782,10 @@ class Game {
 
     updateNiwaPet() {
         const config = PET_CONFIG[this.petType];
-        const stageIdx = config.getStageIndex(this.save.data.petLevel);
+        const stageIdx = config.getStageIndex(this.save.petLevel);
         const stageData = config.stages[stageIdx];
         this.niwaPet.textContent = stageData.text;
-        this.niwaPetName.textContent = `${stageData.text} ${stageData.label} Lv.${this.save.data.petLevel}`;
+        this.niwaPetName.textContent = `${stageData.text} ${stageData.label} Lv.${this.save.petLevel}`;
     }
 
     spawnHeart(e) {
@@ -705,8 +804,8 @@ class Game {
 
     // ========== Header Stats ==========
     updateHeaderStats() {
-        const level = this.save.data.petLevel;
-        const exp = this.save.data.petEXP;
+        const level = this.save.petLevel;
+        const exp = this.save.petEXP;
         const nextExp = getExpForNextLevel(level);
         const prevExp = level >= 2 ? EXP_TABLE[level - 2] : 0;
         const progress = level >= 10 ? 100 : ((exp - prevExp) / (nextExp - prevExp) * 100);
@@ -1065,7 +1164,7 @@ class Game {
 
     updateGamePet() {
         const config = PET_CONFIG[this.petType];
-        const stageIdx = config.getStageIndex(this.save.data.petLevel);
+        const stageIdx = config.getStageIndex(this.save.petLevel);
         const stageData = config.stages[stageIdx];
         this.gamePet.textContent = stageData.text;
 
@@ -1097,9 +1196,9 @@ class Game {
         const isPerfect = (this.score === this.questions.length);
 
         // Apply EXP
-        const oldLevel = this.save.data.petLevel;
+        const oldLevel = this.save.petLevel;
         const leveledUp = this.save.addEXP(this.sessionEXP);
-        const newLevel = this.save.data.petLevel;
+        const newLevel = this.save.petLevel;
 
         // Update max combo
         if (this.combo > this.save.data.comboMax) {
@@ -1197,6 +1296,16 @@ class Game {
                 setTimeout(() => {
                     this.audio.speak(`${diffNames[nextDiff]}がアンロックされたよ！`);
                 }, 2500);
+            }
+        }
+
+        // Unlock mermaid pet when chick reaches Lv.10
+        if (this.petType === 'chick' && newLevel >= 10) {
+            if (this.save.unlockPet('mermaid')) {
+                setTimeout(() => {
+                    this.particles.emitConfetti(30);
+                    this.audio.speak('にんぎょが アンロックされたよ！あたらしい ペットを そだてよう！');
+                }, 3500);
             }
         }
     }

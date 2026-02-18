@@ -427,6 +427,44 @@ main {
     color: var(--text-color);
 }
 
+.pet-switch-bar {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: 0.8rem 0;
+}
+
+.pet-switch-btn {
+    background: rgba(255, 255, 255, 0.6);
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    padding: 0.4rem 1rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pet-switch-btn.active {
+    background: linear-gradient(135deg, var(--primary-color), #ff6b35);
+    border-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+
+.pet-switch-btn.locked {
+    background: rgba(200, 200, 200, 0.5);
+    border-color: #ccc;
+    color: #aaa;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.pet-switch-btn:not(.active):not(.locked):hover {
+    border-color: var(--primary-color);
+    background: rgba(255, 107, 53, 0.1);
+}
 
 
 .niwa-nav-buttons {
