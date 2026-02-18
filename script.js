@@ -80,53 +80,76 @@ function getLevelFromExp(totalExp) {
 
 // ========== Hiragana Data ==========
 const HIRAGANA_DATA = [
-    { char: 'あ', romaji: 'a', word: 'あめ', emoji: '🍬' },
-    { char: 'い', romaji: 'i', word: 'いちご', emoji: '🍓' },
-    { char: 'う', romaji: 'u', word: 'うさぎ', emoji: '🐰' },
-    { char: 'え', romaji: 'e', word: 'えんぴつ', emoji: '✏️' },
-    { char: 'お', romaji: 'o', word: 'おにぎり', emoji: '🍙' },
-    { char: 'か', romaji: 'ka', word: 'かさ', emoji: '🌂' },
-    { char: 'き', romaji: 'ki', word: 'き', emoji: '🌳' },
-    { char: 'く', romaji: 'ku', word: 'くつ', emoji: '👟' },
-    { char: 'け', romaji: 'ke', word: 'けーき', emoji: '🍰' },
-    { char: 'こ', romaji: 'ko', word: 'こま', emoji: '🎲' },
-    { char: 'さ', romaji: 'sa', word: 'さかな', emoji: '🐟' },
-    { char: 'し', romaji: 'shi', word: 'しんかんせん', emoji: '🚅' },
-    { char: 'す', romaji: 'su', word: 'すいか', emoji: '🍉' },
-    { char: 'せ', romaji: 'se', word: 'せみ', emoji: '🐛' },
-    { char: 'そ', romaji: 'so', word: 'そふとくりーむ', emoji: '🍦' },
-    { char: 'た', romaji: 'ta', word: 'たいよう', emoji: '☀️' },
-    { char: 'ち', romaji: 'chi', word: 'ちきゅう', emoji: '🌍' },
-    { char: 'つ', romaji: 'tsu', word: 'つき', emoji: '🌙' },
-    { char: 'て', romaji: 'te', word: 'て', emoji: '✋' },
-    { char: 'と', romaji: 'to', word: 'とまと', emoji: '🍅' },
-    { char: 'な', romaji: 'na', word: 'なす', emoji: '🍆' },
-    { char: 'に', romaji: 'ni', word: 'にく', emoji: '🍖' },
-    { char: 'ぬ', romaji: 'nu', word: 'いぬ', emoji: '🐶' },
-    { char: 'ね', romaji: 'ne', word: 'ねこ', emoji: '🐱' },
-    { char: 'の', romaji: 'no', word: 'のーと', emoji: '📓' },
-    { char: 'は', romaji: 'ha', word: 'はさみ', emoji: '✂️' },
-    { char: 'ひ', romaji: 'hi', word: 'ひこうき', emoji: '✈️' },
-    { char: 'ふ', romaji: 'fu', word: 'ふうせん', emoji: '🎈' },
-    { char: 'へ', romaji: 'he', word: 'へび', emoji: '🐍' },
-    { char: 'ほ', romaji: 'ho', word: 'ほん', emoji: '📚' },
-    { char: 'ま', romaji: 'ma', word: 'まいく', emoji: '🎤' },
-    { char: 'み', romaji: 'mi', word: 'みかん', emoji: '🍊' },
-    { char: 'む', romaji: 'mu', word: 'むし', emoji: '🐞' },
-    { char: 'め', romaji: 'me', word: 'めがね', emoji: '👓' },
-    { char: 'も', romaji: 'mo', word: 'もも', emoji: '🍑' },
-    { char: 'や', romaji: 'ya', word: 'やま', emoji: '⛰️' },
-    { char: 'ゆ', romaji: 'yu', word: 'ゆき', emoji: '❄️' },
-    { char: 'よ', romaji: 'yo', word: 'よっと', emoji: '⛵' },
-    { char: 'ら', romaji: 'ra', word: 'らっぱ', emoji: '🎺' },
-    { char: 'り', romaji: 'ri', word: 'りんご', emoji: '🍎' },
-    { char: 'る', romaji: 'ru', word: 'かえる', emoji: '🐸' },
-    { char: 'れ', romaji: 're', word: 'れもん', emoji: '🍋' },
-    { char: 'ろ', romaji: 'ro', word: 'ろうそく', emoji: '🕯️' },
-    { char: 'わ', romaji: 'wa', word: 'わに', emoji: '🐊' },
-    { char: 'を', romaji: 'wo', word: 'ほんをよむ', emoji: '📖' },
-    { char: 'ん', romaji: 'n', word: 'おでん', emoji: '🍢' }
+    // speech: { pitch, rate, reading } — 不自然な場合はここを手動調整
+    // pitch: 0.0〜2.0 (デフォルト1.0)、rate: 0.1〜10.0 (デフォルト0.8)
+    // reading: 読み上げテキストの上書き（省略時はwordをそのまま読む）
+    { char: 'あ', romaji: 'a', word: 'あめ', emoji: '🍬', speech: { pitch: 1.0, rate: 0.8, reading: '飴' } },
+    { char: 'い', romaji: 'i', word: 'いちご', emoji: '🍓', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'う', romaji: 'u', word: 'うさぎ', emoji: '🐰', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'え', romaji: 'e', word: 'えんぴつ', emoji: '✏️', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'お', romaji: 'o', word: 'おにぎり', emoji: '🍙', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'か', romaji: 'ka', word: 'かさ', emoji: '🌂', speech: { pitch: 1.0, rate: 0.8, reading: '傘' } },
+    { char: 'き', romaji: 'ki', word: 'き', emoji: '🌳', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'く', romaji: 'ku', word: 'くつ', emoji: '👟', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'け', romaji: 'ke', word: 'けーき', emoji: '🍰', speech: { pitch: 1.0, rate: 0.8, reading: 'ケーキ' } },
+    { char: 'こ', romaji: 'ko', word: 'こま', emoji: '🎲', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'さ', romaji: 'sa', word: 'さかな', emoji: '🐟', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'し', romaji: 'shi', word: 'しんかんせん', emoji: '🚅', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'す', romaji: 'su', word: 'すいか', emoji: '🍉', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'せ', romaji: 'se', word: 'せみ', emoji: '🐛', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'そ', romaji: 'so', word: 'そふとくりーむ', emoji: '🍦', speech: { pitch: 1.0, rate: 0.8, reading: 'ソフトクリーム' } },
+    { char: 'た', romaji: 'ta', word: 'たいよう', emoji: '☀️', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'ち', romaji: 'chi', word: 'ちきゅう', emoji: '🌍', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'つ', romaji: 'tsu', word: 'つき', emoji: '🌙', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'て', romaji: 'te', word: 'て', emoji: '✋', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'と', romaji: 'to', word: 'とまと', emoji: '🍅', speech: { pitch: 1.0, rate: 0.8, reading: 'トマト' } },
+    { char: 'な', romaji: 'na', word: 'なす', emoji: '🍆', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'に', romaji: 'ni', word: 'にく', emoji: '🍖', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'ぬ', romaji: 'nu', word: 'いぬ', emoji: '🐶', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'ね', romaji: 'ne', word: 'ねこ', emoji: '🐱', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'の', romaji: 'no', word: 'のーと', emoji: '📓', speech: { pitch: 1.0, rate: 0.8, reading: 'ノート' } },
+    { char: 'は', romaji: 'ha', word: 'はさみ', emoji: '✂️', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'ひ', romaji: 'hi', word: 'ひこうき', emoji: '✈️', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'ふ', romaji: 'fu', word: 'ふうせん', emoji: '🎈', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'へ', romaji: 'he', word: 'へび', emoji: '🐍', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'ほ', romaji: 'ho', word: 'ほん', emoji: '📚', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'ま', romaji: 'ma', word: 'まいく', emoji: '🎤', speech: { pitch: 1.0, rate: 0.8, reading: 'マイク' } },
+    { char: 'み', romaji: 'mi', word: 'みかん', emoji: '🍊', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'む', romaji: 'mu', word: 'むし', emoji: '🐞', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'め', romaji: 'me', word: 'めがね', emoji: '👓', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'も', romaji: 'mo', word: 'もも', emoji: '🍑', speech: { pitch: 1.0, rate: 0.8, reading: '桃' } },
+    { char: 'や', romaji: 'ya', word: 'やま', emoji: '⛰️', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'ゆ', romaji: 'yu', word: 'ゆき', emoji: '❄️', speech: { pitch: 1.0, rate: 0.8, reading: '雪' } },
+    { char: 'よ', romaji: 'yo', word: 'よっと', emoji: '⛵', speech: { pitch: 1.0, rate: 0.8, reading: 'ヨット' } },
+    { char: 'ら', romaji: 'ra', word: 'らっぱ', emoji: '🎺', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'り', romaji: 'ri', word: 'りんご', emoji: '🍎', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'る', romaji: 'ru', word: 'かえる', emoji: '🐸', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'れ', romaji: 're', word: 'れもん', emoji: '🍋', speech: { pitch: 1.0, rate: 0.8, reading: 'レモン' } },
+    { char: 'ろ', romaji: 'ro', word: 'ろうそく', emoji: '🕯️', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'わ', romaji: 'wa', word: 'わに', emoji: '🐊', speech: { pitch: 1.0, rate: 0.8 } },
+    { char: 'を', romaji: 'wo', word: 'ほんをよむ', emoji: '📖', speech: { pitch: 1.0, rate: 0.8, reading: 'ほんを よむ' } },
+    { char: 'ん', romaji: 'n', word: 'おでん', emoji: '🍢', speech: { pitch: 1.0, rate: 0.8 } }
 ];
+
+// ========== フレーズ読み上げ設定 ==========
+// 文章の読み上げイントネーション調整用。不自然な場合はここを手動調整。
+// key: 読み上げテキスト（または識別キー）
+// pitch, rate, reading を指定可能
+const SPEECH_PHRASES = {
+    // 進化メッセージ — テンプレート。stageLabel は動的に埋め込まれる
+    evolution: { pitch: 1.2, rate: 0.8 },
+    // パーフェクト時の褒めフレーズ
+    'おめでとう！すごいね！': { pitch: 1.2, rate: 0.9 },
+    'やったね！かんぺき！': { pitch: 1.2, rate: 0.9 },
+    'すばらしい！': { pitch: 1.1, rate: 0.9 },
+    'てんさいだね！': { pitch: 1.2, rate: 0.9 },
+    // 通常終了
+    'おつかれさま！': { pitch: 1.0, rate: 0.9 },
+    // 難易度アンロック — テンプレート
+    difficultyUnlock: { pitch: 1.1, rate: 0.9 },
+    // ペットアンロック
+    mermaidUnlock: { pitch: 1.1, rate: 0.85, reading: 'にんぎょが アンロックされたよ！あたらしい ペットを そだてよう！' }
+};
 
 // All 46 hiragana for zukan
 const ALL_HIRAGANA = HIRAGANA_DATA.map(h => h.char);
@@ -468,16 +491,25 @@ class AudioController {
         }
     }
 
-    speak(text) {
+    /**
+     * テキストを読み上げる
+     * @param {string} text - 読み上げるテキスト
+     * @param {object} [options] - イントネーション設定
+     * @param {number} [options.pitch=1.0] - ピッチ (0.0〜2.0)
+     * @param {number} [options.rate=0.8]  - 速度 (0.1〜10.0)
+     * @param {string} [options.reading]   - 読み上げテキスト上書き
+     */
+    speak(text, options = {}) {
         if (this.synth) {
             this.synth.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
+            const speakText = options.reading || text;
+            const utterance = new SpeechSynthesisUtterance(speakText);
             if (this.voice) {
                 utterance.voice = this.voice;
             }
             utterance.lang = 'ja-JP';
-            utterance.rate = 0.8;
-            utterance.pitch = 1.1;
+            utterance.rate = options.rate !== undefined ? options.rate : 0.8;
+            utterance.pitch = options.pitch !== undefined ? options.pitch : 1.0;
             this.synth.speak(utterance);
         }
     }
@@ -860,11 +892,11 @@ class Game {
         document.getElementById('zukan-detail-word').textContent = data.word;
 
         modal.classList.remove('hidden');
-        this.audio.speak(data.word);
+        this.audio.speak(data.word, data.speech);
 
         // Speak button
         document.getElementById('zukan-detail-speak').onclick = () => {
-            this.audio.speak(data.word);
+            this.audio.speak(data.word, data.speech);
         };
 
         // Close button
@@ -949,7 +981,7 @@ class Game {
             <div class="feedback-msg" style="height: 2rem; font-weight:bold; color: var(--primary-color);"></div>
         `;
 
-        this.audio.speak(targetQ.word);
+        this.audio.speak(targetQ.word, targetQ.speech);
 
         const distractors = HIRAGANA_DATA
             .filter(d => d.char !== targetQ.char)
@@ -1016,8 +1048,8 @@ class Game {
             <button id="replay-sound" class="btn btn-secondary" style="border-radius: 50%; width: 50px; height: 50px; padding: 0; font-size: 1.8rem; margin-top: 8px;">🔊</button>
         `;
 
-        document.getElementById('replay-sound').onclick = () => this.audio.speak(currentQ.word);
-        setTimeout(() => this.audio.speak(currentQ.word), 400);
+        document.getElementById('replay-sound').onclick = () => this.audio.speak(currentQ.word, currentQ.speech);
+        setTimeout(() => this.audio.speak(currentQ.word, currentQ.speech), 400);
 
         // Generate options
         const options = [currentQ];
@@ -1258,7 +1290,7 @@ class Game {
                         this.audio.playEvolution();
                         this.evolutionMessage.classList.remove('hidden');
                         this.evolutionMessage.textContent = `${stageData.label}に しんかしたよ！✨`;
-                        this.audio.speak(`やったー！${stageData.label}に しんかした！`);
+                        this.audio.speak(`やったー！${stageData.label}に しんかした！`, SPEECH_PHRASES.evolution);
                     }, 1000);
                 }
             }, 1600);
@@ -1273,11 +1305,12 @@ class Game {
                 this.particles.emitConfetti(40);
                 this.particles.emitFireworks(window.innerWidth / 2, window.innerHeight / 3, 30);
                 const praises = ['おめでとう！すごいね！', 'やったね！かんぺき！', 'すばらしい！', 'てんさいだね！'];
-                this.audio.speak(praises[Math.floor(Math.random() * praises.length)]);
+                const praise = praises[Math.floor(Math.random() * praises.length)];
+                this.audio.speak(praise, SPEECH_PHRASES[praise] || {});
             }, 500);
         } else {
             setTimeout(() => {
-                this.audio.speak('おつかれさま！');
+                this.audio.speak('おつかれさま！', SPEECH_PHRASES['おつかれさま！']);
             }, 500);
         }
 
@@ -1294,7 +1327,7 @@ class Game {
                 this.save.save();
                 const diffNames = { normal: 'ふつう', hard: 'むずかしい' };
                 setTimeout(() => {
-                    this.audio.speak(`${diffNames[nextDiff]}がアンロックされたよ！`);
+                    this.audio.speak(`${diffNames[nextDiff]}がアンロックされたよ！`, SPEECH_PHRASES.difficultyUnlock);
                 }, 2500);
             }
         }
@@ -1304,7 +1337,7 @@ class Game {
             if (this.save.unlockPet('mermaid')) {
                 setTimeout(() => {
                     this.particles.emitConfetti(30);
-                    this.audio.speak('にんぎょが アンロックされたよ！あたらしい ペットを そだてよう！');
+                    this.audio.speak('にんぎょが アンロックされたよ！あたらしい ペットを そだてよう！', SPEECH_PHRASES.mermaidUnlock);
                 }, 3500);
             }
         }
