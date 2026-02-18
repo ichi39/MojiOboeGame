@@ -9,45 +9,57 @@ const PET_CONFIG = {
         id: 'chick',
         name: 'ひよこ',
         stages: [
-            { level: 0, text: '🥚', label: 'たまご' },
-            { level: 1, text: '🥚', label: 'たまご' },
-            { level: 2, text: '🥚', label: 'たまご' },
-            { level: 3, text: '🐣', label: 'たまごわれた！' },
-            { level: 4, text: '🐤', label: 'ひよこ' },
-            { level: 5, text: '🐤', label: 'おおきいひよこ' },
-            { level: 6, text: '🐔', label: 'にわとり' },
-            { level: 7, text: '🐔', label: 'おおきいにわとり' },
-            { level: 8, text: '🐓', label: 'りっぱなにわとり' },
-            { level: 9, text: '🐓', label: 'すごいにわとり' },
-            { level: 10, text: '🦚', label: '✨おうごんにわとり✨' }
+            { level: 1, text: '🥚', image: 'assets/pets/chick_0.PNG', label: 'たまご' },
+            { level: 2, text: '🥚', image: 'assets/pets/chick_1.PNG', label: 'すこしわれたたまご' },
+            { level: 3, text: '🥚', image: 'assets/pets/chick_2.PNG', label: 'かなりわれたたまご' },
+            { level: 4, text: '🐣', image: 'assets/pets/chick_3.PNG', label: 'ぴよぴよひよこ' },
+            { level: 5, text: '🐤', image: 'assets/pets/chick_4.PNG', label: 'おおきなひよこ' },
+            { level: 6, text: '🐤', image: 'assets/pets/chick_5.PNG', label: 'りっぱなにわとり' },
+            { level: 7, text: '🦚', image: 'assets/pets/chick_6.PNG', label: '✨おうごんにわとり✨' }
         ],
         getStageIndex(level) {
-            const clamped = Math.min(level, 10);
-            return clamped;
+            const clamped = Math.min(level, 7);
+            return clamped - 1;
         }
     },
     mermaid: {
         id: 'mermaid',
         name: 'にんぎょ',
         stages: [
-            { level: 0, text: '🥚', label: 'みずのたまご' },
-            { level: 1, text: '🥚', label: 'ゆれるたまご' },
-            { level: 2, text: '🥚', label: 'ひかるたまご' },
-            { level: 3, text: '🐟', label: 'こざかな' },
-            { level: 4, text: '🐠', label: 'かわいいさかな' },
-            { level: 5, text: '🐡', label: 'おおきなさかな' },
-            { level: 6, text: '🧜‍♀️', label: 'にんぎょ' },
-            { level: 7, text: '🧜‍♀️', label: 'きれいなにんぎょ' },
-            { level: 8, text: '🧜‍♀️', label: 'うつくしいにんぎょ' },
-            { level: 9, text: '👸', label: 'にんぎょひめ' },
-            { level: 10, text: '🧚', label: '✨でんせつのにんぎょ✨' }
+            { level: 1, text: '🥚', image: 'assets/pets/mermaid_0.PNG', label: 'ふしぎなたまご' },
+            { level: 2, text: '🥚', image: 'assets/pets/mermaid_1.PNG', label: 'ひかるたまご' },
+            { level: 3, text: '🥚', image: 'assets/pets/mermaid_2.PNG', label: 'すこしわれたたまご' },
+            { level: 4, text: '🐟', image: 'assets/pets/mermaid_3.PNG', label: 'あかちゃんにんぎょ' },
+            { level: 5, text: '🐠', image: 'assets/pets/mermaid_4.PNG', label: 'ちいさなにんぎょ' },
+            { level: 6, text: '🐡', image: 'assets/pets/mermaid_5.PNG', label: 'こどものにんぎょ' },
+            { level: 7, text: '🧚', image: 'assets/pets/mermaid_6.PNG', label: '✨プリンセスにんぎょ✨' }
         ],
         getStageIndex(level) {
-            const clamped = Math.min(level, 10);
-            return clamped;
+            const clamped = Math.min(level, 7);
+            return clamped - 1;
         }
     }
 };
+
+// ========== Pet Rendering Helper ==========
+/**
+ * ペットをDOM要素に描画する
+ * stageData.image があればPNG画像を表示、なければ絵文字を表示
+ * @param {HTMLElement} element - 描画先の要素
+ * @param {object} stageData - PET_CONFIGのステージデータ
+ */
+function renderPetToElement(element, stageData) {
+    element.innerHTML = '';
+    if (stageData.image) {
+        const img = document.createElement('img');
+        img.src = stageData.image;
+        img.alt = stageData.label;
+        img.draggable = false;
+        element.appendChild(img);
+    } else {
+        element.textContent = stageData.text;
+    }
+}
 
 // ========== EXP Table ==========
 const EXP_TABLE = [
@@ -57,14 +69,11 @@ const EXP_TABLE = [
     450,  // Lv4
     700,  // Lv5
     1000, // Lv6
-    1400, // Lv7
-    1900, // Lv8
-    2500, // Lv9
-    3200  // Lv10 (max)
+    1400  // Lv7 (max)
 ];
 
 function getExpForNextLevel(level) {
-    if (level >= 10) return Infinity;
+    if (level >= 7) return Infinity;
     return EXP_TABLE[level]; // EXP needed to reach level+1
 }
 
@@ -75,7 +84,7 @@ function getLevelFromExp(totalExp) {
             level = i + 2; // Level 2 at EXP_TABLE[0], etc.
         }
     }
-    return Math.min(level, 10);
+    return Math.min(level, 7);
 }
 
 // ========== Hiragana Data ==========
@@ -577,10 +586,7 @@ class BackgroundManager {
         if (this.petLevel >= 4) items.push({ emoji: '🌻', positions: [[5, 70], [90, 68]] });
         if (this.petLevel >= 5) items.push({ emoji: '🌳', positions: [[15, 60], [80, 55]] });
         if (this.petLevel >= 6) items.push({ emoji: '🦋', positions: [[30, 30], [65, 25]] });
-        if (this.petLevel >= 7) items.push({ emoji: '💐', positions: [[50, 85]] });
-        if (this.petLevel >= 8) items.push({ emoji: '🏡', positions: [[88, 45]] });
-        if (this.petLevel >= 9) items.push({ emoji: '🌈', positions: [[50, 10]] });
-        if (this.petLevel >= 10) items.push({ emoji: '👑', positions: [[50, 5]] });
+        if (this.petLevel >= 7) items.push({ emoji: '', positions: [[50, 5]] });
 
         items.forEach(item => {
             item.positions.forEach(([left, top]) => {
@@ -779,7 +785,9 @@ class Game {
                 const pet = this.save.data.petData[petId];
                 const config = PET_CONFIG[petId];
                 const stageIdx = config.getStageIndex(pet.level);
-                btn.textContent = `${config.stages[stageIdx].text} ${petNames[petId]}`;
+                const stageData = config.stages[stageIdx];
+                const display = stageData.image ? '' : stageData.text + ' ';
+                btn.textContent = `${display}${petNames[petId]}`;
             } else {
                 btn.textContent = `🔒 ${petNames[petId]}`;
             }
@@ -816,7 +824,7 @@ class Game {
         const config = PET_CONFIG[this.petType];
         const stageIdx = config.getStageIndex(this.save.petLevel);
         const stageData = config.stages[stageIdx];
-        this.niwaPet.textContent = stageData.text;
+        renderPetToElement(this.niwaPet, stageData);
         this.niwaPetName.textContent = `${stageData.text} ${stageData.label} Lv.${this.save.petLevel}`;
     }
 
@@ -840,12 +848,12 @@ class Game {
         const exp = this.save.petEXP;
         const nextExp = getExpForNextLevel(level);
         const prevExp = level >= 2 ? EXP_TABLE[level - 2] : 0;
-        const progress = level >= 10 ? 100 : ((exp - prevExp) / (nextExp - prevExp) * 100);
+        const progress = level >= 7 ? 100 : ((exp - prevExp) / (nextExp - prevExp) * 100);
 
         this.petLevelDisplay.textContent = level;
         this.expBarFill.style.width = Math.min(progress, 100) + '%';
         this.expCurrent.textContent = exp;
-        this.expNext.textContent = level >= 10 ? 'MAX' : nextExp;
+        this.expNext.textContent = level >= 7 ? 'MAX' : nextExp;
     }
 
     // ========== もじずかん ==========
@@ -1198,7 +1206,7 @@ class Game {
         const config = PET_CONFIG[this.petType];
         const stageIdx = config.getStageIndex(this.save.petLevel);
         const stageData = config.stages[stageIdx];
-        this.gamePet.textContent = stageData.text;
+        renderPetToElement(this.gamePet, stageData);
 
         // Dynamic scaling based on score
         const scale = 1.0 + (this.score * 0.12);
@@ -1246,7 +1254,7 @@ class Game {
         const config = PET_CONFIG[this.petType];
         const stageIdx = config.getStageIndex(newLevel);
         const stageData = config.stages[stageIdx];
-        this.resultPet.textContent = stageData.text;
+        renderPetToElement(this.resultPet, stageData);
         this.resultPet.style.transform = 'scale(1.5)';
 
         // EXP earned

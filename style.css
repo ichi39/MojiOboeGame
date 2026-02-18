@@ -695,6 +695,13 @@ main {
     user-select: none;
 }
 
+.pet img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
 .quiz-container {
     width: 100%;
     text-align: center;
