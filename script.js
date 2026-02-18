@@ -125,7 +125,8 @@ class SaveManager {
             petLevel: 1,
             masteredChars: [],
             totalCorrect: 0,
-            comboMax: 0
+            comboMax: 0,
+            unlockedDifficulties: ['easy']
         };
     }
 
@@ -585,8 +586,11 @@ class Game {
     attachEventListeners() {
         this.difficultyBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
+                const diff = e.target.closest('[data-difficulty]')?.dataset.difficulty;
+                if (!diff) return;
+                if (!this.save.data.unlockedDifficulties.includes(diff)) return;
                 this.audio.ensureContext();
-                this.startGame(e.target.dataset.difficulty);
+                this.startGame(diff);
             });
         });
 
@@ -648,6 +652,33 @@ class Game {
         this.updateNiwaPet();
         this.bgManager.update(this.save.data.petLevel);
         this.updateHeaderStats();
+        this.updateDifficultyButtons();
+    }
+
+    updateDifficultyButtons() {
+        const unlocked = this.save.data.unlockedDifficulties;
+        const labels = {
+            easy: '🌱 やさしい (3もん)',
+            normal: '🌿 ふつう (5もん)',
+            hard: '🌳 むずかしい (10もん)'
+        };
+        const lockedLabels = {
+            easy: '🌱 やさしい (3もん)',
+            normal: '🔒 ふつう (5もん)',
+            hard: '🔒 むずかしい (10もん)'
+        };
+        this.difficultyBtns.forEach(btn => {
+            const diff = btn.dataset.difficulty;
+            if (unlocked.includes(diff)) {
+                btn.classList.remove('btn-locked');
+                btn.disabled = false;
+                btn.textContent = labels[diff];
+            } else {
+                btn.classList.add('btn-locked');
+                btn.disabled = true;
+                btn.textContent = lockedLabels[diff];
+            }
+        });
     }
 
     updateNiwaPet() {
@@ -1122,6 +1153,21 @@ class Game {
 
         // Hide combo
         this.comboDisplay.classList.add('hidden');
+
+        // Unlock next difficulty
+        const diffOrder = ['easy', 'normal', 'hard'];
+        const currentIdx = diffOrder.indexOf(this.difficulty);
+        if (currentIdx >= 0 && currentIdx < diffOrder.length - 1) {
+            const nextDiff = diffOrder[currentIdx + 1];
+            if (!this.save.data.unlockedDifficulties.includes(nextDiff)) {
+                this.save.data.unlockedDifficulties.push(nextDiff);
+                this.save.save();
+                const diffNames = { normal: 'ふつう', hard: 'むずかしい' };
+                setTimeout(() => {
+                    this.audio.speak(`${diffNames[nextDiff]}がアンロックされたよ！`);
+                }, 2500);
+            }
+        }
     }
 
     animateScoreCount() {
