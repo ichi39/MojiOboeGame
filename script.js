@@ -1340,8 +1340,8 @@ class Game {
             }
         }
 
-        // Unlock mermaid pet when chick reaches Lv.10
-        if (this.petType === 'chick' && newLevel >= 10) {
+        // Unlock mermaid pet when chick reaches Lv.7
+        if (this.petType === 'chick' && newLevel >= 7) {
             if (this.save.unlockPet('mermaid')) {
                 setTimeout(() => {
                     this.particles.emitConfetti(30);
