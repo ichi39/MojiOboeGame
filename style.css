@@ -1006,6 +1006,23 @@ footer {
     color: #999;
 }
 
+.btn-reset {
+    background: none;
+    border: none;
+    color: #bbb;
+    font-size: 0.7rem;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0.3rem 0.5rem;
+    margin-top: 0.3rem;
+    transition: color 0.2s;
+}
+
+.btn-reset:hover {
+    color: #888;
+}
+
 /* ========== Responsive ========== */
 @media (min-width: 768px) {
     #app {

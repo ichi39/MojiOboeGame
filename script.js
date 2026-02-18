@@ -1,5 +1,5 @@
 // ==========================================
-// もじおぼえゲーム v2.0
+// もじおぼえゲーム v2.1
 // 「育てて集める」ひらがな冒険
 // ==========================================
 
@@ -610,6 +610,14 @@ class Game {
             this.audio.ensureContext();
             this.audio.playPetTap();
             this.spawnHeart(e);
+        });
+
+        // Reset button
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            if (confirm('ほんとうに さいしょから あそぶ？\nぜんぶの データが きえちゃうよ！')) {
+                localStorage.clear();
+                location.reload();
+            }
         });
     }
 
