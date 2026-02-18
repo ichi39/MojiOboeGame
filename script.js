@@ -736,6 +736,7 @@ class Game {
             if (mastered.includes(char)) {
                 cell.classList.add('known');
                 cell.innerHTML = `<span>${char}</span><span class="zukan-emoji">${data ? data.emoji : ''}</span>`;
+                cell.addEventListener('click', () => this.showZukanDetail(char));
             } else {
                 cell.classList.add('unknown');
                 cell.textContent = '？';
@@ -748,6 +749,36 @@ class Game {
         if (mastered.length >= 10) this.zukanBadges.innerHTML += '🥉';
         if (mastered.length >= 25) this.zukanBadges.innerHTML += '🥈';
         if (mastered.length >= 46) this.zukanBadges.innerHTML += '🏅';
+    }
+
+    showZukanDetail(char) {
+        const data = HIRAGANA_DATA.find(h => h.char === char);
+        if (!data) return;
+
+        const modal = document.getElementById('zukan-detail-modal');
+        document.getElementById('zukan-detail-char').textContent = char;
+        document.getElementById('zukan-detail-emoji').textContent = data.emoji;
+        document.getElementById('zukan-detail-word').textContent = data.word;
+
+        modal.classList.remove('hidden');
+        this.audio.speak(data.word);
+
+        // Speak button
+        document.getElementById('zukan-detail-speak').onclick = () => {
+            this.audio.speak(data.word);
+        };
+
+        // Close button
+        document.getElementById('zukan-detail-close').onclick = () => {
+            modal.classList.add('hidden');
+        };
+
+        // Close on overlay click
+        modal.onclick = (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+            }
+        };
     }
 
     // ========== Start Game ==========
