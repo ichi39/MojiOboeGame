@@ -429,41 +429,45 @@ main {
 
 .pet-switch-bar {
     display: flex;
-    gap: 0.5rem;
+    gap: 4px;
     justify-content: center;
     margin: 0.8rem 0;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    padding: 4px;
 }
 
 .pet-switch-btn {
-    background: rgba(255, 255, 255, 0.6);
-    border: 2px solid #ddd;
-    border-radius: 12px;
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 16px;
     padding: 0.4rem 1rem;
     font-family: inherit;
     font-size: 0.9rem;
+    color: #666;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .pet-switch-btn.active {
-    background: linear-gradient(135deg, var(--primary-color), #ff6b35);
-    border-color: var(--primary-color);
-    color: white;
+    background: white;
+    border-color: #2EC4B6;
+    color: #2EC4B6;
     font-weight: bold;
-    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+    box-shadow: 0 2px 6px rgba(46, 196, 182, 0.3);
 }
 
 .pet-switch-btn.locked {
-    background: rgba(200, 200, 200, 0.5);
-    border-color: #ccc;
-    color: #aaa;
+    background: transparent;
+    border: 2px solid transparent;
+    color: #bbb;
+    opacity: 0.5;
     cursor: not-allowed;
-    opacity: 0.6;
 }
 
 .pet-switch-btn:not(.active):not(.locked):hover {
-    border-color: var(--primary-color);
-    background: rgba(255, 107, 53, 0.1);
+    border-color: #2EC4B6;
+    background: rgba(46, 196, 182, 0.1);
 }
 
 
@@ -1152,10 +1156,14 @@ footer {
 /* ========== Responsive ========== */
 @media (min-width: 768px) {
     #app {
-        max-width: 800px;
+        max-width: 860px;
         min-height: 90vh;
         margin: 2rem auto;
         border-radius: 30px;
+    }
+
+    header h1 {
+        font-size: 2rem;
     }
 
     .niwa-container {
@@ -1169,6 +1177,15 @@ footer {
 
     .pet {
         font-size: 7rem;
+    }
+
+    .pet img {
+        width: 160px;
+        height: 160px;
+    }
+
+    .result-pet-container {
+        height: 200px;
     }
 
     .question-display {
@@ -1187,6 +1204,53 @@ footer {
 
     .zukan-cell {
         font-size: 1.8rem;
+    }
+
+    /* 雲ボタン */
+    .cloud-choice::before {
+        font-size: 6.5rem;
+    }
+    .cloud-char {
+        font-size: 2.5rem;
+    }
+
+    /* 文字スロット */
+    .char-slot {
+        width: 72px;
+        height: 84px;
+        font-size: 2.6rem;
+        border-radius: 16px;
+    }
+    .char-slots {
+        gap: 0.8rem;
+    }
+
+    /* シルエット */
+    .target-silhouette {
+        font-size: 7rem;
+    }
+
+    /* ワードカード */
+    .word-card-silhouette {
+        font-size: 3rem;
+    }
+    .word-card-name {
+        font-size: 1.4rem;
+    }
+    .word-card {
+        min-width: 120px;
+        padding: 1rem;
+    }
+
+    /* にわコレクション */
+    .niwa-collection-item {
+        font-size: 2.2rem;
+    }
+
+    /* 吹き出し */
+    .pet-speech-bubble {
+        font-size: 1.2rem;
+        max-width: 340px;
     }
 }
 
@@ -1230,6 +1294,16 @@ footer {
     font-size: 1.6rem;
     animation: niwa-item-float 3s ease-in-out infinite;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    cursor: pointer;
+    pointer-events: auto;
+}
+.niwa-collection-item.item-tap {
+    animation: itemTap 0.4s ease !important;
+}
+@keyframes itemTap {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.5) rotate(15deg); }
+    100% { transform: scale(1) rotate(0deg); }
 }
 @keyframes niwa-item-float {
     0%, 100% { transform: translateY(0) rotate(-3deg); }
@@ -1346,6 +1420,16 @@ footer {
     font-size: 0.9rem;
 }
 
+/* 未収集ことば：絵文字シルエット */
+.word-card-silhouette.silhouette {
+    filter: brightness(0) opacity(0.25);
+}
+/* 未収集ことば：？文字のスタイル */
+.word-card-name.unknown-name {
+    color: #bbb;
+    letter-spacing: 0.05em;
+}
+
 /* ---- もじさがし画面 ---- */
 #mojisagashi-scene {
     flex-direction: column;
@@ -1402,6 +1486,15 @@ footer {
     font-weight: bold;
     background: white;
     transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+.char-slot.active-slot::before {
+    content: attr(data-hint);
+    position: absolute;
+    font-size: inherit;
+    color: #999;
+    opacity: 0.25;
+    pointer-events: none;
 }
 .char-slot.active-slot {
     border-color: #ff9f43;
@@ -1507,6 +1600,11 @@ footer {
     z-index: 100;
     pointer-events: none;
 }
+.game-pet-popup img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
 @keyframes pet-jump-in {
     from { transform: translateX(-50%) translateY(100px) scale(0.5); opacity: 0; }
     to   { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
@@ -1525,6 +1623,30 @@ footer {
     z-index: 101;
     pointer-events: none;
     animation: bubble-pop 0.3s ease 0.3s both;
+}
+
+/* ---- リザルトペット跳ね ---- */
+@keyframes petHappyBounce {
+    0%, 100% { transform: scale(1.4) translateY(0); }
+    20%       { transform: scale(1.4) translateY(-20px) rotate(-5deg); }
+    40%       { transform: scale(1.4) translateY(0) rotate(5deg); }
+    60%       { transform: scale(1.4) translateY(-14px) rotate(-3deg); }
+    80%       { transform: scale(1.4) translateY(0) rotate(3deg); }
+}
+.pet-happy-bounce {
+    animation: petHappyBounce 1.2s ease infinite;
+}
+
+/* ---- にわペットクリックジャンプ ---- */
+@keyframes petClickJump {
+    0%   { transform: scaleX(1.15) scaleY(0.85); }
+    20%  { transform: scaleX(0.9) scaleY(1.1) translateY(-24px); }
+    60%  { transform: scaleX(0.95) scaleY(1.05) translateY(-16px); }
+    80%  { transform: scaleX(1.05) scaleY(0.95) translateY(0); }
+    100% { transform: scaleX(1) scaleY(1); }
+}
+.pet-click-jump {
+    animation: petClickJump 0.7s cubic-bezier(0.34,1.56,0.64,1) !important;
 }
 
 /* ---- リザルト画面 ---- */
