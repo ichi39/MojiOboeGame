@@ -429,41 +429,45 @@ main {
 
 .pet-switch-bar {
     display: flex;
-    gap: 0.5rem;
+    gap: 4px;
     justify-content: center;
     margin: 0.8rem 0;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    padding: 4px;
 }
 
 .pet-switch-btn {
-    background: rgba(255, 255, 255, 0.6);
-    border: 2px solid #ddd;
-    border-radius: 12px;
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 16px;
     padding: 0.4rem 1rem;
     font-family: inherit;
     font-size: 0.9rem;
+    color: #666;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .pet-switch-btn.active {
-    background: linear-gradient(135deg, var(--primary-color), #ff6b35);
-    border-color: var(--primary-color);
-    color: white;
+    background: white;
+    border-color: #2EC4B6;
+    color: #2EC4B6;
     font-weight: bold;
-    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+    box-shadow: 0 2px 6px rgba(46, 196, 182, 0.3);
 }
 
 .pet-switch-btn.locked {
-    background: rgba(200, 200, 200, 0.5);
-    border-color: #ccc;
-    color: #aaa;
+    background: transparent;
+    border: 2px solid transparent;
+    color: #bbb;
+    opacity: 0.5;
     cursor: not-allowed;
-    opacity: 0.6;
 }
 
 .pet-switch-btn:not(.active):not(.locked):hover {
-    border-color: var(--primary-color);
-    background: rgba(255, 107, 53, 0.1);
+    border-color: #2EC4B6;
+    background: rgba(46, 196, 182, 0.1);
 }
 
 
@@ -1152,10 +1156,14 @@ footer {
 /* ========== Responsive ========== */
 @media (min-width: 768px) {
     #app {
-        max-width: 800px;
+        max-width: 860px;
         min-height: 90vh;
         margin: 2rem auto;
         border-radius: 30px;
+    }
+
+    header h1 {
+        font-size: 2rem;
     }
 
     .niwa-container {
@@ -1169,6 +1177,15 @@ footer {
 
     .pet {
         font-size: 7rem;
+    }
+
+    .pet img {
+        width: 160px;
+        height: 160px;
+    }
+
+    .result-pet-container {
+        height: 200px;
     }
 
     .question-display {
@@ -1187,6 +1204,53 @@ footer {
 
     .zukan-cell {
         font-size: 1.8rem;
+    }
+
+    /* 雲ボタン */
+    .cloud-choice::before {
+        font-size: 6.5rem;
+    }
+    .cloud-char {
+        font-size: 2.5rem;
+    }
+
+    /* 文字スロット */
+    .char-slot {
+        width: 72px;
+        height: 84px;
+        font-size: 2.6rem;
+        border-radius: 16px;
+    }
+    .char-slots {
+        gap: 0.8rem;
+    }
+
+    /* シルエット */
+    .target-silhouette {
+        font-size: 7rem;
+    }
+
+    /* ワードカード */
+    .word-card-silhouette {
+        font-size: 3rem;
+    }
+    .word-card-name {
+        font-size: 1.4rem;
+    }
+    .word-card {
+        min-width: 120px;
+        padding: 1rem;
+    }
+
+    /* にわコレクション */
+    .niwa-collection-item {
+        font-size: 2.2rem;
+    }
+
+    /* 吹き出し */
+    .pet-speech-bubble {
+        font-size: 1.2rem;
+        max-width: 340px;
     }
 }
 
@@ -1214,4 +1278,406 @@ footer {
     .options-grid {
         gap: 0.8rem;
     }
+}
+/* ==========================================
+   v3 新規スタイル：もじさがしゲーム
+   ========================================== */
+
+/* ---- にわ：コレクション表示 ---- */
+.niwa-collection-items {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+.niwa-collection-item {
+    position: absolute;
+    font-size: 1.6rem;
+    animation: niwa-item-float 3s ease-in-out infinite;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    cursor: pointer;
+    pointer-events: auto;
+}
+.niwa-collection-item.item-tap {
+    animation: itemTap 0.4s ease !important;
+}
+@keyframes itemTap {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.5) rotate(15deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+@keyframes niwa-item-float {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-6px) rotate(3deg); }
+}
+
+.niwa-words-count {
+    font-size: 0.85rem;
+    color: var(--secondary-color, #888);
+    margin-top: 0.2rem;
+}
+
+/* ---- ペット吹き出し ---- */
+.pet-speech-bubble {
+    background: white;
+    border: 2px solid var(--primary-color, #ffb347);
+    border-radius: 16px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    margin: 0.4rem auto;
+    max-width: 260px;
+    text-align: center;
+    position: relative;
+    animation: bubble-pop 0.3s ease;
+}
+.pet-speech-bubble::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-bottom-color: var(--primary-color, #ffb347);
+}
+@keyframes bubble-pop {
+    from { transform: scale(0.8); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+}
+
+/* ---- あそぶ！ボタン ---- */
+.niwa-play-buttons {
+    margin: 0.8rem 0;
+}
+.btn-play {
+    font-size: 1.4rem;
+    padding: 0.8rem 2.5rem;
+    background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255,107,107,0.4);
+    animation: play-btn-pulse 2s ease-in-out infinite;
+    transition: transform 0.1s;
+}
+.btn-play:active { transform: scale(0.96); }
+@keyframes play-btn-pulse {
+    0%, 100% { box-shadow: 0 4px 15px rgba(255,107,107,0.4); }
+    50%  { box-shadow: 0 4px 30px rgba(255,107,107,0.7); }
+}
+
+/* ---- 単語選択画面 ---- */
+#word-select-scene {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    gap: 1rem;
+}
+#word-select-title {
+    font-size: 1.2rem;
+    margin: 0;
+}
+.word-select-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+    width: 100%;
+    max-width: 400px;
+    overflow-y: auto;
+    max-height: 60vh;
+}
+.word-card {
+    background: white;
+    border: 3px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 0.8rem 0.4rem;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+    position: relative;
+}
+.word-card:hover, .word-card:active {
+    transform: scale(1.06);
+    border-color: #ff9f43;
+    box-shadow: 0 4px 12px rgba(255,159,67,0.3);
+}
+.word-card.collected {
+    background: #fffbe6;
+    border-color: #ffd700;
+}
+.word-card-silhouette {
+    font-size: 2.2rem;
+    margin-bottom: 0.3rem;
+}
+.word-card-name {
+    font-size: 1rem;
+    font-weight: bold;
+}
+.collected-badge {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-size: 0.9rem;
+}
+
+/* 未収集ことば：絵文字シルエット */
+.word-card-silhouette.silhouette {
+    filter: brightness(0) opacity(0.25);
+}
+/* 未収集ことば：？文字のスタイル */
+.word-card-name.unknown-name {
+    color: #bbb;
+    letter-spacing: 0.05em;
+}
+
+/* ---- もじさがし画面 ---- */
+#mojisagashi-scene {
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+    gap: 0.5rem;
+    min-height: 0;
+}
+
+/* シルエットエリア */
+#silhouette-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 0 0 auto;
+}
+.target-silhouette {
+    font-size: 5rem;
+    line-height: 1;
+}
+.silhouette-emoji {
+    filter: brightness(0);
+    transition: filter 0.8s ease, transform 0.4s ease;
+    display: inline-block;
+}
+.silhouette-emoji.revealed {
+    filter: brightness(1);
+    transform: scale(1.2);
+    animation: reveal-bounce 0.5s ease;
+}
+@keyframes reveal-bounce {
+    0%   { transform: scale(0.8); }
+    60%  { transform: scale(1.3); }
+    100% { transform: scale(1.2); }
+}
+
+/* 文字スロット */
+.char-slots {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: center;
+}
+.char-slot {
+    width: 56px;
+    height: 64px;
+    border: 3px solid #ccc;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    background: white;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+.char-slot.active-slot::before {
+    content: attr(data-hint);
+    position: absolute;
+    font-size: inherit;
+    color: #999;
+    opacity: 0.25;
+    pointer-events: none;
+}
+.char-slot.active-slot {
+    border-color: #ff9f43;
+    box-shadow: 0 0 0 3px rgba(255,159,67,0.4);
+    transform: scale(1.12);
+    animation: slot-glow 1s ease-in-out infinite;
+}
+@keyframes slot-glow {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(255,159,67,0.4); }
+    50%       { box-shadow: 0 0 0 6px rgba(255,159,67,0.7); }
+}
+.char-slot.slot-filled {
+    border-color: #54a0ff;
+    background: #e8f4ff;
+    animation: slot-fill 0.4s ease;
+}
+@keyframes slot-fill {
+    from { transform: scale(1.3); }
+    to   { transform: scale(1); }
+}
+
+/* 雲エリア */
+.cloud-area {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: flex-end;
+    flex: 1 1 auto;
+    padding: 1rem 0.5rem;
+}
+
+/* 雲ボタン */
+.cloud-choice {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    animation: cloud-float 2.5s ease-in-out infinite;
+    position: relative;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+@keyframes cloud-float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-12px); }
+}
+.cloud-choice::before {
+    content: '☁️';
+    font-size: 4.5rem;
+    line-height: 1;
+    display: block;
+    transition: transform 0.1s;
+}
+.cloud-choice:active::before { transform: scale(0.93); }
+.cloud-char {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    font-size: 1.8rem;
+    font-weight: bold;
+    pointer-events: none;
+    color: #333;
+}
+
+/* 正解アニメーション */
+.cloud-choice.cloud-correct::before {
+    animation: cloud-burst 0.5s ease forwards;
+}
+@keyframes cloud-burst {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.4); filter: brightness(1.5); }
+    100% { transform: scale(0); opacity: 0; }
+}
+.cloud-choice.cloud-correct .cloud-char {
+    animation: char-fly-up 0.6s ease forwards;
+}
+@keyframes char-fly-up {
+    to { transform: translate(-50%, -200%); opacity: 0; font-size: 2.5rem; }
+}
+
+/* ハズレアニメーション */
+.cloud-choice.cloud-wrong {
+    animation: cloud-shake 0.4s ease, cloud-fade 0.3s ease 0.35s forwards;
+}
+@keyframes cloud-shake {
+    0%, 100% { transform: translateX(0); }
+    20%       { transform: translateX(-8px); }
+    60%       { transform: translateX(8px); }
+}
+@keyframes cloud-fade {
+    to { opacity: 0; }
+}
+
+/* ---- ゲーム中ペット吹き出し ---- */
+.game-pet-popup {
+    position: fixed;
+    bottom: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 4rem;
+    animation: pet-jump-in 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 100;
+    pointer-events: none;
+}
+.game-pet-popup img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+@keyframes pet-jump-in {
+    from { transform: translateX(-50%) translateY(100px) scale(0.5); opacity: 0; }
+    to   { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
+}
+.game-speech-bubble {
+    position: fixed;
+    bottom: calc(30% + 100px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border: 3px solid #ff9f43;
+    border-radius: 16px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    white-space: nowrap;
+    z-index: 101;
+    pointer-events: none;
+    animation: bubble-pop 0.3s ease 0.3s both;
+}
+
+/* ---- リザルトペット跳ね ---- */
+@keyframes petHappyBounce {
+    0%, 100% { transform: scale(1.4) translateY(0); }
+    20%       { transform: scale(1.4) translateY(-20px) rotate(-5deg); }
+    40%       { transform: scale(1.4) translateY(0) rotate(5deg); }
+    60%       { transform: scale(1.4) translateY(-14px) rotate(-3deg); }
+    80%       { transform: scale(1.4) translateY(0) rotate(3deg); }
+}
+.pet-happy-bounce {
+    animation: petHappyBounce 1.2s ease infinite;
+}
+
+/* ---- にわペットクリックジャンプ ---- */
+@keyframes petClickJump {
+    0%   { transform: scaleX(1.15) scaleY(0.85); }
+    20%  { transform: scaleX(0.9) scaleY(1.1) translateY(-24px); }
+    60%  { transform: scaleX(0.95) scaleY(1.05) translateY(-16px); }
+    80%  { transform: scaleX(1.05) scaleY(0.95) translateY(0); }
+    100% { transform: scaleX(1) scaleY(1); }
+}
+.pet-click-jump {
+    animation: petClickJump 0.7s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+
+/* ---- リザルト画面 ---- */
+#result-scene {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+.collected-word-display {
+    text-align: center;
+    animation: word-appear 0.5s ease;
+}
+@keyframes word-appear {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+}
+.collected-word-emoji {
+    font-size: 4rem;
+    margin-bottom: 0.3rem;
+}
+.collected-word-text {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--primary-color, #ff9f43);
+}
+.words-progress-display {
+    font-size: 0.95rem;
+    color: #555;
+    background: #f5f5f5;
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+    text-align: center;
 }
