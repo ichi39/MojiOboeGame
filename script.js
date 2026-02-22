@@ -1,6 +1,6 @@
 // ==========================================
-// もじおぼえゲーム v2.1
-// 「育てて集める」ひらがな冒険
+// もじさがしゲーム v3
+// 「あつめて そだてる」ことば冒険
 // ==========================================
 
 // ========== Pet Configuration ==========
@@ -61,30 +61,22 @@ function renderPetToElement(element, stageData) {
     }
 }
 
-// ========== EXP Table ==========
-const EXP_TABLE = [
-    0,    // Lv1
-    100,  // Lv2
-    250,  // Lv3
-    450,  // Lv4
-    700,  // Lv5
-    1000, // Lv6
-    1400  // Lv7 (max)
-];
+// ========== ことば Lv テーブル（EXPを廃止・ことば数でLv管理）==========
+// インデックス i = 必要なことば数の累計（Lv[i+1]になるために必要）
+const WORD_LEVEL_TABLE = [0, 3, 6, 10, 15, 21, 28];
+// Lv1→2: 3個, Lv2→3: 6個, Lv3→4: 10個, ..., Lv6→7: 28個
 
-function getExpForNextLevel(level) {
-    if (level >= 7) return Infinity;
-    return EXP_TABLE[level]; // EXP needed to reach level+1
-}
-
-function getLevelFromExp(totalExp) {
+function getLevelFromWordCount(count) {
     let level = 1;
-    for (let i = 0; i < EXP_TABLE.length; i++) {
-        if (totalExp >= EXP_TABLE[i]) {
-            level = i + 2; // Level 2 at EXP_TABLE[0], etc.
-        }
+    for (let i = 0; i < WORD_LEVEL_TABLE.length; i++) {
+        if (count >= WORD_LEVEL_TABLE[i]) level = i + 1;
     }
     return Math.min(level, 7);
+}
+
+function getWordsForNextLevel(level) {
+    if (level >= 7) return Infinity;
+    return WORD_LEVEL_TABLE[level]; // 次のLvに必要な累計ことば数
 }
 
 // ========== Hiragana Data ==========
@@ -163,26 +155,56 @@ const SPEECH_PHRASES = {
 // All 46 hiragana for zukan
 const ALL_HIRAGANA = HIRAGANA_DATA.map(h => h.char);
 
+// ========== WORD_DATA（もじさがしゲームの単語リスト）==========
+// pet: 'chick'（ひよこ）or 'mermaid'（にんぎょ）で担当ペットを指定
+// chars: ゲームで1文字ずつ集める文字の配列
+// petReaction: 全文字クリア時にペットが言うセリフ
+const WORD_DATA = [
+    // ===== ひよこ: 1〜2文字中心 =====
+    { word: 'め', emoji: '👁️', chars: ['め'], pet: 'chick', petReaction: 'めが　あいたよ〜！' },
+    { word: 'き', emoji: '🌳', chars: ['き'], pet: 'chick', petReaction: 'きのぼり　したいな〜！' },
+    { word: 'て', emoji: '✋', chars: ['て'], pet: 'chick', petReaction: 'たっちして〜！' },
+    { word: 'かに', emoji: '🦀', chars: ['か', 'に'], pet: 'chick', petReaction: 'かにさん、いたーい！' },
+    { word: 'いぬ', emoji: '🐶', chars: ['い', 'ぬ'], pet: 'chick', petReaction: 'わんわん！なかよしだよ！' },
+    { word: 'ねこ', emoji: '🐱', chars: ['ね', 'こ'], pet: 'chick', petReaction: 'にゃ〜ん！かわいいな〜！' },
+    { word: 'うま', emoji: '🐴', chars: ['う', 'ま'], pet: 'chick', petReaction: 'のりたいな〜！ひひーん！' },
+    { word: 'くま', emoji: '🐻', chars: ['く', 'ま'], pet: 'chick', petReaction: 'く〜ん！おおきいね！' },
+    { word: 'かわ', emoji: '🌊', chars: ['か', 'わ'], pet: 'chick', petReaction: 'ひやひやきもちいい〜！' },
+    { word: 'はな', emoji: '🌸', chars: ['は', 'な'], pet: 'chick', petReaction: 'いいにおい〜！' },
+    { word: 'そら', emoji: '🌤️', chars: ['そ', 'ら'], pet: 'chick', petReaction: 'とびたいな〜！わーい！' },
+    { word: 'あめ', emoji: '🍬', chars: ['あ', 'め'], pet: 'chick', petReaction: 'あまくておいしそう！' },
+    { word: 'もも', emoji: '🍑', chars: ['も', 'も'], pet: 'chick', petReaction: 'ももいろで　かわいい〜！' },
+    { word: 'つき', emoji: '🌙', chars: ['つ', 'き'], pet: 'chick', petReaction: 'まるくて　きれいだね！' },
+    // ===== にんぎょ: 2〜3文字（4文字も一部）=====
+    { word: 'さかな', emoji: '🐟', chars: ['さ', 'か', 'な'], pet: 'mermaid', petReaction: 'なかまだ〜！いっしょにおよごう！' },
+    { word: 'うさぎ', emoji: '🐰', chars: ['う', 'さ', 'ぎ'], pet: 'mermaid', petReaction: 'ぴょんぴょん！かわいいな！' },
+    { word: 'みかん', emoji: '🍊', chars: ['み', 'か', 'ん'], pet: 'mermaid', petReaction: 'すっぱそう！ぷにぷにだ！' },
+    { word: 'りんご', emoji: '🍎', chars: ['り', 'ん', 'ご'], pet: 'mermaid', petReaction: 'あかくてあまそう！' },
+    { word: 'たいよう', emoji: '☀️', chars: ['た', 'い', 'よ', 'う'], pet: 'mermaid', petReaction: 'あったか〜い！きもちいい！' },
+    { word: 'ひこうき', emoji: '✈️', chars: ['ひ', 'こ', 'う', 'き'], pet: 'mermaid', petReaction: 'うみのうえを　とんでるよ〜！' },
+    { word: 'ふうせん', emoji: '🎈', chars: ['ふ', 'う', 'せ', 'ん'], pet: 'mermaid', petReaction: 'どこまでも　とんでいくね！' },
+    { word: 'すいか', emoji: '🍉', chars: ['す', 'い', 'か'], pet: 'mermaid', petReaction: 'なつの　あじだ〜！' },
+    { word: 'ちきゅう', emoji: '🌍', chars: ['ち', 'き', 'ゅ', 'う'], pet: 'mermaid', petReaction: 'おおきな　うみが　あるね！' },
+];
+
 // ==========================================
 // SaveManager - localStorage persistence
 // ==========================================
 class SaveManager {
     constructor() {
-        this.SAVE_KEY = 'mojioboe_v2_save';
+        this.SAVE_KEY = 'mojioboe_v3_save'; // v3: キー変更で旧データを無視
         this.data = this.load();
     }
 
     getDefault() {
         return {
-            masteredChars: [],
-            totalCorrect: 0,
-            comboMax: 0,
-            unlockedDifficulties: ['easy'],
+            collectedWords: [],      // 集めたことばリスト（例: ['かに', 'いぬ']）
+            niwaItems: [],           // にわに飾られた絵文字リスト
             unlockedPets: ['chick'],
             activePet: 'chick',
             petData: {
-                chick: { exp: 0, level: 1 },
-                mermaid: { exp: 0, level: 1 }
+                chick: { level: 1 },
+                mermaid: { level: 1 }
             }
         };
     }
@@ -193,16 +215,8 @@ class SaveManager {
             if (raw) {
                 const parsed = JSON.parse(raw);
                 const defaults = this.getDefault();
-                // Merge with defaults for new keys
                 const merged = { ...defaults, ...parsed };
-                // Ensure petData has all pet entries
                 merged.petData = { ...defaults.petData, ...(parsed.petData || {}) };
-                // Migrate from old petEXP/petLevel format
-                if (parsed.petEXP !== undefined && !parsed.petData) {
-                    merged.petData.chick = { exp: parsed.petEXP, level: parsed.petLevel || 1 };
-                    delete merged.petEXP;
-                    delete merged.petLevel;
-                }
                 return merged;
             }
         } catch (e) {
@@ -219,31 +233,38 @@ class SaveManager {
         }
     }
 
-    // Helper accessors for active pet
-    get petEXP() {
-        return this.data.petData[this.data.activePet].exp;
-    }
+    // ことば数からレベルを返す（アクティブペット）
     get petLevel() {
-        return this.data.petData[this.data.activePet].level;
-    }
-
-    addMasteredChar(char) {
-        if (!this.data.masteredChars.includes(char)) {
-            this.data.masteredChars.push(char);
-            this.save();
-            return true; // newly mastered
-        }
-        return false; // already known
-    }
-
-    addEXP(amount) {
+        // 各ペットは自分のペット担当ことばの収集数でLvが決まる
         const petId = this.data.activePet;
-        const pet = this.data.petData[petId];
-        const oldLevel = pet.level;
-        pet.exp += amount;
-        pet.level = getLevelFromExp(pet.exp);
+        const count = this.data.collectedWords.filter(
+            w => (WORD_DATA.find(d => d.word === w)?.pet === petId)
+        ).length;
+        return getLevelFromWordCount(count);
+    }
+
+    // ことばコレクションに追加。レベルアップした場合 true を返す
+    addCollectedWord(word) {
+        const oldLevel = this.petLevel;
+        const petId = this.data.activePet;
+        if (!this.data.collectedWords.includes(word)) {
+            this.data.collectedWords.push(word);
+        }
+        // にわにも追加
+        const wordEntry = WORD_DATA.find(d => d.word === word);
+        if (wordEntry && !this.data.niwaItems.includes(wordEntry.emoji)) {
+            this.data.niwaItems.push(wordEntry.emoji);
+        }
+        this.data.petData[petId].level = this.petLevel; // sync
         this.save();
-        return pet.level > oldLevel; // returns true if leveled up
+        return this.petLevel > oldLevel;
+    }
+
+    getWordCount(petId = null) {
+        const id = petId || this.data.activePet;
+        return this.data.collectedWords.filter(
+            w => (WORD_DATA.find(d => d.word === w)?.pet === id)
+        ).length;
     }
 
     switchPet(petId) {
@@ -261,8 +282,6 @@ class SaveManager {
         }
         return false;
     }
-
-
 }
 
 // ==========================================
@@ -613,30 +632,22 @@ class Game {
         this.bgManager = new BackgroundManager(this.save.petLevel);
 
         this.currentScene = 'niwa';
-        this.difficulty = 'normal';
-        this.questions = [];
-        this.currentQuestionIndex = 0;
-        this.score = 0;
-        this.combo = 0;
-        this.sessionNewChars = [];
-        this.sessionEXP = 0;
         this.petType = this.save.data.activePet;
+        this.currentWord = null;
+        this.currentCharIndex = 0;
 
         this.initElements();
         this.attachEventListeners();
         this.initNiwa();
         this.bgManager.update(this.save.petLevel);
-
-        // Start title BGM
-        // (wait for user interaction to start audio context)
     }
 
     initElements() {
         this.scenes = {
             niwa: document.getElementById('niwa-scene'),
             zukan: document.getElementById('zukan-scene'),
-            learning: document.getElementById('learning-scene'),
-            game: document.getElementById('game-scene'),
+            wordSelect: document.getElementById('word-select-scene'),
+            mojisagashi: document.getElementById('mojisagashi-scene'),
             result: document.getElementById('result-scene')
         };
 
@@ -644,53 +655,54 @@ class Game {
         this.headerStats = document.getElementById('header-stats');
         this.petLevelDisplay = document.getElementById('pet-level');
         this.expBarFill = document.getElementById('exp-bar-fill');
-        this.expCurrent = document.getElementById('exp-current');
-        this.expNext = document.getElementById('exp-next');
+        this.wordsCollected = document.getElementById('words-collected');
 
         // Niwa
         this.niwaPet = document.getElementById('niwa-pet');
         this.niwaPetName = document.getElementById('niwa-pet-name');
+        this.niwaWordsCount = document.getElementById('niwa-words-count');
+        this.speechBubble = document.getElementById('pet-speech-bubble');
 
         // Zukan
         this.zukanGrid = document.getElementById('zukan-grid');
         this.zukanCount = document.getElementById('zukan-count');
         this.zukanBadges = document.getElementById('zukan-badges');
 
-        // Game
-        this.scoreDisplay = document.getElementById('score');
-        this.questionsLeftDisplay = document.getElementById('questions-left');
-        this.gamePet = document.getElementById('game-pet');
-        this.questionText = document.getElementById('question-text');
-        this.optionsContainer = document.getElementById('options-container');
-
-        // Combo
-        this.comboDisplay = document.getElementById('combo-display');
-        this.comboCount = document.getElementById('combo-count');
+        // Mojisagashi
+        this.silhouetteArea = document.getElementById('target-silhouette');
+        this.charSlotsEl = document.getElementById('char-slots');
+        this.cloudArea = document.getElementById('cloud-area');
 
         // Result
         this.resultPet = document.getElementById('result-pet');
-        this.finalScoreDisplay = document.getElementById('final-score');
-        this.retryBtn = document.getElementById('retry-btn');
         this.evolutionMessage = document.getElementById('evolution-message');
-        this.newCharsDisplay = document.getElementById('new-chars-display');
-        this.newCharsList = document.getElementById('new-chars-list');
-        this.expEarnedDisplay = document.getElementById('exp-earned-display');
-        this.expEarnedAmount = document.getElementById('exp-earned-amount');
         this.levelupMessage = document.getElementById('levelup-message');
-        this.scoreCounter = document.getElementById('score-counter');
-
-        this.difficultyBtns = document.querySelectorAll('[data-difficulty]');
+        this.collectedWordDisplay = document.getElementById('collected-word-display');
+        this.nextWordBtn = document.getElementById('next-word-btn');
+        this.retryBtn = document.getElementById('retry-btn');
+        this.wordsProgressDisplay = document.getElementById('words-progress-display');
     }
 
     attachEventListeners() {
-        this.difficultyBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const diff = e.target.closest('[data-difficulty]')?.dataset.difficulty;
-                if (!diff) return;
-                if (!this.save.data.unlockedDifficulties.includes(diff)) return;
-                this.audio.ensureContext();
-                this.startGame(diff);
-            });
+        document.getElementById('play-btn').addEventListener('click', () => {
+            this.audio.ensureContext();
+            this.showWordSelectScreen();
+        });
+
+        document.getElementById('open-zukan-btn').addEventListener('click', () => {
+            this.audio.ensureContext();
+            this.showZukan();
+        });
+        document.getElementById('close-zukan-btn').addEventListener('click', () => {
+            this.switchScene('niwa');
+        });
+
+        document.getElementById('cancel-word-select-btn').addEventListener('click', () => {
+            this.switchScene('niwa');
+        });
+
+        this.nextWordBtn.addEventListener('click', () => {
+            this.showWordSelectScreen();
         });
 
         this.retryBtn.addEventListener('click', () => {
@@ -699,23 +711,13 @@ class Game {
             this.audio.stopBGM();
         });
 
-        document.getElementById('open-zukan-btn').addEventListener('click', () => {
-            this.audio.ensureContext();
-            this.showZukan();
-        });
-
-        document.getElementById('close-zukan-btn').addEventListener('click', () => {
-            this.switchScene('niwa');
-        });
-
-        // Pet tap in niwa
         this.niwaPet.addEventListener('click', (e) => {
             this.audio.ensureContext();
             this.audio.playPetTap();
             this.spawnHeart(e);
+            this.showPetSpeech();
         });
 
-        // Reset button
         document.getElementById('reset-btn').addEventListener('click', () => {
             if (confirm('ほんとうに さいしょから あそぶ？\nぜんぶの データが きえちゃうよ！')) {
                 localStorage.clear();
@@ -723,7 +725,6 @@ class Game {
             }
         });
 
-        // Pet switching
         document.querySelectorAll('.pet-switch-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const petId = btn.dataset.pet;
@@ -748,11 +749,10 @@ class Game {
         target.classList.add('active');
         this.currentScene = sceneName;
 
-        // Show/hide header stats
-        if (sceneName === 'game' || sceneName === 'learning') {
+        if (sceneName === 'mojisagashi') {
             this.headerStats.classList.remove('hidden');
             this.updateHeaderStats();
-        } else if (sceneName === 'niwa') {
+        } else {
             this.headerStats.classList.add('hidden');
         }
     }
@@ -762,15 +762,17 @@ class Game {
         this.petType = this.save.data.activePet;
         this.updateNiwaPet();
         this.bgManager.update(this.save.petLevel);
-        this.updateHeaderStats();
-        this.updateDifficultyButtons();
         this.updatePetSwitchBar();
+        this.updateNiwaCollection();
+        this.bgManager.updateNiwaBgItems();
+
+        const count = this.save.getWordCount();
+        if (this.niwaWordsCount) this.niwaWordsCount.textContent = `ことば: ${count}こ あつめた`;
     }
 
     updatePetSwitchBar() {
         const unlocked = this.save.data.unlockedPets;
         const active = this.save.data.activePet;
-        const petEmojis = { chick: '🐣', mermaid: '🧜‍♀️' };
         const petNames = { chick: 'ひよこ', mermaid: 'にんぎょ' };
 
         document.querySelectorAll('.pet-switch-btn').forEach(btn => {
@@ -782,9 +784,9 @@ class Game {
             btn.classList.toggle('locked', !isUnlocked);
 
             if (isUnlocked) {
-                const pet = this.save.data.petData[petId];
                 const config = PET_CONFIG[petId];
-                const stageIdx = config.getStageIndex(pet.level);
+                const lv = this.save.data.petData[petId].level || 1;
+                const stageIdx = config.getStageIndex(lv);
                 const stageData = config.stages[stageIdx];
                 const display = stageData.image ? '' : stageData.text + ' ';
                 btn.textContent = `${display}${petNames[petId]}`;
@@ -794,29 +796,19 @@ class Game {
         });
     }
 
-    updateDifficultyButtons() {
-        const unlocked = this.save.data.unlockedDifficulties;
-        const labels = {
-            easy: '🌱 やさしい (3もん)',
-            normal: '🌿 ふつう (5もん)',
-            hard: '🌳 むずかしい (10もん)'
-        };
-        const lockedLabels = {
-            easy: '🌱 やさしい (3もん)',
-            normal: '🔒 ふつう (5もん)',
-            hard: '🔒 むずかしい (10もん)'
-        };
-        this.difficultyBtns.forEach(btn => {
-            const diff = btn.dataset.difficulty;
-            if (unlocked.includes(diff)) {
-                btn.classList.remove('btn-locked');
-                btn.disabled = false;
-                btn.textContent = labels[diff];
-            } else {
-                btn.classList.add('btn-locked');
-                btn.disabled = true;
-                btn.textContent = lockedLabels[diff];
-            }
+    updateNiwaCollection() {
+        const container = document.getElementById('niwa-collection-items');
+        if (!container) return;
+        container.innerHTML = '';
+        const items = this.save.data.niwaItems || [];
+        items.slice(-12).forEach((emoji, i) => {
+            const el = document.createElement('div');
+            el.className = 'niwa-collection-item';
+            el.textContent = emoji;
+            el.style.left = (8 + (i % 6) * 14) + '%';
+            el.style.bottom = (4 + Math.floor(i / 6) * 14) + '%';
+            el.style.animationDelay = (i * 0.15) + 's';
+            container.appendChild(el);
         });
     }
 
@@ -828,11 +820,26 @@ class Game {
         this.niwaPetName.textContent = `${stageData.text} ${stageData.label} Lv.${this.save.petLevel}`;
     }
 
+    showPetSpeech() {
+        const collected = this.save.data.collectedWords;
+        let text = 'ぴよ〜！あそんで！';
+        if (collected.length > 0) {
+            const word = collected[Math.floor(Math.random() * collected.length)];
+            const entry = WORD_DATA.find(d => d.word === word);
+            if (entry) text = entry.petReaction;
+        }
+        this.speechBubble.textContent = text;
+        this.speechBubble.classList.remove('hidden');
+        clearTimeout(this._speechTimer);
+        this._speechTimer = setTimeout(() => this.speechBubble.classList.add('hidden'), 2500);
+    }
+
     spawnHeart(e) {
         const heartsContainer = document.getElementById('niwa-hearts');
+        const icons = ['❤️', '⭐', '💫', '🌸'];
         const heart = document.createElement('div');
         heart.className = 'niwa-heart';
-        heart.textContent = '❤️';
+        heart.textContent = icons[Math.floor(Math.random() * icons.length)];
         const rect = this.niwaPet.getBoundingClientRect();
         const parentRect = heartsContainer.getBoundingClientRect();
         heart.style.left = (rect.left - parentRect.left + rect.width / 2) + 'px';
@@ -845,15 +852,15 @@ class Game {
     // ========== Header Stats ==========
     updateHeaderStats() {
         const level = this.save.petLevel;
-        const exp = this.save.petEXP;
-        const nextExp = getExpForNextLevel(level);
-        const prevExp = level >= 2 ? EXP_TABLE[level - 2] : 0;
-        const progress = level >= 7 ? 100 : ((exp - prevExp) / (nextExp - prevExp) * 100);
+        const count = this.save.getWordCount();
+        const nextCount = getWordsForNextLevel(level);
+        const prevCount = level >= 2 ? WORD_LEVEL_TABLE[level - 1] : 0;
+        const progress = level >= 7 ? 100 :
+            ((count - prevCount) / (nextCount - prevCount) * 100);
 
         this.petLevelDisplay.textContent = level;
-        this.expBarFill.style.width = Math.min(progress, 100) + '%';
-        this.expCurrent.textContent = exp;
-        this.expNext.textContent = level >= 7 ? 'MAX' : nextExp;
+        this.expBarFill.style.width = Math.min(Math.max(progress, 0), 100) + '%';
+        if (this.wordsCollected) this.wordsCollected.textContent = count;
     }
 
     // ========== もじずかん ==========
@@ -863,16 +870,21 @@ class Game {
     }
 
     renderZukan() {
-        const mastered = this.save.data.masteredChars;
+        const collectedChars = new Set();
+        this.save.data.collectedWords.forEach(word => {
+            const entry = WORD_DATA.find(d => d.word === word);
+            if (entry) entry.chars.forEach(c => collectedChars.add(c));
+        });
+
         this.zukanGrid.innerHTML = '';
-        this.zukanCount.textContent = mastered.length;
+        this.zukanCount.textContent = collectedChars.size;
 
         ALL_HIRAGANA.forEach(char => {
             const cell = document.createElement('div');
             cell.className = 'zukan-cell';
             const data = HIRAGANA_DATA.find(h => h.char === char);
 
-            if (mastered.includes(char)) {
+            if (collectedChars.has(char)) {
                 cell.classList.add('known');
                 cell.innerHTML = `<span>${char}</span><span class="zukan-emoji">${data ? data.emoji : ''}</span>`;
                 cell.addEventListener('click', () => this.showZukanDetail(char));
@@ -883,416 +895,241 @@ class Game {
             this.zukanGrid.appendChild(cell);
         });
 
-        // Badges
         this.zukanBadges.innerHTML = '';
-        if (mastered.length >= 10) this.zukanBadges.innerHTML += '🥉';
-        if (mastered.length >= 25) this.zukanBadges.innerHTML += '🥈';
-        if (mastered.length >= 46) this.zukanBadges.innerHTML += '🏅';
+        if (collectedChars.size >= 10) this.zukanBadges.innerHTML += '🥉';
+        if (collectedChars.size >= 25) this.zukanBadges.innerHTML += '🥈';
+        if (collectedChars.size >= 46) this.zukanBadges.innerHTML += '🏅';
     }
 
     showZukanDetail(char) {
         const data = HIRAGANA_DATA.find(h => h.char === char);
         if (!data) return;
-
         const modal = document.getElementById('zukan-detail-modal');
         document.getElementById('zukan-detail-char').textContent = char;
         document.getElementById('zukan-detail-emoji').textContent = data.emoji;
         document.getElementById('zukan-detail-word').textContent = data.word;
-
         modal.classList.remove('hidden');
         this.audio.speak(data.word, data.speech);
-
-        // Speak button
-        document.getElementById('zukan-detail-speak').onclick = () => {
-            this.audio.speak(data.word, data.speech);
-        };
-
-        // Close button
-        document.getElementById('zukan-detail-close').onclick = () => {
-            modal.classList.add('hidden');
-        };
-
-        // Close on overlay click
-        modal.onclick = (e) => {
-            if (e.target === modal) {
-                modal.classList.add('hidden');
-            }
-        };
+        document.getElementById('zukan-detail-speak').onclick = () => this.audio.speak(data.word, data.speech);
+        document.getElementById('zukan-detail-close').onclick = () => modal.classList.add('hidden');
+        modal.onclick = (e) => { if (e.target === modal) modal.classList.add('hidden'); };
     }
 
-    // ========== Start Game ==========
-    startGame(difficulty) {
-        this.difficulty = difficulty;
-        this.score = 0;
-        this.combo = 0;
-        this.sessionNewChars = [];
-        this.sessionEXP = 0;
-        this.currentQuestionIndex = 0;
+    // ========== 単語選択画面 ==========
+    showWordSelectScreen() {
+        this.switchScene('wordSelect');
+        const petId = this.save.data.activePet;
+        const petWords = WORD_DATA.filter(d => d.pet === petId);
+        const collected = this.save.data.collectedWords;
+        const petNames = { chick: 'ひよこ', mermaid: 'にんぎょ' };
+        document.getElementById('word-select-title').textContent =
+            `${petNames[petId]}の　ことばをえらんで！`;
 
-        let questionCount = 5;
-        if (difficulty === 'easy') questionCount = 3;
-        if (difficulty === 'hard') questionCount = 10;
-
-        // Prioritize unmastered chars
-        const unmasteredChars = HIRAGANA_DATA.filter(h => !this.save.data.masteredChars.includes(h.char));
-        const masteredChars = HIRAGANA_DATA.filter(h => this.save.data.masteredChars.includes(h.char));
-
-        let pool = [];
-
-        // Unmastered first
-        const shuffledUnmastered = [...unmasteredChars].sort(() => 0.5 - Math.random());
-        pool = [...pool, ...shuffledUnmastered];
-
-        // Fill remaining with mastered (review)
-        const shuffledMastered = [...masteredChars].sort(() => 0.5 - Math.random());
-        pool = [...pool, ...shuffledMastered];
-
-        // Deduplicate and slice
-        const seen = new Set();
-        this.questions = [];
-        for (const q of pool) {
-            if (!seen.has(q.char)) {
-                seen.add(q.char);
-                this.questions.push(q);
-                if (this.questions.length >= questionCount) break;
-            }
-        }
-
-        this.updateGamePet();
-        this.startLearningMatchingPhase();
-        this.audio.startBGM('title');
-    }
-
-    // ========== Learning Phase ==========
-    startLearningMatchingPhase() {
-        this.switchScene('learning');
-        this.currentLearningIndex = 0;
-        this.showMatchingProblem();
-    }
-
-    showMatchingProblem() {
-        if (this.currentLearningIndex >= this.questions.length) {
-            this.startQuizPhase();
-            return;
-        }
-
-        const targetQ = this.questions[this.currentLearningIndex];
-        const container = document.getElementById('learning-scene');
-
-        container.innerHTML = `
-            <h2>おなじのど〜れだ？</h2>
-            <div class="sample-display">
-                <div class="sample-emoji">${targetQ.emoji}</div>
-                <div class="sample-char">${this.highlightChar(targetQ.char, targetQ.word)}</div>
-            </div>
-            <div class="matching-options options-grid" style="margin-top: 1.5rem;"></div>
-            <div class="feedback-msg" style="height: 2rem; font-weight:bold; color: var(--primary-color);"></div>
-        `;
-
-        this.audio.speak(targetQ.word, targetQ.speech);
-
-        const distractors = HIRAGANA_DATA
-            .filter(d => d.char !== targetQ.char)
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 2);
-
-        const options = [targetQ, ...distractors].sort(() => 0.5 - Math.random());
-        const optionsContainer = container.querySelector('.matching-options');
-
-        options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn matching-btn';
-            btn.innerHTML = `
-                <span class="food-icon">${opt.emoji}</span>
-                <span class="hiragana-text">${this.highlightChar(opt.char, opt.word)}</span>
+        const grid = document.getElementById('word-select-grid');
+        grid.innerHTML = '';
+        petWords.forEach(entry => {
+            const card = document.createElement('div');
+            card.className = 'word-card' + (collected.includes(entry.word) ? ' collected' : '');
+            card.innerHTML = `
+                <div class="word-card-silhouette">${entry.emoji}</div>
+                <div class="word-card-name">${entry.word}</div>
+                ${collected.includes(entry.word) ? '<span class="collected-badge">✅</span>' : ''}
             `;
-            btn.onclick = () => this.handleMatchingAnswer(opt === targetQ, btn, container);
-            optionsContainer.appendChild(btn);
+            card.addEventListener('click', () => {
+                this.audio.ensureContext();
+                this.startMojiSagashi(entry);
+            });
+            grid.appendChild(card);
         });
     }
 
-    handleMatchingAnswer(isCorrect, btn, container) {
-        if (isCorrect) {
-            btn.classList.add('correct');
-            this.audio.playCorrect();
-            container.querySelector('.feedback-msg').textContent = 'せいかい！🎉';
+    // ========== もじさがし ==========
+    startMojiSagashi(wordEntry) {
+        this.currentWord = wordEntry;
+        this.currentCharIndex = 0;
+        this.switchScene('mojisagashi');
+        this.audio.startBGM('title');
+        this.renderSilhouette();
+        this.renderCharSlots();
+        this.showNextChar();
+    }
 
-            // Star particles on the button
-            const rect = btn.getBoundingClientRect();
+    renderSilhouette() {
+        this.silhouetteArea.innerHTML = '';
+        const el = document.createElement('div');
+        el.className = 'silhouette-emoji';
+        el.id = 'silhouette-emoji-inner';
+        el.textContent = this.currentWord.emoji;
+        this.silhouetteArea.appendChild(el);
+    }
+
+    renderCharSlots() {
+        this.charSlotsEl.innerHTML = '';
+        this.currentWord.chars.forEach((char, i) => {
+            const slot = document.createElement('div');
+            slot.className = 'char-slot';
+            slot.id = `char-slot-${i}`;
+            this.charSlotsEl.appendChild(slot);
+        });
+    }
+
+    getChoiceCount() {
+        const lv = this.save.petLevel;
+        if (lv <= 2) return 2;
+        if (lv <= 5) return 3;
+        return 4;
+    }
+
+    showNextChar() {
+        if (this.currentCharIndex >= this.currentWord.chars.length) {
+            this.showWordClear();
+            return;
+        }
+
+        const target = this.currentWord.chars[this.currentCharIndex];
+
+        // 今のスロットをアクティブ強調
+        document.querySelectorAll('.char-slot').forEach(s => s.classList.remove('active-slot'));
+        const activeSlot = document.getElementById(`char-slot-${this.currentCharIndex}`);
+        if (activeSlot) activeSlot.classList.add('active-slot');
+
+        // 音声で読み上げ
+        setTimeout(() => this.audio.speak(target, { pitch: 1.2, rate: 0.7 }), 200);
+
+        // ダミー選択肢
+        const choiceCount = this.getChoiceCount();
+        const allChars = ALL_HIRAGANA.filter(c => c !== target);
+        const distractors = [...allChars].sort(() => 0.5 - Math.random()).slice(0, choiceCount - 1);
+        const choices = [target, ...distractors].sort(() => 0.5 - Math.random());
+        this.renderClouds(choices, target);
+    }
+
+    renderClouds(choices, target) {
+        this.cloudArea.innerHTML = '';
+        choices.forEach((char, i) => {
+            const cloud = document.createElement('div');
+            cloud.className = 'cloud-choice';
+            cloud.style.animationDelay = (i * 0.35) + 's';
+
+            const charEl = document.createElement('span');
+            charEl.className = 'cloud-char';
+            charEl.textContent = char;
+            cloud.appendChild(charEl);
+
+            cloud.addEventListener('click', () => this.handleCloudAnswer(char === target, cloud, char));
+            this.cloudArea.appendChild(cloud);
+        });
+    }
+
+    handleCloudAnswer(isCorrect, cloudEl, char) {
+        if (isCorrect) {
+            cloudEl.classList.add('cloud-correct');
+            this.audio.playCorrect();
+
+            const rect = cloudEl.getBoundingClientRect();
             this.particles.emitStars(rect.left + rect.width / 2, rect.top + rect.height / 2, 6);
 
-            setTimeout(() => {
-                this.currentLearningIndex++;
-                this.showMatchingProblem();
-            }, 1200);
-        } else {
-            btn.classList.add('wrong');
-            this.audio.playWrong();
-        }
-    }
-
-    // ========== Quiz Phase ==========
-    startQuizPhase() {
-        this.switchScene('game');
-        this.updateGamePet();
-        this.currentQuestionIndex = 0;
-        this.showQuestion();
-        this.audio.startBGM('quiz');
-    }
-
-    showQuestion() {
-        if (this.currentQuestionIndex >= this.questions.length) {
-            this.finishGame();
-            return;
-        }
-
-        const currentQ = this.questions[this.currentQuestionIndex];
-        this.scoreDisplay.textContent = this.score;
-        this.questionsLeftDisplay.textContent = this.questions.length - this.currentQuestionIndex;
-
-        this.questionText.innerHTML = `
-            <div style="font-size: 1.3rem; margin-bottom: 8px;">これ な〜んだ？</div>
-            <div class="question-emoji" style="font-size: 5rem; line-height: 1.2;">${currentQ.emoji}</div>
-            <button id="replay-sound" class="btn btn-secondary" style="border-radius: 50%; width: 50px; height: 50px; padding: 0; font-size: 1.8rem; margin-top: 8px;">🔊</button>
-        `;
-
-        document.getElementById('replay-sound').onclick = () => this.audio.speak(currentQ.word, currentQ.speech);
-        setTimeout(() => this.audio.speak(currentQ.word, currentQ.speech), 400);
-
-        // Generate options
-        const options = [currentQ];
-        const available = HIRAGANA_DATA.filter(h => h.char !== currentQ.char);
-        while (options.length < 4 && available.length > 0) {
-            const idx = Math.floor(Math.random() * available.length);
-            const rand = available.splice(idx, 1)[0];
-            if (!options.find(o => o.char === rand.char)) {
-                options.push(rand);
-            }
-        }
-        options.sort(() => 0.5 - Math.random());
-
-        this.optionsContainer.innerHTML = '';
-        this.hasAnswered = false;
-
-        options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerHTML = `<span class="hiragana-text">${this.highlightChar(opt.char, opt.word)}</span>`;
-            btn.onclick = () => this.handleAnswer(opt === currentQ, btn, opt);
-            this.optionsContainer.appendChild(btn);
-        });
-    }
-
-    highlightChar(char, word) {
-        return word.split(char).join(`<span class="highlight">${char}</span>`);
-    }
-
-    handleAnswer(isCorrect, btnElement, optData) {
-        if (this.hasAnswered) return;
-
-        if (isCorrect) {
-            this.hasAnswered = true;
-            btnElement.classList.add('correct');
-            this.audio.playCorrectVariant();
-            this.score++;
-            this.combo++;
-
-            // Update combo display
-            this.updateCombo();
-
-            // Mastered char
-            const currentQ = this.questions[this.currentQuestionIndex];
-            const isNew = this.save.addMasteredChar(currentQ.char);
-            if (isNew) {
-                this.sessionNewChars.push(currentQ.char);
-            }
-
-            // EXP calculation
-            let expGain = 10;
-            if (this.combo >= 3) expGain += 5; // combo bonus
-            this.sessionEXP += expGain;
-
-            // Particles on correct
-            const rect = btnElement.getBoundingClientRect();
-            this.particles.emitStars(rect.left + rect.width / 2, rect.top + rect.height / 2, 8);
-
-            // Combo particles
-            if (this.combo === 3) {
-                this.particles.emitFireworks(window.innerWidth / 2, window.innerHeight / 2, 15);
-            } else if (this.combo >= 5) {
-                this.particles.emitConfetti(20);
-            }
-
-            const allBtns = this.optionsContainer.querySelectorAll('button');
-            allBtns.forEach(b => b.disabled = true);
-
-            this.scoreDisplay.textContent = this.score;
-
-            this.animateFoodToPet(btnElement, () => {
-                this.audio.playEat();
-                this.updateGamePetWithBounce();
-
-                setTimeout(() => {
-                    this.currentQuestionIndex++;
-                    this.showQuestion();
-                }, 1200);
+            // 全ての雲クリックを無効化
+            this.cloudArea.querySelectorAll('.cloud-choice').forEach(c => {
+                c.style.pointerEvents = 'none';
             });
 
+            setTimeout(() => {
+                const slot = document.getElementById(`char-slot-${this.currentCharIndex}`);
+                if (slot) {
+                    slot.textContent = char;
+                    slot.classList.add('slot-filled');
+                    slot.classList.remove('active-slot');
+                }
+                this.currentCharIndex++;
+                setTimeout(() => this.showNextChar(), 400);
+            }, 600);
+
         } else {
-            btnElement.classList.add('wrong');
-            btnElement.disabled = true;
+            // ハズレ：ぷるぷる → フェードアウト（消去型）
+            cloudEl.classList.add('cloud-wrong');
+            cloudEl.style.pointerEvents = 'none';
             this.audio.playWrong();
-            this.combo = 0;
-            this.updateCombo();
+            setTimeout(() => { cloudEl.style.visibility = 'hidden'; }, 550);
         }
     }
 
-    updateCombo() {
-        if (this.combo >= 2) {
-            this.comboDisplay.classList.remove('hidden');
-            this.comboCount.textContent = this.combo;
-
-            // Combo colors
-            this.comboDisplay.classList.remove('combo-rainbow');
-            if (this.combo >= 4) {
-                this.comboDisplay.classList.add('combo-rainbow');
-            }
-
-            if (this.combo >= 2) {
-                this.audio.playCombo(this.combo);
-            }
-
-            // Rainbow glow on pet container
-            const petContainer = document.querySelector('.pet-container');
-            if (this.combo >= 4) {
-                petContainer.classList.add('rainbow-glow');
-            } else {
-                petContainer.classList.remove('rainbow-glow');
-            }
-        } else {
-            this.comboDisplay.classList.add('hidden');
-            document.querySelector('.pet-container')?.classList.remove('rainbow-glow');
-        }
-    }
-
-    animateFoodToPet(btnElement, callback) {
-        const rect = btnElement.getBoundingClientRect();
-        const petRect = this.gamePet.getBoundingClientRect();
-
-        const clone = btnElement.cloneNode(true);
-        clone.classList.add('flying-food');
-        clone.style.left = rect.left + 'px';
-        clone.style.top = rect.top + 'px';
-        clone.style.width = rect.width + 'px';
-        clone.style.height = rect.height + 'px';
-        clone.style.margin = '0';
-
-        document.body.appendChild(clone);
-        void clone.offsetWidth;
-
-        const destX = petRect.left + petRect.width / 2 - rect.width / 2;
-        const destY = petRect.top + petRect.height / 2 - rect.height / 2;
-
-        clone.style.transform = `translate(${destX - rect.left}px, ${destY - rect.top}px) scale(0.3)`;
-        clone.style.opacity = '0';
-
-        setTimeout(() => {
-            clone.remove();
-            if (callback) callback();
-        }, 800);
-    }
-
-    updateGamePet() {
-        const config = PET_CONFIG[this.petType];
-        const stageIdx = config.getStageIndex(this.save.petLevel);
-        const stageData = config.stages[stageIdx];
-        renderPetToElement(this.gamePet, stageData);
-
-        // Dynamic scaling based on score
-        const scale = 1.0 + (this.score * 0.12);
-        this.gamePet.style.transform = `scale(${Math.min(scale, 2.5)})`;
-    }
-
-    updateGamePetWithBounce() {
-        this.updateGamePet();
-        this.gamePet.classList.add('eating');
-        setTimeout(() => this.gamePet.classList.remove('eating'), 800);
-        setTimeout(() => {
-            this.gamePet.classList.add('bounce');
-            setTimeout(() => this.gamePet.classList.remove('bounce'), 500);
-        }, 300);
-    }
-
-    // ========== Finish Game ==========
-    finishGame() {
+    // ========== 全文字クリア ==========
+    showWordClear() {
         this.audio.stopBGM();
-        this.switchScene('result');
-        this.headerStats.classList.remove('hidden');
 
-        // Score count-up animation
-        this.finalScoreDisplay.textContent = this.score;
-        this.animateScoreCount();
+        const scene = document.getElementById('mojisagashi-scene');
 
-        const isPerfect = (this.score === this.questions.length);
+        // ペット飛び込みアニメーション
+        const petEl = document.createElement('div');
+        petEl.className = 'game-pet-popup';
+        const config = PET_CONFIG[this.petType];
+        const stageData = config.stages[config.getStageIndex(this.save.petLevel)];
+        petEl.textContent = stageData.text;
+        scene.appendChild(petEl);
 
-        // Apply EXP
+        // ことば反応セリフ
+        const speechEl = document.createElement('div');
+        speechEl.className = 'game-speech-bubble';
+        speechEl.textContent = this.currentWord.petReaction;
+        scene.appendChild(speechEl);
+        setTimeout(() => this.audio.speak(this.currentWord.petReaction, { pitch: 1.3, rate: 0.85 }), 300);
+
+        // シルエット点灯
+        setTimeout(() => {
+            const inner = document.getElementById('silhouette-emoji-inner');
+            if (inner) inner.classList.add('revealed');
+            this.particles.emitConfetti(20);
+            this.particles.emitFireworks(window.innerWidth / 2, window.innerHeight / 3, 12);
+            this.audio.playLevelUp();
+        }, 1800);
+
+        // リザルトへ
+        setTimeout(() => {
+            petEl.remove();
+            speechEl.remove();
+            this.showResult();
+        }, 3500);
+    }
+
+    // ========== リザルト ==========
+    showResult() {
+        const wordEntry = this.currentWord;
         const oldLevel = this.save.petLevel;
-        const leveledUp = this.save.addEXP(this.sessionEXP);
+        const leveledUp = this.save.addCollectedWord(wordEntry.word);
         const newLevel = this.save.petLevel;
 
-        // Update max combo
-        if (this.combo > this.save.data.comboMax) {
-            this.save.data.comboMax = this.combo;
-        }
-        this.save.data.totalCorrect += this.score;
-        this.save.save();
+        this.switchScene('result');
 
-        // Update header
-        this.updateHeaderStats();
-
-        // Show result pet
+        // ペット表示
         const config = PET_CONFIG[this.petType];
-        const stageIdx = config.getStageIndex(newLevel);
-        const stageData = config.stages[stageIdx];
+        const stageData = config.stages[config.getStageIndex(newLevel)];
         renderPetToElement(this.resultPet, stageData);
-        this.resultPet.style.transform = 'scale(1.5)';
+        this.resultPet.style.transform = 'scale(1.4)';
 
-        // EXP earned
-        setTimeout(() => {
-            this.expEarnedDisplay.classList.remove('hidden');
-            this.expEarnedDisplay.classList.add('exp-earned');
-            this.expEarnedAmount.textContent = this.sessionEXP;
-        }, 800);
+        // 集めたことば表示
+        this.collectedWordDisplay.classList.remove('hidden');
+        document.getElementById('collected-word-emoji').textContent = wordEntry.emoji;
+        document.getElementById('collected-word-text').textContent =
+            `「${wordEntry.word}」を　あつめた！`;
 
-        // New chars
-        if (this.sessionNewChars.length > 0) {
-            setTimeout(() => {
-                this.newCharsDisplay.classList.remove('hidden');
-                this.newCharsList.innerHTML = '';
-                this.sessionNewChars.forEach((char, i) => {
-                    const badge = document.createElement('span');
-                    badge.className = 'new-char-badge';
-                    badge.textContent = char;
-                    badge.style.animationDelay = (i * 0.15) + 's';
-                    this.newCharsList.appendChild(badge);
-                });
-            }, 1200);
-        } else {
-            this.newCharsDisplay.classList.add('hidden');
-        }
+        // 進捗表示
+        const count = this.save.getWordCount();
+        const nextCount = getWordsForNextLevel(newLevel);
+        this.wordsProgressDisplay.textContent = newLevel >= 7
+            ? `ことば: ${count}こ （さいこうレベル！🎉）`
+            : `ことば: ${count}こ　→　あと ${nextCount - count}こ で Lv.${newLevel + 1} 🐣`;
 
-        // Level up
+        // レベルアップ演出
         if (leveledUp) {
             setTimeout(() => {
                 this.levelupMessage.classList.remove('hidden');
                 this.audio.playLevelUp();
                 this.particles.emitFireworks(window.innerWidth / 2, window.innerHeight / 3, 25);
 
-                // Check evolution
                 const oldStageIdx = config.getStageIndex(oldLevel);
                 const newStageIdx = config.getStageIndex(newLevel);
                 if (newStageIdx !== oldStageIdx) {
-                    // Evolution!
                     setTimeout(() => {
                         this.particles.flashScreen();
                         this.audio.playEvolution();
@@ -1301,78 +1138,29 @@ class Game {
                         this.audio.speak(`やったー！${stageData.label}に しんかした！`, SPEECH_PHRASES.evolution);
                     }, 1000);
                 }
-            }, 1600);
+
+                // にんぎょアンロック
+                if (this.petType === 'chick' && newLevel >= 7) {
+                    if (this.save.unlockPet('mermaid')) {
+                        setTimeout(() => {
+                            this.particles.emitConfetti(30);
+                            this.audio.speak('にんぎょが アンロックされたよ！あたらしい ペットを そだてよう！',
+                                { pitch: 1.1, rate: 0.85 });
+                        }, 2500);
+                    }
+                }
+            }, 600);
         } else {
             this.levelupMessage.classList.add('hidden');
             this.evolutionMessage.classList.add('hidden');
-        }
-
-        // Perfect = confetti + fireworks
-        if (isPerfect) {
+            // 褒めセリフ
             setTimeout(() => {
-                this.particles.emitConfetti(40);
-                this.particles.emitFireworks(window.innerWidth / 2, window.innerHeight / 3, 30);
-                const praises = ['おめでとう！すごいね！', 'やったね！かんぺき！', 'すばらしい！', 'てんさいだね！'];
-                const praise = praises[Math.floor(Math.random() * praises.length)];
-                this.audio.speak(praise, SPEECH_PHRASES[praise] || {});
-            }, 500);
-        } else {
-            setTimeout(() => {
-                this.audio.speak('おつかれさま！', SPEECH_PHRASES['おつかれさま！']);
+                const praises = ['すごいね！あつめたね！', 'やったね！', 'もう1こあつめよう！'];
+                this.audio.speak(praises[Math.floor(Math.random() * praises.length)], { pitch: 1.1, rate: 0.9 });
             }, 500);
         }
 
-        // Hide combo
-        this.comboDisplay.classList.add('hidden');
-
-        // Unlock next difficulty
-        const diffOrder = ['easy', 'normal', 'hard'];
-        const currentIdx = diffOrder.indexOf(this.difficulty);
-        if (currentIdx >= 0 && currentIdx < diffOrder.length - 1) {
-            const nextDiff = diffOrder[currentIdx + 1];
-            if (!this.save.data.unlockedDifficulties.includes(nextDiff)) {
-                this.save.data.unlockedDifficulties.push(nextDiff);
-                this.save.save();
-                const diffNames = { normal: 'ふつう', hard: 'むずかしい' };
-                setTimeout(() => {
-                    this.audio.speak(`${diffNames[nextDiff]}がアンロックされたよ！`, SPEECH_PHRASES.difficultyUnlock);
-                }, 2500);
-            }
-        }
-
-        // Unlock mermaid pet when chick reaches Lv.7
-        if (this.petType === 'chick' && newLevel >= 7) {
-            if (this.save.unlockPet('mermaid')) {
-                setTimeout(() => {
-                    this.particles.emitConfetti(30);
-                    this.audio.speak('にんぎょが アンロックされたよ！あたらしい ペットを そだてよう！', SPEECH_PHRASES.mermaidUnlock);
-                }, 3500);
-            }
-        }
-    }
-
-    animateScoreCount() {
-        const target = this.score;
-        let current = 0;
-        this.scoreCounter.textContent = '0';
-
-        if (target === 0) {
-            this.scoreCounter.textContent = '0';
-            return;
-        }
-
-        const interval = setInterval(() => {
-            current++;
-            this.scoreCounter.textContent = current;
-            if (current >= target) {
-                clearInterval(interval);
-                // Pop effect
-                this.scoreCounter.style.transform = 'scale(1.3)';
-                setTimeout(() => {
-                    this.scoreCounter.style.transform = 'scale(1)';
-                }, 200);
-            }
-        }, 200);
+        this.bgManager.update(newLevel);
     }
 }
 
@@ -1380,3 +1168,4 @@ class Game {
 window.addEventListener('DOMContentLoaded', () => {
     new Game();
 });
+
