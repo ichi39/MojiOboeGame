@@ -3,6 +3,20 @@
 // 「あつめて そだてる」ことば冒険
 // ==========================================
 
+// ========== UI Constants ==========
+const SPEECH_BUBBLE_DURATION_MS = 2500;
+const MAX_NIWA_COLLECTION_DISPLAY = 12;
+
+// ========== Utility ==========
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// ========== Shared Pet Helper ==========
+function _petGetStageIndex(level) {
+  return Math.min(level, 7) - 1;
+}
+
 // ========== Pet Configuration ==========
 const PET_CONFIG = {
   chick: {
@@ -11,54 +25,17 @@ const PET_CONFIG = {
     // ひよこは少ないことば数で進化できる（やさしい）
     // Lv1→2:2, Lv2→3:2, Lv3→4:3, Lv4→5:3, Lv5→6:2, Lv6→7:2 （合計14個）
     wordLevelTable: [0, 2, 4, 7, 10, 12, 14],
+    unlocks: { petId: "mermaid", atLevel: 7 },
     stages: [
-      {
-        level: 1,
-        text: "🥚",
-        image: "assets/pets/chick_0.PNG",
-        label: "たまご",
-      },
-      {
-        level: 2,
-        text: "🥚",
-        image: "assets/pets/chick_1.PNG",
-        label: "すこしわれたたまご",
-      },
-      {
-        level: 3,
-        text: "🥚",
-        image: "assets/pets/chick_2.PNG",
-        label: "かなりわれたたまご",
-      },
-      {
-        level: 4,
-        text: "🐣",
-        image: "assets/pets/chick_3.PNG",
-        label: "ぴよぴよひよこ",
-      },
-      {
-        level: 5,
-        text: "🐤",
-        image: "assets/pets/chick_4.PNG",
-        label: "おおきなひよこ",
-      },
-      {
-        level: 6,
-        text: "🐤",
-        image: "assets/pets/chick_5.PNG",
-        label: "りっぱなにわとり",
-      },
-      {
-        level: 7,
-        text: "🦚",
-        image: "assets/pets/chick_6.PNG",
-        label: "✨おうごんにわとり✨",
-      },
+      { level: 1, text: "🥚", image: "assets/pets/chick_0.PNG", label: "たまご" },
+      { level: 2, text: "🥚", image: "assets/pets/chick_1.PNG", label: "すこしわれたたまご" },
+      { level: 3, text: "🥚", image: "assets/pets/chick_2.PNG", label: "かなりわれたたまご" },
+      { level: 4, text: "🐣", image: "assets/pets/chick_3.PNG", label: "ぴよぴよひよこ" },
+      { level: 5, text: "🐤", image: "assets/pets/chick_4.PNG", label: "おおきなひよこ" },
+      { level: 6, text: "🐤", image: "assets/pets/chick_5.PNG", label: "りっぱなにわとり" },
+      { level: 7, text: "🦚", image: "assets/pets/chick_6.PNG", label: "✨おうごんにわとり✨" },
     ],
-    getStageIndex(level) {
-      const clamped = Math.min(level, 7);
-      return clamped - 1;
-    },
+    getStageIndex: _petGetStageIndex,
   },
   mermaid: {
     id: "mermaid",
@@ -67,53 +44,15 @@ const PET_CONFIG = {
     // Lv1→2:3, Lv2→3:2, Lv3→4:1, Lv4→5:1, Lv5→6:1, Lv6→7:1 （合計9個）
     wordLevelTable: [0, 3, 5, 6, 7, 8, 9],
     stages: [
-      {
-        level: 1,
-        text: "🥚",
-        image: "assets/pets/mermaid_0.PNG",
-        label: "ふしぎなたまご",
-      },
-      {
-        level: 2,
-        text: "🥚",
-        image: "assets/pets/mermaid_1.PNG",
-        label: "ひかるたまご",
-      },
-      {
-        level: 3,
-        text: "🥚",
-        image: "assets/pets/mermaid_2.PNG",
-        label: "すこしわれたたまご",
-      },
-      {
-        level: 4,
-        text: "🐟",
-        image: "assets/pets/mermaid_3.PNG",
-        label: "あかちゃんにんぎょ",
-      },
-      {
-        level: 5,
-        text: "🐠",
-        image: "assets/pets/mermaid_4.PNG",
-        label: "ちいさなにんぎょ",
-      },
-      {
-        level: 6,
-        text: "🐡",
-        image: "assets/pets/mermaid_5.PNG",
-        label: "こどものにんぎょ",
-      },
-      {
-        level: 7,
-        text: "🧚",
-        image: "assets/pets/mermaid_6.PNG",
-        label: "✨プリンセスにんぎょ✨",
-      },
+      { level: 1, text: "🥚", image: "assets/pets/mermaid_0.PNG", label: "ふしぎなたまご" },
+      { level: 2, text: "🥚", image: "assets/pets/mermaid_1.PNG", label: "ひかるたまご" },
+      { level: 3, text: "🥚", image: "assets/pets/mermaid_2.PNG", label: "すこしわれたたまご" },
+      { level: 4, text: "🐟", image: "assets/pets/mermaid_3.PNG", label: "あかちゃんにんぎょ" },
+      { level: 5, text: "🐠", image: "assets/pets/mermaid_4.PNG", label: "ちいさなにんぎょ" },
+      { level: 6, text: "🐡", image: "assets/pets/mermaid_5.PNG", label: "こどものにんぎょ" },
+      { level: 7, text: "🧚", image: "assets/pets/mermaid_6.PNG", label: "✨プリンセスにんぎょ✨" },
     ],
-    getStageIndex(level) {
-      const clamped = Math.min(level, 7);
-      return clamped - 1;
-    },
+    getStageIndex: _petGetStageIndex,
   },
 };
 
@@ -141,14 +80,14 @@ function renderPetToElement(element, stageData) {
 // 各ペットの wordLevelTable は PET_CONFIG に定義
 // インデックス i = 累計ことば数の閾値（count >= table[i] で level = i+1）
 
-function _getTable(petId) {
+function _getWordLevelTable(petId) {
   return petId && PET_CONFIG[petId]
     ? PET_CONFIG[petId].wordLevelTable
     : [0, 3, 6, 10, 15, 21, 28];
 }
 
 function getLevelFromWordCount(count, petId) {
-  const table = _getTable(petId);
+  const table = _getWordLevelTable(petId);
   let level = 1;
   for (let i = 0; i < table.length; i++) {
     if (count >= table[i]) level = i + 1;
@@ -158,7 +97,7 @@ function getLevelFromWordCount(count, petId) {
 
 /** 現在レベルの累計閾値（現在Lvになるのに必要だった累計数）*/
 function getLevelThreshold(level, petId) {
-  const table = _getTable(petId);
+  const table = _getWordLevelTable(petId);
   const idx = Math.max(0, Math.min(level - 1, table.length - 1));
   return table[idx];
 }
@@ -166,7 +105,7 @@ function getLevelThreshold(level, petId) {
 /** 次のLvに必要な累計ことば数 */
 function getWordsForNextLevel(level, petId) {
   if (level >= 7) return Infinity;
-  return _getTable(petId)[level];
+  return _getWordLevelTable(petId)[level];
 }
 
 /** 現在Lvから次Lvへの1段分のことば数 */
@@ -177,331 +116,54 @@ function getWordsPerLevelStep(level, petId) {
 
 // ========== Hiragana Data ==========
 const HIRAGANA_DATA = [
-  // speech: { pitch, rate, reading } — 不自然な場合はここを手動調整
-  // pitch: 0.0〜2.0 (デフォルト1.0)、rate: 0.1〜10.0 (デフォルト0.8)
-  // reading: 読み上げテキストの上書き（省略時はwordをそのまま読む）
-  {
-    char: "あ",
-    romaji: "a",
-    word: "あめ",
-    emoji: "🍬",
-    speech: { pitch: 1.0, rate: 0.8, reading: "飴" },
-  },
-  {
-    char: "い",
-    romaji: "i",
-    word: "いちご",
-    emoji: "🍓",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "う",
-    romaji: "u",
-    word: "うさぎ",
-    emoji: "🐰",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "え",
-    romaji: "e",
-    word: "えんぴつ",
-    emoji: "✏️",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "お",
-    romaji: "o",
-    word: "おにぎり",
-    emoji: "🍙",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "か",
-    romaji: "ka",
-    word: "かさ",
-    emoji: "🌂",
-    speech: { pitch: 1.0, rate: 0.8, reading: "傘" },
-  },
-  {
-    char: "き",
-    romaji: "ki",
-    word: "き",
-    emoji: "🌳",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "く",
-    romaji: "ku",
-    word: "くつ",
-    emoji: "👟",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "け",
-    romaji: "ke",
-    word: "けーき",
-    emoji: "🍰",
-    speech: { pitch: 1.0, rate: 0.8, reading: "ケーキ" },
-  },
-  {
-    char: "こ",
-    romaji: "ko",
-    word: "こま",
-    emoji: "🎲",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "さ",
-    romaji: "sa",
-    word: "さかな",
-    emoji: "🐟",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "し",
-    romaji: "shi",
-    word: "しんかんせん",
-    emoji: "🚅",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "す",
-    romaji: "su",
-    word: "すいか",
-    emoji: "🍉",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "せ",
-    romaji: "se",
-    word: "せみ",
-    emoji: "🐛",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "そ",
-    romaji: "so",
-    word: "そふとくりーむ",
-    emoji: "🍦",
-    speech: { pitch: 1.0, rate: 0.8, reading: "ソフトクリーム" },
-  },
-  {
-    char: "た",
-    romaji: "ta",
-    word: "たいよう",
-    emoji: "☀️",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "ち",
-    romaji: "chi",
-    word: "ちきゅう",
-    emoji: "🌍",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "つ",
-    romaji: "tsu",
-    word: "つき",
-    emoji: "🌙",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "て",
-    romaji: "te",
-    word: "て",
-    emoji: "✋",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "と",
-    romaji: "to",
-    word: "とまと",
-    emoji: "🍅",
-    speech: { pitch: 1.0, rate: 0.8, reading: "トマト" },
-  },
-  {
-    char: "な",
-    romaji: "na",
-    word: "なす",
-    emoji: "🍆",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "に",
-    romaji: "ni",
-    word: "にく",
-    emoji: "🍖",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "ぬ",
-    romaji: "nu",
-    word: "いぬ",
-    emoji: "🐶",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "ね",
-    romaji: "ne",
-    word: "ねこ",
-    emoji: "🐱",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "の",
-    romaji: "no",
-    word: "のーと",
-    emoji: "📓",
-    speech: { pitch: 1.0, rate: 0.8, reading: "ノート" },
-  },
-  {
-    char: "は",
-    romaji: "ha",
-    word: "はさみ",
-    emoji: "✂️",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "ひ",
-    romaji: "hi",
-    word: "ひこうき",
-    emoji: "✈️",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "ふ",
-    romaji: "fu",
-    word: "ふうせん",
-    emoji: "🎈",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "へ",
-    romaji: "he",
-    word: "へび",
-    emoji: "🐍",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "ほ",
-    romaji: "ho",
-    word: "ほん",
-    emoji: "📚",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "ま",
-    romaji: "ma",
-    word: "まいく",
-    emoji: "🎤",
-    speech: { pitch: 1.0, rate: 0.8, reading: "マイク" },
-  },
-  {
-    char: "み",
-    romaji: "mi",
-    word: "みかん",
-    emoji: "🍊",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "む",
-    romaji: "mu",
-    word: "むし",
-    emoji: "🐞",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "め",
-    romaji: "me",
-    word: "めがね",
-    emoji: "👓",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "も",
-    romaji: "mo",
-    word: "もも",
-    emoji: "🍑",
-    speech: { pitch: 1.0, rate: 0.8, reading: "桃" },
-  },
-  {
-    char: "や",
-    romaji: "ya",
-    word: "やま",
-    emoji: "⛰️",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "ゆ",
-    romaji: "yu",
-    word: "ゆき",
-    emoji: "❄️",
-    speech: { pitch: 1.0, rate: 0.8, reading: "雪" },
-  },
-  {
-    char: "よ",
-    romaji: "yo",
-    word: "よっと",
-    emoji: "⛵",
-    speech: { pitch: 1.0, rate: 0.8, reading: "ヨット" },
-  },
-  {
-    char: "ら",
-    romaji: "ra",
-    word: "らっぱ",
-    emoji: "🎺",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "り",
-    romaji: "ri",
-    word: "りんご",
-    emoji: "🍎",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "る",
-    romaji: "ru",
-    word: "かえる",
-    emoji: "🐸",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "れ",
-    romaji: "re",
-    word: "れもん",
-    emoji: "🍋",
-    speech: { pitch: 1.0, rate: 0.8, reading: "レモン" },
-  },
-  {
-    char: "ろ",
-    romaji: "ro",
-    word: "ろうそく",
-    emoji: "🕯️",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "わ",
-    romaji: "wa",
-    word: "わに",
-    emoji: "🐊",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
-  {
-    char: "を",
-    romaji: "wo",
-    word: "ほんをよむ",
-    emoji: "📖",
-    speech: { pitch: 1.0, rate: 0.8, reading: "ほんを よむ" },
-  },
-  {
-    char: "ん",
-    romaji: "n",
-    word: "おでん",
-    emoji: "🍢",
-    speech: { pitch: 1.0, rate: 0.8 },
-  },
+  // speech.reading: 読み上げテキストの上書き（省略時はwordをそのまま読む）
+  // speech.pitch / speech.rate: 不自然な場合に手動調整（省略時: pitch 1.0 / rate 0.8）
+  { char: "あ", romaji: "a",   word: "あめ",         emoji: "🍬", speech: { reading: "飴" } },
+  { char: "い", romaji: "i",   word: "いちご",       emoji: "🍓" },
+  { char: "う", romaji: "u",   word: "うさぎ",       emoji: "🐰" },
+  { char: "え", romaji: "e",   word: "えんぴつ",     emoji: "✏️" },
+  { char: "お", romaji: "o",   word: "おにぎり",     emoji: "🍙" },
+  { char: "か", romaji: "ka",  word: "かさ",         emoji: "🌂", speech: { reading: "傘" } },
+  { char: "き", romaji: "ki",  word: "き",           emoji: "🌳" },
+  { char: "く", romaji: "ku",  word: "くつ",         emoji: "👟" },
+  { char: "け", romaji: "ke",  word: "けーき",       emoji: "🍰", speech: { reading: "ケーキ" } },
+  { char: "こ", romaji: "ko",  word: "こま",         emoji: "🎲" },
+  { char: "さ", romaji: "sa",  word: "さかな",       emoji: "🐟" },
+  { char: "し", romaji: "shi", word: "しんかんせん", emoji: "🚅" },
+  { char: "す", romaji: "su",  word: "すいか",       emoji: "🍉" },
+  { char: "せ", romaji: "se",  word: "せみ",         emoji: "🐛" },
+  { char: "そ", romaji: "so",  word: "そふとくりーむ", emoji: "🍦", speech: { reading: "ソフトクリーム" } },
+  { char: "た", romaji: "ta",  word: "たいよう",     emoji: "☀️" },
+  { char: "ち", romaji: "chi", word: "ちきゅう",     emoji: "🌍" },
+  { char: "つ", romaji: "tsu", word: "つき",         emoji: "🌙" },
+  { char: "て", romaji: "te",  word: "て",           emoji: "✋" },
+  { char: "と", romaji: "to",  word: "とまと",       emoji: "🍅", speech: { reading: "トマト" } },
+  { char: "な", romaji: "na",  word: "なす",         emoji: "🍆" },
+  { char: "に", romaji: "ni",  word: "にく",         emoji: "🍖" },
+  { char: "ぬ", romaji: "nu",  word: "いぬ",         emoji: "🐶" },
+  { char: "ね", romaji: "ne",  word: "ねこ",         emoji: "🐱" },
+  { char: "の", romaji: "no",  word: "のーと",       emoji: "📓", speech: { reading: "ノート" } },
+  { char: "は", romaji: "ha",  word: "はさみ",       emoji: "✂️" },
+  { char: "ひ", romaji: "hi",  word: "ひこうき",     emoji: "✈️" },
+  { char: "ふ", romaji: "fu",  word: "ふうせん",     emoji: "🎈" },
+  { char: "へ", romaji: "he",  word: "へび",         emoji: "🐍" },
+  { char: "ほ", romaji: "ho",  word: "ほん",         emoji: "📚" },
+  { char: "ま", romaji: "ma",  word: "まいく",       emoji: "🎤", speech: { reading: "マイク" } },
+  { char: "み", romaji: "mi",  word: "みかん",       emoji: "🍊" },
+  { char: "む", romaji: "mu",  word: "むし",         emoji: "🐞" },
+  { char: "め", romaji: "me",  word: "めがね",       emoji: "👓" },
+  { char: "も", romaji: "mo",  word: "もも",         emoji: "🍑", speech: { reading: "桃" } },
+  { char: "や", romaji: "ya",  word: "やま",         emoji: "⛰️" },
+  { char: "ゆ", romaji: "yu",  word: "ゆき",         emoji: "❄️", speech: { reading: "雪" } },
+  { char: "よ", romaji: "yo",  word: "よっと",       emoji: "⛵", speech: { reading: "ヨット" } },
+  { char: "ら", romaji: "ra",  word: "らっぱ",       emoji: "🎺" },
+  { char: "り", romaji: "ri",  word: "りんご",       emoji: "🍎" },
+  { char: "る", romaji: "ru",  word: "かえる",       emoji: "🐸" },
+  { char: "れ", romaji: "re",  word: "れもん",       emoji: "🍋", speech: { reading: "レモン" } },
+  { char: "ろ", romaji: "ro",  word: "ろうそく",     emoji: "🕯️" },
+  { char: "わ", romaji: "wa",  word: "わに",         emoji: "🐊" },
+  { char: "を", romaji: "wo",  word: "ほんをよむ",   emoji: "📖", speech: { reading: "ほんを よむ" } },
+  { char: "ん", romaji: "n",   word: "おでん",       emoji: "🍢" },
 ];
 
 // ========== フレーズ読み上げ設定 ==========
@@ -530,6 +192,9 @@ const SPEECH_PHRASES = {
 
 // All 46 hiragana for zukan
 const ALL_HIRAGANA = HIRAGANA_DATA.map((h) => h.char);
+
+// O(1) lookup maps
+const HIRAGANA_MAP = new Map(HIRAGANA_DATA.map((h) => [h.char, h]));
 
 // ========== WORD_DATA（もじさがしゲームの単語リスト）==========
 // pet: 'chick'（ひよこ）or 'mermaid'（にんぎょ）で担当ペットを指定
@@ -701,6 +366,10 @@ const WORD_DATA = [
   },
 ];
 
+// O(1) lookup maps
+const WORD_MAP = new Map(WORD_DATA.map((d) => [d.word, d]));
+const EMOJI_WORD_MAP = new Map(WORD_DATA.map((d) => [d.emoji, d]));
+
 // ==========================================
 // SaveManager - localStorage persistence
 // ==========================================
@@ -749,7 +418,6 @@ class SaveManager {
 
   // ことば数からレベルを返す（アクティブペット）
   get petLevel() {
-    // 各ペットは自分のペット担当ことばの収集数でLvが決まる
     const petId = this.data.activePet;
     const count = this.getWordCount(petId);
     return getLevelFromWordCount(count, petId);
@@ -762,20 +430,20 @@ class SaveManager {
     if (!this.data.collectedWords.includes(word)) {
       this.data.collectedWords.push(word);
     }
-    // にわにも追加
-    const wordEntry = WORD_DATA.find((d) => d.word === word);
+    const wordEntry = WORD_MAP.get(word);
     if (wordEntry && !this.data.niwaItems.includes(wordEntry.emoji)) {
       this.data.niwaItems.push(wordEntry.emoji);
     }
-    this.data.petData[petId].level = this.petLevel; // sync
+    const newLevel = this.petLevel;
+    this.data.petData[petId].level = newLevel;
     this.save();
-    return this.petLevel > oldLevel;
+    return newLevel > oldLevel;
   }
 
   getWordCount(petId = null) {
     const id = petId || this.data.activePet;
     return this.data.collectedWords.filter(
-      (w) => WORD_DATA.find((d) => d.word === w)?.pet === id,
+      (w) => WORD_MAP.get(w)?.pet === id,
     ).length;
   }
 
@@ -804,76 +472,68 @@ class ParticleSystem {
     this.container = document.getElementById("particle-container");
   }
 
+  _spawnParticle(className, lifetime, setup) {
+    const el = document.createElement("div");
+    el.className = "particle " + className;
+    setup(el);
+    this.container.appendChild(el);
+    setTimeout(() => el.remove(), lifetime);
+    return el;
+  }
+
   // Stars that fly toward a target
   emitStars(x, y, count = 8) {
     const emojis = ["⭐", "✨", "🌟", "💫"];
     for (let i = 0; i < count; i++) {
-      const el = document.createElement("div");
-      el.className = "particle particle-star";
-      el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-      el.style.left = x + "px";
-      el.style.top = y + "px";
       const angle = ((Math.PI * 2) / count) * i;
       const dist = 60 + Math.random() * 80;
-      el.style.setProperty("--dx", Math.cos(angle) * dist + "px");
-      el.style.setProperty("--dy", Math.sin(angle) * dist + "px");
-      el.style.setProperty("--dur", 0.6 + Math.random() * 0.6 + "s");
-      this.container.appendChild(el);
-      setTimeout(() => el.remove(), 1500);
+      this._spawnParticle("particle-star", 1500, (el) => {
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = x + "px";
+        el.style.top = y + "px";
+        el.style.setProperty("--dx", Math.cos(angle) * dist + "px");
+        el.style.setProperty("--dy", Math.sin(angle) * dist + "px");
+        el.style.setProperty("--dur", 0.6 + Math.random() * 0.6 + "s");
+      });
     }
   }
 
   // Fireworks effect
   emitFireworks(x, y, count = 20) {
     const colors = [
-      "#ff6b6b",
-      "#feca57",
-      "#48dbfb",
-      "#ff9ff3",
-      "#54a0ff",
-      "#5f27cd",
-      "#ff9f43",
+      "#ff6b6b", "#feca57", "#48dbfb", "#ff9ff3",
+      "#54a0ff", "#5f27cd", "#ff9f43",
     ];
     for (let i = 0; i < count; i++) {
-      const el = document.createElement("div");
-      el.className = "particle particle-firework";
-      el.style.left = x + "px";
-      el.style.top = y + "px";
-      el.style.background = colors[Math.floor(Math.random() * colors.length)];
       const angle = ((Math.PI * 2) / count) * i + Math.random() * 0.5;
       const dist = 80 + Math.random() * 120;
-      el.style.setProperty("--dx", Math.cos(angle) * dist + "px");
-      el.style.setProperty("--dy", Math.sin(angle) * dist + "px");
-      el.style.setProperty("--dur", 0.8 + Math.random() * 0.5 + "s");
-      this.container.appendChild(el);
-      setTimeout(() => el.remove(), 2000);
+      this._spawnParticle("particle-firework", 2000, (el) => {
+        el.style.left = x + "px";
+        el.style.top = y + "px";
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.setProperty("--dx", Math.cos(angle) * dist + "px");
+        el.style.setProperty("--dy", Math.sin(angle) * dist + "px");
+        el.style.setProperty("--dur", 0.8 + Math.random() * 0.5 + "s");
+      });
     }
   }
 
   // Confetti
   emitConfetti(count = 30) {
     const colors = [
-      "#ff6b6b",
-      "#feca57",
-      "#48dbfb",
-      "#ff9ff3",
-      "#54a0ff",
-      "#5f27cd",
-      "#1dd1a1",
-      "#ff9f43",
+      "#ff6b6b", "#feca57", "#48dbfb", "#ff9ff3",
+      "#54a0ff", "#5f27cd", "#1dd1a1", "#ff9f43",
     ];
     for (let i = 0; i < count; i++) {
-      const el = document.createElement("div");
-      el.className = "particle particle-confetti";
-      el.style.left = Math.random() * window.innerWidth + "px";
-      el.style.top = "-20px";
-      el.style.background = colors[Math.floor(Math.random() * colors.length)];
-      el.style.setProperty("--dx", (Math.random() - 0.5) * 200 + "px");
-      el.style.setProperty("--dy", 300 + Math.random() * 400 + "px");
-      el.style.setProperty("--dur", 1.5 + Math.random() * 1 + "s");
-      el.style.animationDelay = Math.random() * 0.5 + "s";
-      this.container.appendChild(el);
-      setTimeout(() => el.remove(), 3000);
+      this._spawnParticle("particle-confetti", 3000, (el) => {
+        el.style.left = Math.random() * window.innerWidth + "px";
+        el.style.top = "-20px";
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.setProperty("--dx", (Math.random() - 0.5) * 200 + "px");
+        el.style.setProperty("--dy", 300 + Math.random() * 400 + "px");
+        el.style.setProperty("--dur", 1.5 + Math.random() * 1 + "s");
+        el.style.animationDelay = Math.random() * 0.5 + "s";
+      });
     }
   }
 
@@ -1210,7 +870,6 @@ class Game {
     this.bgManager = new BackgroundManager(this.save.petLevel);
 
     this.currentScene = "niwa";
-    this.petType = this.save.data.activePet;
     this.currentWord = null;
     this.currentCharIndex = 0;
 
@@ -1218,6 +877,11 @@ class Game {
     this.attachEventListeners();
     this.initNiwa();
     this.bgManager.update(this.save.petLevel);
+  }
+
+  // petType は save.data.activePet の単一参照にする
+  get petType() {
+    return this.save.data.activePet;
   }
 
   initElements() {
@@ -1247,7 +911,7 @@ class Game {
     this.zukanBadges = document.getElementById("zukan-badges");
 
     // Mojisagashi
-    this.silhouetteArea = document.getElementById("target-silhouette");
+    this.targetSilhouette = document.getElementById("target-silhouette");
     this.charSlotsEl = document.getElementById("char-slots");
     this.cloudArea = document.getElementById("cloud-area");
 
@@ -1300,7 +964,6 @@ class Game {
       this.audio.playPetTap();
       this.spawnHeart(e);
       this.showPetSpeech();
-      // 跳ねる
       this.niwaPet.classList.remove("pet-click-jump");
       void this.niwaPet.offsetWidth;
       this.niwaPet.classList.add("pet-click-jump");
@@ -1313,7 +976,7 @@ class Game {
           "ほんとうに さいしょから あそぶ？\nぜんぶの データが きえちゃうよ！",
         )
       ) {
-        localStorage.clear();
+        localStorage.removeItem(this.save.SAVE_KEY);
         location.reload();
       }
     });
@@ -1323,7 +986,6 @@ class Game {
         const petId = btn.dataset.pet;
         if (!this.save.data.unlockedPets.includes(petId)) return;
         this.save.switchPet(petId);
-        this.petType = petId;
         this.initNiwa();
       });
     });
@@ -1356,7 +1018,6 @@ class Game {
 
   // ========== にわ (Home) ==========
   initNiwa() {
-    this.petType = this.save.data.activePet;
     this.updateNiwaPet();
     this.bgManager.update(this.save.petLevel);
     this.updatePetSwitchBar();
@@ -1378,7 +1039,6 @@ class Game {
       const isUnlocked = unlocked.includes(petId);
 
       if (!isUnlocked) {
-        // ロック中は薄く表示、操作不可
         btn.style.display = "";
         btn.disabled = true;
         btn.classList.remove("active");
@@ -1412,7 +1072,7 @@ class Game {
       WORD_DATA.filter((w) => w.pet === this.petType).map((w) => w.emoji),
     );
     const items = allItems.filter((e) => petEmojis.has(e));
-    items.slice(-12).forEach((emoji, i) => {
+    items.slice(-MAX_NIWA_COLLECTION_DISPLAY).forEach((emoji, i) => {
       const el = document.createElement("div");
       el.className = "niwa-collection-item";
       el.textContent = emoji;
@@ -1422,25 +1082,16 @@ class Game {
       el.addEventListener("click", () => {
         this.audio.ensureContext();
         this.audio.playPetTap();
-        // 星パーティクル
         const rect = el.getBoundingClientRect();
         this.particles.emitStars(
           rect.left + rect.width / 2,
           rect.top + rect.height / 2,
           5,
         );
-        // ペットのセリフ
-        const wordEntry = WORD_DATA.find((d) => d.emoji === emoji);
+        const wordEntry = EMOJI_WORD_MAP.get(emoji);
         if (wordEntry) {
-          this.speechBubble.textContent = wordEntry.petReaction;
-          this.speechBubble.classList.remove("hidden");
-          clearTimeout(this._speechTimer);
-          this._speechTimer = setTimeout(
-            () => this.speechBubble.classList.add("hidden"),
-            2500,
-          );
+          this.showSpeechBubble(wordEntry.petReaction);
         }
-        // タップアニメーション
         el.classList.remove("item-tap");
         void el.offsetWidth;
         el.classList.add("item-tap");
@@ -1458,21 +1109,26 @@ class Game {
     this.niwaPetName.textContent = `${stageData.text} ${stageData.label} Lv.${this.save.petLevel}`;
   }
 
-  showPetSpeech() {
-    const collected = this.save.data.collectedWords;
-    let text = "ぴよ〜！あそんで！";
-    if (collected.length > 0) {
-      const word = collected[Math.floor(Math.random() * collected.length)];
-      const entry = WORD_DATA.find((d) => d.word === word);
-      if (entry) text = entry.petReaction;
-    }
+  // ========== 吹き出し表示（共通）==========
+  showSpeechBubble(text, durationMs = SPEECH_BUBBLE_DURATION_MS) {
     this.speechBubble.textContent = text;
     this.speechBubble.classList.remove("hidden");
     clearTimeout(this._speechTimer);
     this._speechTimer = setTimeout(
       () => this.speechBubble.classList.add("hidden"),
-      2500,
+      durationMs,
     );
+  }
+
+  showPetSpeech() {
+    const collected = this.save.data.collectedWords;
+    let text = "ぴよ〜！あそんで！";
+    if (collected.length > 0) {
+      const word = collected[Math.floor(Math.random() * collected.length)];
+      const entry = WORD_MAP.get(word);
+      if (entry) text = entry.petReaction;
+    }
+    this.showSpeechBubble(text);
   }
 
   spawnHeart(e) {
@@ -1514,7 +1170,7 @@ class Game {
   renderZukan() {
     const collectedChars = new Set();
     this.save.data.collectedWords.forEach((word) => {
-      const entry = WORD_DATA.find((d) => d.word === word);
+      const entry = WORD_MAP.get(word);
       if (entry) entry.chars.forEach((c) => collectedChars.add(c));
     });
 
@@ -1524,7 +1180,7 @@ class Game {
     ALL_HIRAGANA.forEach((char) => {
       const cell = document.createElement("div");
       cell.className = "zukan-cell";
-      const data = HIRAGANA_DATA.find((h) => h.char === char);
+      const data = HIRAGANA_MAP.get(char);
 
       if (collectedChars.has(char)) {
         cell.classList.add("known");
@@ -1544,7 +1200,7 @@ class Game {
   }
 
   showZukanDetail(char) {
-    const data = HIRAGANA_DATA.find((h) => h.char === char);
+    const data = HIRAGANA_MAP.get(char);
     if (!data) return;
     const modal = document.getElementById("zukan-detail-modal");
     document.getElementById("zukan-detail-char").textContent = char;
@@ -1596,7 +1252,6 @@ class Game {
                     <span class="collected-badge">✅</span>
                 `;
       } else {
-        // 未収集：絵文字をシルエット化、文字を？で隠す
         const questionText = "？".repeat(entry.word.length);
         card.innerHTML = `
                     <div class="word-card-silhouette silhouette">${entry.emoji}</div>
@@ -1624,12 +1279,12 @@ class Game {
   }
 
   renderSilhouette() {
-    this.silhouetteArea.innerHTML = "";
+    this.targetSilhouette.innerHTML = "";
     const el = document.createElement("div");
     el.className = "silhouette-emoji";
     el.id = "silhouette-emoji-inner";
     el.textContent = this.currentWord.emoji;
-    this.silhouetteArea.appendChild(el);
+    this.targetSilhouette.appendChild(el);
   }
 
   renderCharSlots() {
@@ -1657,7 +1312,6 @@ class Game {
 
     const target = this.currentWord.chars[this.currentCharIndex];
 
-    // 今のスロットをアクティブ強調
     document
       .querySelectorAll(".char-slot")
       .forEach((s) => s.classList.remove("active-slot"));
@@ -1669,10 +1323,8 @@ class Game {
       activeSlot.dataset.hint = target;
     }
 
-    // 音声で読み上げ
     setTimeout(() => this.audio.speak(target, { pitch: 1.2, rate: 0.7 }), 200);
 
-    // ダミー選択肢
     const choiceCount = this.getChoiceCount();
     const allChars = ALL_HIRAGANA.filter((c) => c !== target);
     const distractors = [...allChars]
@@ -1713,7 +1365,6 @@ class Game {
         6,
       );
 
-      // 全ての雲クリックを無効化
       this.cloudArea.querySelectorAll(".cloud-choice").forEach((c) => {
         c.style.pointerEvents = "none";
       });
@@ -1732,7 +1383,6 @@ class Game {
         setTimeout(() => this.showNextChar(), 400);
       }, 600);
     } else {
-      // ハズレ：ぷるぷる → フェードアウト（消去型）
       cloudEl.classList.add("cloud-wrong");
       cloudEl.style.pointerEvents = "none";
       this.audio.playWrong();
@@ -1743,12 +1393,11 @@ class Game {
   }
 
   // ========== 全文字クリア ==========
-  showWordClear() {
+  async showWordClear() {
     this.audio.stopBGM();
 
     const scene = document.getElementById("mojisagashi-scene");
 
-    // ペット飛び込みアニメーション
     const petEl = document.createElement("div");
     petEl.className = "game-pet-popup";
     const config = PET_CONFIG[this.petType];
@@ -1757,49 +1406,33 @@ class Game {
     renderPetToElement(petEl, stageData);
     scene.appendChild(petEl);
 
-    // ことば反応セリフ
     const speechEl = document.createElement("div");
     speechEl.className = "game-speech-bubble";
     speechEl.textContent = this.currentWord.petReaction;
     scene.appendChild(speechEl);
-    // 「〇〇をみつけたよ！」を先に読み上げ
-    setTimeout(
-      () =>
-        this.audio.speak(`「${this.currentWord.word}」を みつけたよ！`, {
-          pitch: 1.3,
-          rate: 0.85,
-        }),
-      300,
-    );
-    // その後 petReaction を読み上げ
-    setTimeout(
-      () =>
-        this.audio.speak(this.currentWord.petReaction, {
-          pitch: 1.3,
-          rate: 0.85,
-        }),
-      1800,
-    );
 
-    // シルエット点灯
-    setTimeout(() => {
-      const inner = document.getElementById("silhouette-emoji-inner");
-      if (inner) inner.classList.add("revealed");
-      this.particles.emitConfetti(20);
-      this.particles.emitFireworks(
-        window.innerWidth / 2,
-        window.innerHeight / 3,
-        12,
-      );
-      this.audio.playLevelUp();
-    }, 1800);
+    await wait(300);
+    this.audio.speak(`「${this.currentWord.word}」を みつけたよ！`, {
+      pitch: 1.3,
+      rate: 0.85,
+    });
 
-    // リザルトへ
-    setTimeout(() => {
-      petEl.remove();
-      speechEl.remove();
-      this.showResult();
-    }, 3500);
+    await wait(1500);
+    this.audio.speak(this.currentWord.petReaction, { pitch: 1.3, rate: 0.85 });
+    const inner = document.getElementById("silhouette-emoji-inner");
+    if (inner) inner.classList.add("revealed");
+    this.particles.emitConfetti(20);
+    this.particles.emitFireworks(
+      window.innerWidth / 2,
+      window.innerHeight / 3,
+      12,
+    );
+    this.audio.playLevelUp();
+
+    await wait(1700);
+    petEl.remove();
+    speechEl.remove();
+    this.showResult();
   }
 
   // ========== リザルト ==========
@@ -1810,87 +1443,105 @@ class Game {
     const newLevel = this.save.petLevel;
 
     this.switchScene("result");
+    this._showResultPet(newLevel);
+    this._showResultWord(wordEntry);
+    this._showResultProgress(newLevel);
 
-    // ペット表示
+    if (leveledUp) {
+      this._playLevelUpSequence(oldLevel, newLevel);
+    } else {
+      this._playResultPraise();
+    }
+
+    this.bgManager.update(newLevel);
+  }
+
+  _showResultPet(newLevel) {
     const config = PET_CONFIG[this.petType];
     const stageData = config.stages[config.getStageIndex(newLevel)];
     renderPetToElement(this.resultPet, stageData);
     this.resultPet.classList.remove("pet-happy-bounce");
     void this.resultPet.offsetWidth;
     this.resultPet.classList.add("pet-happy-bounce");
+  }
 
-    // 集めたことば表示
+  _showResultWord(wordEntry) {
     this.collectedWordDisplay.classList.remove("hidden");
     document.getElementById("collected-word-emoji").textContent =
       wordEntry.emoji;
     document.getElementById("collected-word-text").textContent =
       `「${wordEntry.word}」を　あつめた！`;
+  }
 
-    // 進捗表示
+  _showResultProgress(newLevel) {
     const count = this.save.getWordCount();
     const nextCount = getWordsForNextLevel(newLevel, this.petType);
     this.wordsProgressDisplay.textContent =
       newLevel >= 7
         ? `ことば: ${count}こ （さいこうレベル！🎉）`
         : `ことば: ${count}こ　→　あと ${nextCount - count}こ で Lv.${newLevel + 1} 🐣`;
+  }
 
-    // レベルアップ演出
-    if (leveledUp) {
-      setTimeout(() => {
-        this.levelupMessage.classList.remove("hidden");
-        this.audio.playLevelUp();
-        this.particles.emitFireworks(
-          window.innerWidth / 2,
-          window.innerHeight / 3,
-          25,
-        );
+  _playLevelUpSequence(oldLevel, newLevel) {
+    setTimeout(() => {
+      this.levelupMessage.classList.remove("hidden");
+      this.audio.playLevelUp();
+      this.particles.emitFireworks(
+        window.innerWidth / 2,
+        window.innerHeight / 3,
+        25,
+      );
 
-        const oldStageIdx = config.getStageIndex(oldLevel);
-        const newStageIdx = config.getStageIndex(newLevel);
-        if (newStageIdx !== oldStageIdx) {
-          setTimeout(() => {
-            this.particles.flashScreen();
-            this.audio.playEvolution();
-            this.evolutionMessage.classList.remove("hidden");
-            this.evolutionMessage.textContent = `${stageData.label}に しんかしたよ！✨`;
-            this.audio.speak(
-              `やったー！${stageData.label}に しんかした！`,
-              SPEECH_PHRASES.evolution,
-            );
-          }, 1000);
+      const config = PET_CONFIG[this.petType];
+      if (config.getStageIndex(newLevel) !== config.getStageIndex(oldLevel)) {
+        setTimeout(() => this._playEvolutionSequence(newLevel), 1000);
+      }
+
+      // PET_CONFIG.unlocks からアンロック条件を参照
+      const unlock = config.unlocks;
+      if (unlock && newLevel >= unlock.atLevel) {
+        if (this.save.unlockPet(unlock.petId)) {
+          setTimeout(() => this._playUnlockSequence(), 2500);
         }
+      }
+    }, 600);
+  }
 
-        // にんぎょアンロック
-        if (this.petType === "chick" && newLevel >= 7) {
-          if (this.save.unlockPet("mermaid")) {
-            setTimeout(() => {
-              this.particles.emitConfetti(30);
-              this.audio.speak(
-                "にんぎょが アンロックされたよ！あたらしい ペットを そだてよう！",
-                { pitch: 1.1, rate: 0.85 },
-              );
-            }, 2500);
-          }
-        }
-      }, 600);
-    } else {
-      this.levelupMessage.classList.add("hidden");
-      this.evolutionMessage.classList.add("hidden");
-      // 褒めセリフ
-      setTimeout(() => {
-        const praises = [
-          "すごいね！あつめたね！",
-          "やったね！",
-          "もう1こあつめよう！",
-        ];
-        this.audio.speak(praises[Math.floor(Math.random() * praises.length)], {
-          pitch: 1.1,
-          rate: 0.9,
-        });
-      }, 500);
-    }
+  _playEvolutionSequence(newLevel) {
+    const config = PET_CONFIG[this.petType];
+    const stageData = config.stages[config.getStageIndex(newLevel)];
+    this.particles.flashScreen();
+    this.audio.playEvolution();
+    this.evolutionMessage.classList.remove("hidden");
+    this.evolutionMessage.textContent = `${stageData.label}に しんかしたよ！✨`;
+    this.audio.speak(
+      `やったー！${stageData.label}に しんかした！`,
+      SPEECH_PHRASES.evolution,
+    );
+  }
 
-    this.bgManager.update(newLevel);
+  _playUnlockSequence() {
+    this.particles.emitConfetti(30);
+    this.audio.speak(
+      "にんぎょが アンロックされたよ！あたらしい ペットを そだてよう！",
+      { pitch: 1.1, rate: 0.85 },
+    );
+  }
+
+  _playResultPraise() {
+    this.levelupMessage.classList.add("hidden");
+    this.evolutionMessage.classList.add("hidden");
+    setTimeout(() => {
+      const praises = [
+        "すごいね！あつめたね！",
+        "やったね！",
+        "もう1こあつめよう！",
+      ];
+      this.audio.speak(praises[Math.floor(Math.random() * praises.length)], {
+        pitch: 1.1,
+        rate: 0.9,
+      });
+    }, 500);
   }
 }
 
