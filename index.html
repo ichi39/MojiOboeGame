@@ -130,6 +130,79 @@
     <!-- Particle container -->
     <div id="particle-container"></div>
 
+    <!-- Admin Panel (?admin=1 で表示) -->
+    <div id="analytics-panel" class="analytics-panel hidden">
+        <div class="analytics-panel-inner">
+            <h2 class="analytics-title">📊 Analytics Admin</h2>
+
+            <!-- Summary Cards -->
+            <div class="analytics-summary" id="analytics-summary"></div>
+
+            <!-- Word Table -->
+            <section class="analytics-section">
+                <h3>ことば別 集計</h3>
+                <div class="analytics-table-wrap">
+                    <table class="analytics-table" id="analytics-word-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-col="word">ことば</th>
+                                <th class="sortable" data-col="totalAttempts">開始</th>
+                                <th class="sortable" data-col="completions">完了</th>
+                                <th class="sortable" data-col="completionRate">完了率%</th>
+                                <th class="sortable" data-col="abandonments">離脱</th>
+                                <th class="sortable" data-col="replays">再挑戦</th>
+                                <th class="sortable" data-col="avgTimeMs">平均時間</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Char Table -->
+            <section class="analytics-section">
+                <h3>文字別 正答率</h3>
+                <div class="analytics-table-wrap">
+                    <table class="analytics-table" id="analytics-char-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-col="char">文字</th>
+                                <th class="sortable" data-col="correct">正解</th>
+                                <th class="sortable" data-col="wrong">誤答</th>
+                                <th class="sortable" data-col="accuracy">正答率%</th>
+                                <th>混同しやすい文字</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Dropout / Scene Transitions -->
+            <section class="analytics-section">
+                <h3>シーン遷移 / 離脱ポイント</h3>
+                <div class="analytics-table-wrap">
+                    <table class="analytics-table" id="analytics-dropout-table">
+                        <thead>
+                            <tr>
+                                <th>遷移</th>
+                                <th>回数</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Buttons -->
+            <div class="analytics-actions">
+                <button id="analytics-export-btn" class="analytics-btn">⬇️ JSON Export</button>
+                <button id="analytics-clear-btn" class="analytics-btn analytics-btn-danger">🗑️ データクリア</button>
+                <button id="analytics-close-btn" class="analytics-btn analytics-btn-secondary">✕ 閉じる</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 

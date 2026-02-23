@@ -27,13 +27,48 @@ const PET_CONFIG = {
     wordLevelTable: [0, 2, 4, 7, 10, 12, 14],
     unlocks: { petId: "mermaid", atLevel: 7 },
     stages: [
-      { level: 1, text: "🥚", image: "assets/pets/chick_0.PNG", label: "たまご" },
-      { level: 2, text: "🥚", image: "assets/pets/chick_1.PNG", label: "すこしわれたたまご" },
-      { level: 3, text: "🥚", image: "assets/pets/chick_2.PNG", label: "かなりわれたたまご" },
-      { level: 4, text: "🐣", image: "assets/pets/chick_3.PNG", label: "ぴよぴよひよこ" },
-      { level: 5, text: "🐤", image: "assets/pets/chick_4.PNG", label: "おおきなひよこ" },
-      { level: 6, text: "🐤", image: "assets/pets/chick_5.PNG", label: "りっぱなにわとり" },
-      { level: 7, text: "🦚", image: "assets/pets/chick_6.PNG", label: "✨おうごんにわとり✨" },
+      {
+        level: 1,
+        text: "🥚",
+        image: "assets/pets/chick_0.PNG",
+        label: "たまご",
+      },
+      {
+        level: 2,
+        text: "🥚",
+        image: "assets/pets/chick_1.PNG",
+        label: "すこしわれたたまご",
+      },
+      {
+        level: 3,
+        text: "🥚",
+        image: "assets/pets/chick_2.PNG",
+        label: "かなりわれたたまご",
+      },
+      {
+        level: 4,
+        text: "🐣",
+        image: "assets/pets/chick_3.PNG",
+        label: "ぴよぴよひよこ",
+      },
+      {
+        level: 5,
+        text: "🐤",
+        image: "assets/pets/chick_4.PNG",
+        label: "おおきなひよこ",
+      },
+      {
+        level: 6,
+        text: "🐤",
+        image: "assets/pets/chick_5.PNG",
+        label: "りっぱなにわとり",
+      },
+      {
+        level: 7,
+        text: "🦚",
+        image: "assets/pets/chick_6.PNG",
+        label: "✨おうごんにわとり✨",
+      },
     ],
     getStageIndex: _petGetStageIndex,
   },
@@ -44,13 +79,48 @@ const PET_CONFIG = {
     // Lv1→2:3, Lv2→3:2, Lv3→4:1, Lv4→5:1, Lv5→6:1, Lv6→7:1 （合計9個）
     wordLevelTable: [0, 3, 5, 6, 7, 8, 9],
     stages: [
-      { level: 1, text: "🥚", image: "assets/pets/mermaid_0.PNG", label: "ふしぎなたまご" },
-      { level: 2, text: "🥚", image: "assets/pets/mermaid_1.PNG", label: "ひかるたまご" },
-      { level: 3, text: "🥚", image: "assets/pets/mermaid_2.PNG", label: "すこしわれたたまご" },
-      { level: 4, text: "🐟", image: "assets/pets/mermaid_3.PNG", label: "あかちゃんにんぎょ" },
-      { level: 5, text: "🐠", image: "assets/pets/mermaid_4.PNG", label: "ちいさなにんぎょ" },
-      { level: 6, text: "🐡", image: "assets/pets/mermaid_5.PNG", label: "こどものにんぎょ" },
-      { level: 7, text: "🧚", image: "assets/pets/mermaid_6.PNG", label: "✨プリンセスにんぎょ✨" },
+      {
+        level: 1,
+        text: "🥚",
+        image: "assets/pets/mermaid_0.PNG",
+        label: "ふしぎなたまご",
+      },
+      {
+        level: 2,
+        text: "🥚",
+        image: "assets/pets/mermaid_1.PNG",
+        label: "ひかるたまご",
+      },
+      {
+        level: 3,
+        text: "🥚",
+        image: "assets/pets/mermaid_2.PNG",
+        label: "すこしわれたたまご",
+      },
+      {
+        level: 4,
+        text: "🐟",
+        image: "assets/pets/mermaid_3.PNG",
+        label: "あかちゃんにんぎょ",
+      },
+      {
+        level: 5,
+        text: "🐠",
+        image: "assets/pets/mermaid_4.PNG",
+        label: "ちいさなにんぎょ",
+      },
+      {
+        level: 6,
+        text: "🐡",
+        image: "assets/pets/mermaid_5.PNG",
+        label: "こどものにんぎょ",
+      },
+      {
+        level: 7,
+        text: "🧚",
+        image: "assets/pets/mermaid_6.PNG",
+        label: "✨プリンセスにんぎょ✨",
+      },
     ],
     getStageIndex: _petGetStageIndex,
   },
@@ -118,52 +188,124 @@ function getWordsPerLevelStep(level, petId) {
 const HIRAGANA_DATA = [
   // speech.reading: 読み上げテキストの上書き（省略時はwordをそのまま読む）
   // speech.pitch / speech.rate: 不自然な場合に手動調整（省略時: pitch 1.0 / rate 0.8）
-  { char: "あ", romaji: "a",   word: "あめ",         emoji: "🍬", speech: { reading: "飴" } },
-  { char: "い", romaji: "i",   word: "いちご",       emoji: "🍓" },
-  { char: "う", romaji: "u",   word: "うさぎ",       emoji: "🐰" },
-  { char: "え", romaji: "e",   word: "えんぴつ",     emoji: "✏️" },
-  { char: "お", romaji: "o",   word: "おにぎり",     emoji: "🍙" },
-  { char: "か", romaji: "ka",  word: "かさ",         emoji: "🌂", speech: { reading: "傘" } },
-  { char: "き", romaji: "ki",  word: "き",           emoji: "🌳" },
-  { char: "く", romaji: "ku",  word: "くつ",         emoji: "👟" },
-  { char: "け", romaji: "ke",  word: "けーき",       emoji: "🍰", speech: { reading: "ケーキ" } },
-  { char: "こ", romaji: "ko",  word: "こま",         emoji: "🎲" },
-  { char: "さ", romaji: "sa",  word: "さかな",       emoji: "🐟" },
+  {
+    char: "あ",
+    romaji: "a",
+    word: "あめ",
+    emoji: "🍬",
+    speech: { reading: "飴" },
+  },
+  { char: "い", romaji: "i", word: "いちご", emoji: "🍓" },
+  { char: "う", romaji: "u", word: "うさぎ", emoji: "🐰" },
+  { char: "え", romaji: "e", word: "えんぴつ", emoji: "✏️" },
+  { char: "お", romaji: "o", word: "おにぎり", emoji: "🍙" },
+  {
+    char: "か",
+    romaji: "ka",
+    word: "かさ",
+    emoji: "🌂",
+    speech: { reading: "傘" },
+  },
+  { char: "き", romaji: "ki", word: "き", emoji: "🌳" },
+  { char: "く", romaji: "ku", word: "くつ", emoji: "👟" },
+  {
+    char: "け",
+    romaji: "ke",
+    word: "けーき",
+    emoji: "🍰",
+    speech: { reading: "ケーキ" },
+  },
+  { char: "こ", romaji: "ko", word: "こま", emoji: "🎲" },
+  { char: "さ", romaji: "sa", word: "さかな", emoji: "🐟" },
   { char: "し", romaji: "shi", word: "しんかんせん", emoji: "🚅" },
-  { char: "す", romaji: "su",  word: "すいか",       emoji: "🍉" },
-  { char: "せ", romaji: "se",  word: "せみ",         emoji: "🐛" },
-  { char: "そ", romaji: "so",  word: "そふとくりーむ", emoji: "🍦", speech: { reading: "ソフトクリーム" } },
-  { char: "た", romaji: "ta",  word: "たいよう",     emoji: "☀️" },
-  { char: "ち", romaji: "chi", word: "ちきゅう",     emoji: "🌍" },
-  { char: "つ", romaji: "tsu", word: "つき",         emoji: "🌙" },
-  { char: "て", romaji: "te",  word: "て",           emoji: "✋" },
-  { char: "と", romaji: "to",  word: "とまと",       emoji: "🍅", speech: { reading: "トマト" } },
-  { char: "な", romaji: "na",  word: "なす",         emoji: "🍆" },
-  { char: "に", romaji: "ni",  word: "にく",         emoji: "🍖" },
-  { char: "ぬ", romaji: "nu",  word: "いぬ",         emoji: "🐶" },
-  { char: "ね", romaji: "ne",  word: "ねこ",         emoji: "🐱" },
-  { char: "の", romaji: "no",  word: "のーと",       emoji: "📓", speech: { reading: "ノート" } },
-  { char: "は", romaji: "ha",  word: "はさみ",       emoji: "✂️" },
-  { char: "ひ", romaji: "hi",  word: "ひこうき",     emoji: "✈️" },
-  { char: "ふ", romaji: "fu",  word: "ふうせん",     emoji: "🎈" },
-  { char: "へ", romaji: "he",  word: "へび",         emoji: "🐍" },
-  { char: "ほ", romaji: "ho",  word: "ほん",         emoji: "📚" },
-  { char: "ま", romaji: "ma",  word: "まいく",       emoji: "🎤", speech: { reading: "マイク" } },
-  { char: "み", romaji: "mi",  word: "みかん",       emoji: "🍊" },
-  { char: "む", romaji: "mu",  word: "むし",         emoji: "🐞" },
-  { char: "め", romaji: "me",  word: "めがね",       emoji: "👓" },
-  { char: "も", romaji: "mo",  word: "もも",         emoji: "🍑", speech: { reading: "桃" } },
-  { char: "や", romaji: "ya",  word: "やま",         emoji: "⛰️" },
-  { char: "ゆ", romaji: "yu",  word: "ゆき",         emoji: "❄️", speech: { reading: "雪" } },
-  { char: "よ", romaji: "yo",  word: "よっと",       emoji: "⛵", speech: { reading: "ヨット" } },
-  { char: "ら", romaji: "ra",  word: "らっぱ",       emoji: "🎺" },
-  { char: "り", romaji: "ri",  word: "りんご",       emoji: "🍎" },
-  { char: "る", romaji: "ru",  word: "かえる",       emoji: "🐸" },
-  { char: "れ", romaji: "re",  word: "れもん",       emoji: "🍋", speech: { reading: "レモン" } },
-  { char: "ろ", romaji: "ro",  word: "ろうそく",     emoji: "🕯️" },
-  { char: "わ", romaji: "wa",  word: "わに",         emoji: "🐊" },
-  { char: "を", romaji: "wo",  word: "ほんをよむ",   emoji: "📖", speech: { reading: "ほんを よむ" } },
-  { char: "ん", romaji: "n",   word: "おでん",       emoji: "🍢" },
+  { char: "す", romaji: "su", word: "すいか", emoji: "🍉" },
+  { char: "せ", romaji: "se", word: "せみ", emoji: "🐛" },
+  {
+    char: "そ",
+    romaji: "so",
+    word: "そふとくりーむ",
+    emoji: "🍦",
+    speech: { reading: "ソフトクリーム" },
+  },
+  { char: "た", romaji: "ta", word: "たいよう", emoji: "☀️" },
+  { char: "ち", romaji: "chi", word: "ちきゅう", emoji: "🌍" },
+  { char: "つ", romaji: "tsu", word: "つき", emoji: "🌙" },
+  { char: "て", romaji: "te", word: "て", emoji: "✋" },
+  {
+    char: "と",
+    romaji: "to",
+    word: "とまと",
+    emoji: "🍅",
+    speech: { reading: "トマト" },
+  },
+  { char: "な", romaji: "na", word: "なす", emoji: "🍆" },
+  { char: "に", romaji: "ni", word: "にく", emoji: "🍖" },
+  { char: "ぬ", romaji: "nu", word: "いぬ", emoji: "🐶" },
+  { char: "ね", romaji: "ne", word: "ねこ", emoji: "🐱" },
+  {
+    char: "の",
+    romaji: "no",
+    word: "のーと",
+    emoji: "📓",
+    speech: { reading: "ノート" },
+  },
+  { char: "は", romaji: "ha", word: "はさみ", emoji: "✂️" },
+  { char: "ひ", romaji: "hi", word: "ひこうき", emoji: "✈️" },
+  { char: "ふ", romaji: "fu", word: "ふうせん", emoji: "🎈" },
+  { char: "へ", romaji: "he", word: "へび", emoji: "🐍" },
+  { char: "ほ", romaji: "ho", word: "ほん", emoji: "📚" },
+  {
+    char: "ま",
+    romaji: "ma",
+    word: "まいく",
+    emoji: "🎤",
+    speech: { reading: "マイク" },
+  },
+  { char: "み", romaji: "mi", word: "みかん", emoji: "🍊" },
+  { char: "む", romaji: "mu", word: "むし", emoji: "🐞" },
+  { char: "め", romaji: "me", word: "めがね", emoji: "👓" },
+  {
+    char: "も",
+    romaji: "mo",
+    word: "もも",
+    emoji: "🍑",
+    speech: { reading: "桃" },
+  },
+  { char: "や", romaji: "ya", word: "やま", emoji: "⛰️" },
+  {
+    char: "ゆ",
+    romaji: "yu",
+    word: "ゆき",
+    emoji: "❄️",
+    speech: { reading: "雪" },
+  },
+  {
+    char: "よ",
+    romaji: "yo",
+    word: "よっと",
+    emoji: "⛵",
+    speech: { reading: "ヨット" },
+  },
+  { char: "ら", romaji: "ra", word: "らっぱ", emoji: "🎺" },
+  { char: "り", romaji: "ri", word: "りんご", emoji: "🍎" },
+  { char: "る", romaji: "ru", word: "かえる", emoji: "🐸" },
+  {
+    char: "れ",
+    romaji: "re",
+    word: "れもん",
+    emoji: "🍋",
+    speech: { reading: "レモン" },
+  },
+  { char: "ろ", romaji: "ro", word: "ろうそく", emoji: "🕯️" },
+  { char: "わ", romaji: "wa", word: "わに", emoji: "🐊" },
+  {
+    char: "を",
+    romaji: "wo",
+    word: "ほんをよむ",
+    emoji: "📖",
+    speech: { reading: "ほんを よむ" },
+  },
+  { char: "ん", romaji: "n", word: "おでん", emoji: "🍢" },
 ];
 
 // ========== フレーズ読み上げ設定 ==========
@@ -442,9 +584,8 @@ class SaveManager {
 
   getWordCount(petId = null) {
     const id = petId || this.data.activePet;
-    return this.data.collectedWords.filter(
-      (w) => WORD_MAP.get(w)?.pet === id,
-    ).length;
+    return this.data.collectedWords.filter((w) => WORD_MAP.get(w)?.pet === id)
+      .length;
   }
 
   switchPet(petId) {
@@ -501,8 +642,13 @@ class ParticleSystem {
   // Fireworks effect
   emitFireworks(x, y, count = 20) {
     const colors = [
-      "#ff6b6b", "#feca57", "#48dbfb", "#ff9ff3",
-      "#54a0ff", "#5f27cd", "#ff9f43",
+      "#ff6b6b",
+      "#feca57",
+      "#48dbfb",
+      "#ff9ff3",
+      "#54a0ff",
+      "#5f27cd",
+      "#ff9f43",
     ];
     for (let i = 0; i < count; i++) {
       const angle = ((Math.PI * 2) / count) * i + Math.random() * 0.5;
@@ -521,8 +667,14 @@ class ParticleSystem {
   // Confetti
   emitConfetti(count = 30) {
     const colors = [
-      "#ff6b6b", "#feca57", "#48dbfb", "#ff9ff3",
-      "#54a0ff", "#5f27cd", "#1dd1a1", "#ff9f43",
+      "#ff6b6b",
+      "#feca57",
+      "#48dbfb",
+      "#ff9ff3",
+      "#54a0ff",
+      "#5f27cd",
+      "#1dd1a1",
+      "#ff9f43",
     ];
     for (let i = 0; i < count; i++) {
       this._spawnParticle("particle-confetti", 3000, (el) => {
@@ -860,6 +1012,263 @@ class BackgroundManager {
 }
 
 // ==========================================
+// Analytics Manager
+// ==========================================
+class AnalyticsManager {
+  static STORAGE_KEY = "mojioboe_analytics_v1";
+  static MAX_SESSIONS = 100;
+
+  constructor() {
+    this._data = this._load();
+    this._currentSession = null;
+    this._wordAttempt = null; // { word, startedAt, charAttempts, isReplay }
+  }
+
+  // -------- Persistence --------
+  _load() {
+    try {
+      const raw = localStorage.getItem(AnalyticsManager.STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (_) {}
+    return { sessions: [], wordStats: {}, charStats: {} };
+  }
+
+  _save() {
+    try {
+      localStorage.setItem(
+        AnalyticsManager.STORAGE_KEY,
+        JSON.stringify(this._data),
+      );
+    } catch (_) {}
+  }
+
+  // -------- Session --------
+  startSession(pet, level, totalWords) {
+    this._currentSession = {
+      id: String(Date.now()),
+      startedAt: Date.now(),
+      endedAt: null,
+      pet,
+      levelAtStart: level,
+      levelAtEnd: level,
+      wordsCompleted: 0,
+      events: [],
+    };
+    this.track("session_start", { pet, level, totalWords });
+  }
+
+  endSession(wordsCompleted) {
+    if (!this._currentSession) return;
+    this._currentSession.endedAt = Date.now();
+    this._currentSession.wordsCompleted =
+      wordsCompleted ?? this._currentSession.wordsCompleted;
+    this.track("session_end", {
+      durationMs: this._currentSession.endedAt - this._currentSession.startedAt,
+      wordsCompleted: this._currentSession.wordsCompleted,
+    });
+    this._data.sessions.push(this._currentSession);
+    if (this._data.sessions.length > AnalyticsManager.MAX_SESSIONS) {
+      this._data.sessions.splice(
+        0,
+        this._data.sessions.length - AnalyticsManager.MAX_SESSIONS,
+      );
+    }
+    this._currentSession = null;
+    this._save();
+  }
+
+  // -------- Word Attempt --------
+  startWordAttempt(wordEntry, isReplay) {
+    this._wordAttempt = {
+      word: wordEntry.word,
+      startedAt: Date.now(),
+      charAttempts: 0,
+      charsCompleted: 0,
+      isReplay,
+    };
+    const ws = this._ensureWordStats(wordEntry.word);
+    ws.totalAttempts++;
+    if (isReplay) ws.replays++;
+    this.track("word_start", {
+      word: wordEntry.word,
+      pet: wordEntry.pet,
+      isReplay,
+    });
+    this._save();
+  }
+
+  endWordAttempt(completed) {
+    if (!this._wordAttempt) return;
+    const wa = this._wordAttempt;
+    const durationMs = Date.now() - wa.startedAt;
+    const ws = this._ensureWordStats(wa.word);
+
+    if (completed) {
+      ws.completions++;
+      ws.totalTimeMs += durationMs;
+      if (this._currentSession) this._currentSession.wordsCompleted++;
+      this.track("word_complete", {
+        word: wa.word,
+        durationMs,
+        totalAttempts: wa.charAttempts,
+      });
+    } else {
+      ws.abandonments++;
+      this.track("word_abandon", {
+        word: wa.word,
+        charsCompleted: wa.charsCompleted,
+      });
+    }
+    this._wordAttempt = null;
+    this._save();
+  }
+
+  // -------- Core Track --------
+  track(type, payload = {}) {
+    const event = { type, ts: Date.now(), ...payload };
+    if (this._currentSession) {
+      this._currentSession.events.push(event);
+    }
+    this._updateAggregates(event);
+
+    // 外部サービス連携フック
+    if (typeof window.analyticsExternalSend === "function") {
+      try {
+        window.analyticsExternalSend(type, payload);
+      } catch (_) {}
+    }
+  }
+
+  _updateAggregates(event) {
+    if (event.type === "char_attempt") {
+      const { word, charIndex, target, selected, isCorrect } = event;
+      // wordStats.charStats
+      const ws = this._ensureWordStats(word);
+      if (!ws.charStats[charIndex]) {
+        ws.charStats[charIndex] = { correct: 0, wrong: 0, confusedWith: {} };
+      }
+      const cs = ws.charStats[charIndex];
+      if (isCorrect) {
+        cs.correct++;
+      } else {
+        cs.wrong++;
+        cs.confusedWith[selected] = (cs.confusedWith[selected] || 0) + 1;
+      }
+      // global charStats
+      const gc = this._ensureCharStats(target);
+      if (isCorrect) {
+        gc.correct++;
+      } else {
+        gc.wrong++;
+        gc.confusedWith[selected] = (gc.confusedWith[selected] || 0) + 1;
+      }
+      // wordAttempt counter
+      if (this._wordAttempt) {
+        this._wordAttempt.charAttempts++;
+        if (isCorrect) this._wordAttempt.charsCompleted++;
+      }
+    }
+
+    if (event.type === "level_up" && this._currentSession) {
+      this._currentSession.levelAtEnd = event.newLevel;
+    }
+  }
+
+  _ensureWordStats(word) {
+    if (!this._data.wordStats[word]) {
+      this._data.wordStats[word] = {
+        totalAttempts: 0,
+        completions: 0,
+        abandonments: 0,
+        replays: 0,
+        totalTimeMs: 0,
+        charStats: {},
+      };
+    }
+    return this._data.wordStats[word];
+  }
+
+  _ensureCharStats(char) {
+    if (!this._data.charStats[char]) {
+      this._data.charStats[char] = { correct: 0, wrong: 0, confusedWith: {} };
+    }
+    return this._data.charStats[char];
+  }
+
+  // -------- Reports --------
+  getWordReport() {
+    return Object.entries(this._data.wordStats).map(([word, s]) => ({
+      word,
+      totalAttempts: s.totalAttempts,
+      completions: s.completions,
+      abandonments: s.abandonments,
+      replays: s.replays,
+      completionRate:
+        s.totalAttempts > 0
+          ? Math.round((s.completions / s.totalAttempts) * 100)
+          : 0,
+      avgTimeMs:
+        s.completions > 0 ? Math.round(s.totalTimeMs / s.completions) : 0,
+    }));
+  }
+
+  getCharReport() {
+    return Object.entries(this._data.charStats).map(([char, s]) => {
+      const total = s.correct + s.wrong;
+      const accuracy = total > 0 ? Math.round((s.correct / total) * 100) : 100;
+      const topConfusions = Object.entries(s.confusedWith)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([c, n]) => `${c}(${n})`);
+      return {
+        char,
+        correct: s.correct,
+        wrong: s.wrong,
+        accuracy,
+        topConfusions,
+      };
+    });
+  }
+
+  getDropoutReport() {
+    const counts = {};
+    this._data.sessions.forEach((sess) => {
+      sess.events.forEach((ev) => {
+        if (ev.type === "scene_change") {
+          const key = `${ev.from}→${ev.to}`;
+          counts[key] = (counts[key] || 0) + 1;
+        }
+      });
+    });
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .map(([transition, count]) => ({ transition, count }));
+  }
+
+  getSessions() {
+    return this._data.sessions;
+  }
+
+  // -------- Export / Clear --------
+  exportJSON() {
+    const blob = new Blob([JSON.stringify(this._data, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `mojioboe_analytics_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  clearData() {
+    this._data = { sessions: [], wordStats: {}, charStats: {} };
+    localStorage.removeItem(AnalyticsManager.STORAGE_KEY);
+  }
+}
+
+// ==========================================
 // Main Game Class
 // ==========================================
 class Game {
@@ -868,6 +1277,7 @@ class Game {
     this.audio = new AudioController();
     this.particles = new ParticleSystem();
     this.bgManager = new BackgroundManager(this.save.petLevel);
+    this.analytics = new AnalyticsManager();
 
     this.currentScene = "niwa";
     this.currentWord = null;
@@ -877,6 +1287,26 @@ class Game {
     this.attachEventListeners();
     this.initNiwa();
     this.bgManager.update(this.save.petLevel);
+
+    // セッション開始
+    this.analytics.startSession(
+      this.save.data.activePet,
+      this.save.petLevel,
+      this.save.getWordCount(),
+    );
+    // ページ離脱時にセッション終了
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
+        this.analytics.endSession();
+      } else {
+        // 復帰時に新セッション開始
+        this.analytics.startSession(
+          this.save.data.activePet,
+          this.save.petLevel,
+          this.save.getWordCount(),
+        );
+      }
+    });
   }
 
   // petType は save.data.activePet の単一参照にする
@@ -954,6 +1384,7 @@ class Game {
     });
 
     this.retryBtn.addEventListener("click", () => {
+      // result→niwa はすでに word_complete 済みなので abandon しない
       this.switchScene("niwa");
       this.initNiwa();
       this.audio.stopBGM();
@@ -993,6 +1424,10 @@ class Game {
 
   // ========== Scene Management ==========
   switchScene(sceneName) {
+    this.analytics.track("scene_change", {
+      from: this.currentScene,
+      to: sceneName,
+    });
     Object.values(this.scenes).forEach((el) => {
       el.classList.remove("active");
       el.style.display = "none";
@@ -1271,6 +1706,8 @@ class Game {
   startMojiSagashi(wordEntry) {
     this.currentWord = wordEntry;
     this.currentCharIndex = 0;
+    const isReplay = this.save.data.collectedWords.includes(wordEntry.word);
+    this.analytics.startWordAttempt(wordEntry, isReplay);
     this.switchScene("mojisagashi");
     this.audio.startBGM("title");
     this.renderSilhouette();
@@ -1354,6 +1791,14 @@ class Game {
   }
 
   handleCloudAnswer(isCorrect, cloudEl, char) {
+    const target = this.currentWord.chars[this.currentCharIndex];
+    this.analytics.track("char_attempt", {
+      word: this.currentWord.word,
+      charIndex: this.currentCharIndex,
+      target,
+      selected: char,
+      isCorrect,
+    });
     if (isCorrect) {
       cloudEl.classList.add("cloud-correct");
       this.audio.playCorrect();
@@ -1437,6 +1882,7 @@ class Game {
 
   // ========== リザルト ==========
   showResult() {
+    this.analytics.endWordAttempt(true);
     const wordEntry = this.currentWord;
     const oldLevel = this.save.petLevel;
     const leveledUp = this.save.addCollectedWord(wordEntry.word);
@@ -1483,6 +1929,11 @@ class Game {
   }
 
   _playLevelUpSequence(oldLevel, newLevel) {
+    this.analytics.track("level_up", {
+      pet: this.petType,
+      oldLevel,
+      newLevel,
+    });
     setTimeout(() => {
       this.levelupMessage.classList.remove("hidden");
       this.audio.playLevelUp();
@@ -1547,5 +1998,187 @@ class Game {
 
 // ========== Initialize ==========
 window.addEventListener("DOMContentLoaded", () => {
-  new Game();
+  const game = new Game();
+
+  // Admin panel (?admin=1)
+  if (new URLSearchParams(location.search).has("admin")) {
+    initAnalyticsPanel(game.analytics);
+  }
 });
+
+// ========== Admin Panel ==========
+function initAnalyticsPanel(analytics) {
+  const panel = document.getElementById("analytics-panel");
+  if (!panel) return;
+  panel.classList.remove("hidden");
+
+  let wordSortCol = "completionRate";
+  let wordSortDir = -1;
+  let charSortCol = "accuracy";
+  let charSortDir = 1;
+
+  function fmtMs(ms) {
+    if (!ms) return "-";
+    return ms < 1000 ? ms + "ms" : (ms / 1000).toFixed(1) + "s";
+  }
+
+  function renderSummary() {
+    const sessions = analytics.getSessions();
+    const wordReport = analytics.getWordReport();
+    const totalMs = sessions.reduce(
+      (s, sess) => s + ((sess.endedAt || Date.now()) - sess.startedAt),
+      0,
+    );
+    const totalCompleted = wordReport.reduce((s, w) => s + w.completions, 0);
+
+    const cards = [
+      { label: "セッション数", value: sessions.length },
+      {
+        label: "総プレイ時間",
+        value:
+          totalMs < 60000
+            ? Math.round(totalMs / 1000) + "秒"
+            : Math.floor(totalMs / 60000) + "分",
+      },
+      { label: "総完了単語", value: totalCompleted + "語" },
+      { label: "収集単語種類", value: wordReport.length + "種" },
+    ];
+
+    const el = document.getElementById("analytics-summary");
+    el.innerHTML = cards
+      .map(
+        (c) =>
+          `<div class="analytics-card"><div class="card-value">${c.value}</div><div class="card-label">${c.label}</div></div>`,
+      )
+      .join("");
+  }
+
+  function renderWordTable() {
+    const data = analytics
+      .getWordReport()
+      .sort(
+        (a, b) =>
+          wordSortDir *
+          (a[wordSortCol] > b[wordSortCol]
+            ? 1
+            : a[wordSortCol] < b[wordSortCol]
+              ? -1
+              : 0),
+      );
+    const tbody = document.querySelector("#analytics-word-table tbody");
+    tbody.innerHTML = data
+      .map(
+        (r) =>
+          `<tr><td>${r.word}</td><td>${r.totalAttempts}</td><td>${r.completions}</td><td>${r.completionRate}%</td><td>${r.abandonments}</td><td>${r.replays}</td><td>${fmtMs(r.avgTimeMs)}</td></tr>`,
+      )
+      .join("");
+    document
+      .querySelectorAll("#analytics-word-table th.sortable")
+      .forEach((th) => {
+        th.classList.remove("sort-asc", "sort-desc");
+        if (th.dataset.col === wordSortCol) {
+          th.classList.add(wordSortDir === 1 ? "sort-asc" : "sort-desc");
+        }
+      });
+  }
+
+  function renderCharTable() {
+    const data = analytics
+      .getCharReport()
+      .sort(
+        (a, b) =>
+          charSortDir *
+          (a[charSortCol] > b[charSortCol]
+            ? 1
+            : a[charSortCol] < b[charSortCol]
+              ? -1
+              : 0),
+      );
+    const tbody = document.querySelector("#analytics-char-table tbody");
+    tbody.innerHTML = data
+      .map(
+        (r) =>
+          `<tr><td>${r.char}</td><td>${r.correct}</td><td>${r.wrong}</td><td>${r.accuracy}%</td><td>${r.topConfusions.join(", ") || "-"}</td></tr>`,
+      )
+      .join("");
+    document
+      .querySelectorAll("#analytics-char-table th.sortable")
+      .forEach((th) => {
+        th.classList.remove("sort-asc", "sort-desc");
+        if (th.dataset.col === charSortCol) {
+          th.classList.add(charSortDir === 1 ? "sort-asc" : "sort-desc");
+        }
+      });
+  }
+
+  function renderDropoutTable() {
+    const data = analytics.getDropoutReport();
+    const tbody = document.querySelector("#analytics-dropout-table tbody");
+    tbody.innerHTML = data
+      .map((r) => `<tr><td>${r.transition}</td><td>${r.count}</td></tr>`)
+      .join("");
+  }
+
+  function renderAll() {
+    renderSummary();
+    renderWordTable();
+    renderCharTable();
+    renderDropoutTable();
+  }
+
+  renderAll();
+
+  // Sort: Word table
+  document
+    .querySelectorAll("#analytics-word-table th.sortable")
+    .forEach((th) => {
+      th.addEventListener("click", () => {
+        if (wordSortCol === th.dataset.col) {
+          wordSortDir *= -1;
+        } else {
+          wordSortCol = th.dataset.col;
+          wordSortDir = -1;
+        }
+        renderWordTable();
+      });
+    });
+
+  // Sort: Char table
+  document
+    .querySelectorAll("#analytics-char-table th.sortable")
+    .forEach((th) => {
+      th.addEventListener("click", () => {
+        if (charSortCol === th.dataset.col) {
+          charSortDir *= -1;
+        } else {
+          charSortCol = th.dataset.col;
+          charSortDir = 1;
+        }
+        renderCharTable();
+      });
+    });
+
+  // Export
+  document
+    .getElementById("analytics-export-btn")
+    .addEventListener("click", () => {
+      analytics.exportJSON();
+    });
+
+  // Clear
+  document
+    .getElementById("analytics-clear-btn")
+    .addEventListener("click", () => {
+      if (confirm("アナリティクスデータを全て削除しますか？")) {
+        analytics.clearData();
+        renderAll();
+      }
+    });
+
+  // Close
+  document
+    .getElementById("analytics-close-btn")
+    .addEventListener("click", () => {
+      panel.classList.add("hidden");
+    });
+}

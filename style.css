@@ -1280,3 +1280,147 @@ footer {
     padding: 0.5rem 1rem;
     text-align: center;
 }
+
+/* ========== Analytics Admin Panel ========== */
+.analytics-panel {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 9999;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.analytics-panel.hidden {
+    display: none;
+}
+
+.analytics-panel-inner {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    max-width: 900px;
+    width: 100%;
+    margin: auto;
+    font-family: 'Kiwi Maru', sans-serif;
+    color: #011627;
+}
+
+.analytics-title {
+    font-size: 1.4rem;
+    margin: 0 0 1rem;
+    border-bottom: 2px solid #FF9F1C;
+    padding-bottom: 0.5rem;
+}
+
+.analytics-summary {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.analytics-card {
+    flex: 1 1 120px;
+    background: #FFF8EC;
+    border: 1px solid #FF9F1C;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    text-align: center;
+}
+
+.analytics-card .card-value {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #E71D36;
+}
+
+.analytics-card .card-label {
+    font-size: 0.75rem;
+    color: #555;
+}
+
+.analytics-section {
+    margin-bottom: 1.5rem;
+}
+
+.analytics-section h3 {
+    font-size: 1rem;
+    margin: 0 0 0.5rem;
+    color: #2EC4B6;
+}
+
+.analytics-table-wrap {
+    overflow-x: auto;
+}
+
+.analytics-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.analytics-table th,
+.analytics-table td {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #ddd;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.analytics-table th {
+    background: #f5f5f5;
+    font-weight: bold;
+}
+
+.analytics-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.analytics-table th.sortable:hover {
+    background: #e8e8e8;
+}
+
+.analytics-table th.sort-asc::after { content: " ▲"; }
+.analytics-table th.sort-desc::after { content: " ▼"; }
+
+.analytics-table tr:nth-child(even) td {
+    background: #fafafa;
+}
+
+.analytics-table tr:hover td {
+    background: #fff8e1;
+}
+
+.analytics-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
+.analytics-btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Kiwi Maru', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    background: #2EC4B6;
+    color: #fff;
+    transition: opacity 0.15s;
+}
+
+.analytics-btn:hover { opacity: 0.85; }
+
+.analytics-btn-danger {
+    background: #E71D36;
+}
+
+.analytics-btn-secondary {
+    background: #888;
+}
