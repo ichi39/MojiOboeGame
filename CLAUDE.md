@@ -20,6 +20,9 @@ python3 -m http.server 8080
 
 データリセットは画面下部の「さいしょからあそぶ」ボタン、または `localStorage.removeItem("mojioboe_v3_save")` で可能。
 
+アナリティクスデータのリセット: `localStorage.removeItem("mojioboe_analytics_v1")`
+Admin パネル（データ閲覧）: `http://localhost:8080/?admin=1`
+
 ## ファイル構成
 
 - `index.html` — 全シーンのDOM構造を静的に定義
@@ -75,6 +78,41 @@ getWordsPerLevelStep(level, petId)     // 現在Lvから次Lvへの1段分のこ
 ```
 
 すべて `petId` を第2引数に渡すこと。省略すると旧デフォルト値にフォールバックする。
+
+### アナリティクス
+
+`AnalyticsManager` が `localStorage`（キー: `mojioboe_analytics_v1`）に学習履歴を保存する。
+
+**記録イベント:**
+
+| イベント | 発火タイミング |
+|---------|--------------|
+| `session_start` / `session_end` | ページロード / `visibilitychange` |
+| `scene_change` | `switchScene()` |
+| `word_start` | `startMojiSagashi()`（`isReplay` 自動判定） |
+| `word_complete` / `word_abandon` | `showResult()` / 中断時 |
+| `char_attempt` | `handleCloudAnswer()`（正誤両方） |
+| `level_up` | `_playLevelUpSequence()` |
+
+**パブリック API:**
+```js
+analytics.track(type, payload)          // 任意イベント記録
+analytics.startWordAttempt(entry, isReplay)
+analytics.endWordAttempt(completed)     // true=完了 / false=中断
+analytics.getWordReport()               // 単語別集計レポート
+analytics.getCharReport()               // 文字別正答率レポート
+analytics.getDropoutReport()            // シーン遷移・離脱ポイント
+analytics.exportJSON()                  // JSON ファイルダウンロード
+```
+
+**外部サービス連携フック:**
+```js
+window.analyticsExternalSend = (type, payload) => { /* GA / Mixpanel 等 */ };
+```
+
+**Admin パネル:** `?admin=1` URLパラメータで閲覧用オーバーレイを表示。
+
+**アナリティクスリセット:** `localStorage.removeItem("mojioboe_analytics_v1")`
 
 ### 永続化
 `SaveManager` が `localStorage`（キー: `mojioboe_v3_save`）を管理。セーブデータの構造:
