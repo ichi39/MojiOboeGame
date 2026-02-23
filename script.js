@@ -1029,7 +1029,9 @@ class AnalyticsManager {
     try {
       const raw = localStorage.getItem(AnalyticsManager.STORAGE_KEY);
       if (raw) return JSON.parse(raw);
-    } catch (_) {}
+    } catch (err) {
+      console.error("Analytics load failed:", err);
+    }
     return { sessions: [], wordStats: {}, charStats: {} };
   }
 
@@ -1039,7 +1041,28 @@ class AnalyticsManager {
         AnalyticsManager.STORAGE_KEY,
         JSON.stringify(this._data),
       );
-    } catch (_) {}
+    } catch (err) {
+      if (
+        err.name === "QuotaExceededError" &&
+        this._data.sessions.length > 10
+      ) {
+        // 古いセッションを半分削除してリトライ
+        this._data.sessions.splice(
+          0,
+          Math.floor(this._data.sessions.length / 2),
+        );
+        try {
+          localStorage.setItem(
+            AnalyticsManager.STORAGE_KEY,
+            JSON.stringify(this._data),
+          );
+        } catch (e2) {
+          console.warn("Analytics storage full, data not saved:", e2);
+        }
+      } else {
+        console.error("Analytics save failed:", err);
+      }
+    }
   }
 
   // -------- Session --------
@@ -2095,12 +2118,19 @@ function initAnalyticsPanel(analytics) {
               : 0),
       );
     const tbody = document.querySelector("#analytics-char-table tbody");
-    tbody.innerHTML = data
-      .map(
-        (r) =>
-          `<tr><td>${r.char}</td><td>${r.correct}</td><td>${r.wrong}</td><td>${r.accuracy}%</td><td>${r.topConfusions.join(", ") || "-"}</td></tr>`,
-      )
-      .join("");
+    tbody.innerHTML = "";
+    data.forEach((r) => {
+      const tr = document.createElement("tr");
+      [r.char, r.correct, r.wrong, r.accuracy + "%"].forEach((val) => {
+        const td = document.createElement("td");
+        td.textContent = val;
+        tr.appendChild(td);
+      });
+      const confTd = document.createElement("td");
+      confTd.textContent = r.topConfusions.join(", ") || "-";
+      tr.appendChild(confTd);
+      tbody.appendChild(tr);
+    });
     document
       .querySelectorAll("#analytics-char-table th.sortable")
       .forEach((th) => {
